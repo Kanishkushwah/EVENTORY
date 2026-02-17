@@ -641,11 +641,25 @@
 
                 allEvents = await response.json();
 
+                // DEBUG: Show raw response if empty
+                if (!allEvents || allEvents.length === 0) {
+                    const debugDiv = document.createElement('div');
+                    debugDiv.className = "fixed bottom-0 left-0 w-full bg-black text-white p-4 text-xs font-mono z-50 overflow-auto max-h-40";
+                    debugDiv.innerText = "Debug API: " + JSON.stringify(allEvents).slice(0, 500);
+                    document.body.appendChild(debugDiv);
+                }
+
                 // Use the filter logic to handle grouping immediately
                 filterCategory('all');
 
             } catch (err) {
                 console.error('Failed to load events:', err);
+                // Dump error to UI
+                const debugDiv = document.createElement('div');
+                debugDiv.className = "fixed bottom-0 left-0 w-full bg-red-900 text-white p-4 text-xs font-mono z-50";
+                debugDiv.innerText = "Error: " + err.message;
+                document.body.appendChild(debugDiv);
+
                 document.getElementById('eventGrid').innerHTML = `
                     <div class="col-span-3 text-center py-12 flex flex-col items-center justify-center gap-4">
                         <p class="text-gray-500 text-lg">Unable to connect to the server.</p>
