@@ -644,8 +644,13 @@
                 // DEBUG: Show raw response if empty
                 if (!allEvents || allEvents.length === 0) {
                     const debugDiv = document.createElement('div');
-                    debugDiv.className = "fixed bottom-0 left-0 w-full bg-black text-white p-4 text-xs font-mono z-50 overflow-auto max-h-40";
-                    debugDiv.innerText = "Debug API: " + JSON.stringify(allEvents).slice(0, 500);
+                    debugDiv.className = "fixed bottom-0 left-0 w-full bg-black text-white p-4 text-xs font-mono z-50 overflow-auto max-h-40 flex justify-between items-center";
+                    debugDiv.innerHTML = `
+                        <span>Debug API: ${JSON.stringify(allEvents).slice(0, 100)}... (Empty Database?)</span>
+                        <button onclick="seedDatabase()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-bold ml-4">
+                            🛠 Fix Database (Seed Data)
+                        </button>
+                     `;
                     document.body.appendChild(debugDiv);
                 }
 
@@ -961,6 +966,24 @@
         // Mobile menu toggle
         function toggleMobileMenu() {
             alert('Mobile menu - Add your mobile menu implementation here');
+        }
+
+        // --- DATABASE SEED TOOL ---
+        async function seedDatabase() {
+            if (!confirm("This will overwrite existing data. Are you sure?")) return;
+
+            try {
+                const res = await fetch('/api/admin/seed');
+                if (res.ok) {
+                    alert('Database populated successfully! Reloading...');
+                    window.location.reload();
+                } else {
+                    const err = await res.json();
+                    alert('Failed: ' + (err.error || err.message));
+                }
+            } catch (e) {
+                alert('Connection Error: ' + e.message);
+            }
         }
 
         // Initialize: Load events on page load
