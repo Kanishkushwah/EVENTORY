@@ -203,7 +203,7 @@
         // Load user bookings
         async function loadUserBookings() {
             try {
-                const res = await fetch(`http://localhost:8000/api/users/bookings/${user.email}`);
+                const res = await fetch(`/api/users/bookings/${user.email}`);
                 const data = await res.json();
 
                 allBookings = data.all || [];
@@ -213,7 +213,7 @@
                 document.getElementById('stat-upcoming').textContent = data.upcoming?.length || 0;
 
                 // Load total spent
-                const statsRes = await fetch(`http://localhost:8000/api/users/stats/${user.email}`);
+                const statsRes = await fetch(`/api/users/stats/${user.email}`);
                 const stats = await statsRes.json();
                 document.getElementById('stat-spent').textContent = '₹' + (stats.totalSpent || 0).toLocaleString();
 
@@ -322,7 +322,7 @@
 
         async function downloadTicket(reference) {
             try {
-                const response = await fetch(`http://localhost:8000/api/pdf/ticket/${reference}`);
+                const response = await fetch(`/api/pdf/ticket/${reference}`);
 
                 if (!response.ok) throw new Error('Failed to download ticket');
 
@@ -353,7 +353,7 @@
 
             // Fetch cancellation policy
             try {
-                const res = await fetch(`http://localhost:8000/api/bookings/${reference}/cancellation-policy`);
+                const res = await fetch(`/api/bookings/${reference}/cancellation-policy`);
                 const policy = await res.json();
 
                 if (!policy.can_cancel) {
@@ -443,7 +443,7 @@
             `;
 
             try {
-                const res = await fetch(`http://localhost:8000/api/bookings/${currentCancelReference}/cancel`, {
+                const res = await fetch(`/api/bookings/${currentCancelReference}/cancel`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ reason })

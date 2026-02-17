@@ -97,46 +97,45 @@
                 Find and book tickets for concerts, sports, workshops, and more
             </p>
             <div
-                class="bg-white dark:bg-surface-dark p-2 rounded-full shadow-lg max-w-3xl mx-auto flex items-center transition-colors duration-200">
-                <span class="material-icons text-gray-400 ml-4">search</span>
+                class="bg-white dark:bg-surface-dark p-1 md:p-2 rounded-full shadow-lg max-w-3xl mx-auto flex items-center transition-colors duration-200">
+                <span class="material-icons text-gray-400 ml-3 md:ml-4">search</span>
                 <input
-                    class="flex-grow bg-transparent border-none focus:ring-0 text-gray-800 dark:text-gray-100 placeholder-gray-400 px-4 py-2"
-                    placeholder="Search events, venues, or locations..." type="text" id="searchInput"
-                    onkeyup="searchEvents()" />
+                    class="flex-grow bg-transparent border-none focus:ring-0 text-gray-800 dark:text-gray-100 placeholder-gray-400 px-2 md:px-4 py-2 text-sm md:text-base"
+                    placeholder="Search events..." type="text" id="searchInput" onkeyup="searchEvents()" />
                 <button
-                    class="bg-primary hover:bg-secondary text-white px-8 py-3 rounded-full font-medium transition-colors shadow-md"
+                    class="bg-primary hover:bg-secondary text-white px-4 py-2 md:px-8 md:py-3 rounded-full font-medium transition-colors shadow-md text-sm md:text-base"
                     onclick="searchEvents()">
                     Search
                 </button>
             </div>
-            <div class="mt-10 flex flex-wrap justify-center gap-3 max-w-5xl mx-auto">
+            <div class="mt-8 md:mt-10 flex flex-wrap justify-center gap-2 md:gap-3 max-w-5xl mx-auto">
                 <button
-                    class="bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 text-white px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 category-btn active-category"
+                    class="bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium transition-all flex items-center gap-1 md:gap-2 category-btn active-category"
                     onclick="filterCategory('all')">
-                    <span class="material-icons text-base">grid_view</span> All Events
+                    <span class="material-icons text-sm md:text-base">grid_view</span> All
                 </button>
                 <button
-                    class="bg-white text-primary px-4 py-2 rounded-full text-sm font-medium shadow-md transition-all hover:scale-105 flex items-center gap-2 category-btn"
+                    class="bg-white text-primary px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium shadow-md transition-all hover:scale-105 flex items-center gap-1 md:gap-2 category-btn"
                     onclick="filterCategory('movies')">
-                    <span class="material-icons text-base">movie</span> Movies
+                    <span class="material-icons text-sm md:text-base">movie</span> Movies
                 </button>
                 <button
-                    class="bg-white text-primary px-4 py-2 rounded-full text-sm font-medium shadow-md transition-all hover:scale-105 flex items-center gap-2 category-btn"
+                    class="bg-white text-primary px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium shadow-md transition-all hover:scale-105 flex items-center gap-1 md:gap-2 category-btn"
                     onclick="filterCategory('music')">
-                    <span class="material-icons text-base">music_note</span> Music
+                    <span class="material-icons text-sm md:text-base">music_note</span> Music
                 </button>
                 <button
-                    class="bg-white text-primary px-4 py-2 rounded-full text-sm font-medium shadow-md transition-all hover:scale-105 flex items-center gap-2 category-btn"
+                    class="bg-white text-primary px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium shadow-md transition-all hover:scale-105 flex items-center gap-1 md:gap-2 category-btn"
                     onclick="filterCategory('sports')">
-                    <span class="material-icons text-base">sports_soccer</span> Sports
+                    <span class="material-icons text-sm md:text-base">sports_soccer</span> Sports
                 </button>
                 <button
-                    class="bg-white text-primary px-4 py-2 rounded-full text-sm font-medium shadow-md transition-all hover:scale-105 flex items-center gap-2 category-btn"
+                    class="bg-white text-primary px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium shadow-md transition-all hover:scale-105 flex items-center gap-1 md:gap-2 category-btn"
                     onclick="filterCategory('business')">
-                    <span class="material-icons text-base">business_center</span> Business
+                    <span class="material-icons text-sm md:text-base">business_center</span> Business
                 </button>
                 <button
-                    class="bg-white text-primary px-4 py-2 rounded-full text-sm font-medium shadow-md transition-all hover:scale-105"
+                    class="bg-white text-primary px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium shadow-md transition-all hover:scale-105"
                     onclick="filterCategory('other')">
                     Other
                 </button>
@@ -625,7 +624,7 @@
         // Load events from API
         async function loadEvents() {
             try {
-                const response = await fetch('http://localhost:8000/api/events');
+                const response = await fetch('/api/events');
                 if (!response.ok) throw new Error('Failed to fetch events');
 
                 allEvents = await response.json();

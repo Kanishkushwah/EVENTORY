@@ -185,7 +185,7 @@
 
                 <!-- Google Sign In Button -->
                 <div class="mt-6">
-                    <a href="http://localhost:8000/auth/google"
+                    <a href="/auth/google"
                         class="w-full flex items-center justify-center gap-3 px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                         <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt="Google">
                         <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Sign up with Google</span>
@@ -228,8 +228,8 @@
             }
 
             try {
-                // Determine API URL (handle localhost vs 127.0.0.1 nuances)
-                const apiUrl = 'http://localhost:8000/api/auth/register';
+                // Determine API URL (Relative for deployment support)
+                const apiUrl = '/api/auth/register';
 
                 const response = await fetch(apiUrl, {
                     method: 'POST',

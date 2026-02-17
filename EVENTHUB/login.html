@@ -174,7 +174,7 @@
 
                 <!-- Google Sign In Button -->
                 <div class="mt-6">
-                    <a href="http://localhost:8000/auth/google"
+                    <a href="/auth/google"
                         class="w-full flex items-center justify-center gap-3 px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                         <svg class="w-5 h-5" viewBox="0 0 24 24">
                             <path fill="#4285F4"
@@ -278,7 +278,7 @@
 
             // 3. Backend Login (Attempt)
             try {
-                const res = await fetch('http://localhost:8000/api/auth/login', {
+                const res = await fetch('/api/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
