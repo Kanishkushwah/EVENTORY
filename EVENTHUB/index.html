@@ -646,6 +646,7 @@
                 document.getElementById('eventGrid').innerHTML = `
                     <div class="col-span-3 text-center py-12 flex flex-col items-center justify-center gap-4">
                         <p class="text-gray-500 text-lg">Unable to connect to the server.</p>
+                        <p class="text-red-500 text-sm font-mono bg-red-50 p-2 rounded border border-red-200">${err.message}</p>
                         <button onclick="loadEvents()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition-colors flex items-center gap-2">
                             <span class="material-icons">refresh</span> Retry Connection
                         </button>
