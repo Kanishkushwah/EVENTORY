@@ -86,6 +86,47 @@
         </div>
     </nav>
 
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu"
+        class="fixed inset-0 z-50 bg-white dark:bg-gray-900 transform translate-x-full transition-transform duration-300 md:hidden flex flex-col h-full shadow-2xl">
+        <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+            <span class="text-xl font-bold text-primary">Menu</span>
+            <button onclick="toggleMobileMenu()" class="text-gray-500 hover:text-red-500 transition-colors">
+                <span class="material-icons text-2xl">close</span>
+            </button>
+        </div>
+        <div class="flex-1 overflow-y-auto py-6 px-6 space-y-6">
+            <div class="space-y-4">
+                <a href="index.html"
+                    class="flex items-center gap-3 text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-primary transition-colors p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
+                    <span class="material-icons">home</span> Browse Events
+                </a>
+                <a href="user-dashboard.html"
+                    class="flex items-center gap-3 text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-primary transition-colors p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
+                    <span class="material-icons">confirmation_number</span> My Bookings
+                </a>
+                <a href="#search"
+                    class="flex items-center gap-3 text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-primary transition-colors p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
+                    onclick="toggleMobileMenu()">
+                    <span class="material-icons">search</span> Search Booking
+                </a>
+            </div>
+
+            <div class="border-t border-gray-100 dark:border-gray-800 pt-6 space-y-4">
+                <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Account</p>
+                <!-- These will be dynamically updated by checkLoginState if needed -->
+                <a href="login.html"
+                    class="flex items-center gap-3 text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-primary transition-colors p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
+                    <span class="material-icons">login</span> Login
+                </a>
+                <a href="register.html"
+                    class="flex items-center gap-3 text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-primary transition-colors p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
+                    <span class="material-icons">person_add</span> Register
+                </a>
+            </div>
+        </div>
+    </div>
+
     <header class="hero-gradient text-white py-16 md:py-24 relative overflow-hidden">
         <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
             <div class="absolute top-10 left-10 w-32 h-32 rounded-full bg-white blur-3xl"></div>
@@ -645,19 +686,7 @@
                 // Handle wrapped response { data: [...] }
                 allEvents = Array.isArray(json) ? json : (json.data || []);
 
-                // DEBUG: Show raw response if empty
-
-                if (!allEvents || allEvents.length === 0) {
-                    const debugDiv = document.createElement('div');
-                    debugDiv.className = "fixed bottom-0 left-0 w-full bg-black text-white p-4 text-xs font-mono z-50 overflow-auto max-h-40 flex justify-between items-center";
-                    debugDiv.innerHTML = `
-                        <span>Debug API: ${JSON.stringify(allEvents).slice(0, 100)}... (Empty Database?)</span>
-                        <button onclick="seedDatabase()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-bold ml-4">
-                            🛠 Fix Database (Seed Data)
-                        </button>
-                     `;
-                    document.body.appendChild(debugDiv);
-                }
+                // Removed debug dump
 
                 // Use the filter logic to handle grouping immediately
                 filterCategory('all');
@@ -701,7 +730,7 @@
             console.log("Rendering Events Count:", events ? events.length : 0);
 
             if (!events || events.length === 0) {
-                grid.innerHTML = '<div class="col-span-3 text-center py-12 text-pink-600 font-bold text-2xl">No events found. <br><span class="text-sm text-gray-500">If you see this, please try clearing cache or reloading. API returned 0 events.</span></div>';
+                grid.innerHTML = '<div class="col-span-3 text-center py-12 text-gray-500 font-medium text-lg">No events found.</div>';
                 return;
             }
 
@@ -970,7 +999,12 @@
 
         // Mobile menu toggle
         function toggleMobileMenu() {
-            alert('Mobile menu - Add your mobile menu implementation here');
+            const menu = document.getElementById('mobile-menu');
+            if (menu.classList.contains('translate-x-full')) {
+                menu.classList.remove('translate-x-full');
+            } else {
+                menu.classList.add('translate-x-full');
+            }
         }
 
         // --- DATABASE SEED TOOL ---
