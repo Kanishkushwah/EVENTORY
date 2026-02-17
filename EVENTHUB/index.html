@@ -636,12 +636,17 @@
         // Load events from API
         async function loadEvents() {
             try {
-                const response = await fetch('/api/events');
+                // Add timestamp to prevent caching
+                const response = await fetch('/api/events?v=' + Date.now());
                 if (!response.ok) throw new Error('Failed to fetch events');
 
-                allEvents = await response.json();
+                let json = await response.json();
+
+                // Handle wrapped response { data: [...] }
+                allEvents = Array.isArray(json) ? json : (json.data || []);
 
                 // DEBUG: Show raw response if empty
+
                 if (!allEvents || allEvents.length === 0) {
                     const debugDiv = document.createElement('div');
                     debugDiv.className = "fixed bottom-0 left-0 w-full bg-black text-white p-4 text-xs font-mono z-50 overflow-auto max-h-40 flex justify-between items-center";
@@ -696,7 +701,7 @@
             console.log("Rendering Events Count:", events ? events.length : 0);
 
             if (!events || events.length === 0) {
-                grid.innerHTML = '<div class="col-span-3 text-center py-12 text-gray-500">No events found.</div>';
+                grid.innerHTML = '<div class="col-span-3 text-center py-12 text-pink-600 font-bold text-2xl">No events found. <br><span class="text-sm text-gray-500">If you see this, please try clearing cache or reloading. API returned 0 events.</span></div>';
                 return;
             }
 
