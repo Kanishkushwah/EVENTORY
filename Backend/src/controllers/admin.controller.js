@@ -113,5 +113,21 @@ export const AdminController = {
             console.error("Delete Event Error:", err);
             return res.status(500).json({ message: "Internal Server Error" });
         }
+    },
+
+    // Seed Database Manual Trigger
+    async seedDatabase(req, res) {
+        try {
+            console.log("Seeding Database Manually...");
+            const { AutomationService } = await import("../services/automation.service.js");
+
+            await AutomationService.syncUpcomingMovies();
+            await AutomationService.syncWorldCupEvents();
+
+            return res.json({ message: "Database seeding initiated successfully" });
+        } catch (err) {
+            console.error("Seed Error:", err);
+            return res.status(500).json({ message: "Seeding failed", error: err.message });
+        }
     }
 };

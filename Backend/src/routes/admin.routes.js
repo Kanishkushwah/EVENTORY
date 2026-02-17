@@ -9,6 +9,9 @@ router.post("/login", AdminController.login);
 // Dashboard stats
 router.get("/stats", AdminController.getDashboardStats);
 
+// Manual Seeding
+router.get("/seed", AdminController.seedDatabase);
+
 // Bookings management
 router.get("/bookings", AdminController.getAllBookings);
 
