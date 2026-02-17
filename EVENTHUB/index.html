@@ -97,15 +97,24 @@
                 Find and book tickets for concerts, sports, workshops, and more
             </p>
             <div
-                class="bg-white dark:bg-surface-dark p-1 md:p-2 rounded-full shadow-lg max-w-3xl mx-auto flex items-center transition-colors duration-200">
-                <span class="material-icons text-gray-400 ml-3 md:ml-4">search</span>
+                class="bg-white dark:bg-surface-dark p-1 md:p-2 rounded-full shadow-lg max-w-3xl mx-auto flex items-center transition-colors duration-200 w-full">
+                <span class="material-icons text-gray-400 ml-3 md:ml-4 flex-shrink-0">search</span>
                 <input
-                    class="flex-grow bg-transparent border-none focus:ring-0 text-gray-800 dark:text-gray-100 placeholder-gray-400 px-2 md:px-4 py-2 text-sm md:text-base"
-                    placeholder="Search events..." type="text" id="searchInput" onkeyup="searchEvents()" />
+                    class="flex-grow bg-transparent border-none focus:ring-0 text-gray-800 dark:text-gray-100 placeholder-gray-400 px-2 md:px-4 py-2 text-sm md:text-base min-w-0"
+                    placeholder="Search..." type="text" id="searchInput" onkeyup="searchEvents()" />
+
+                <!-- Desktop Search Button -->
                 <button
-                    class="bg-primary hover:bg-secondary text-white px-4 py-2 md:px-8 md:py-3 rounded-full font-medium transition-colors shadow-md text-sm md:text-base"
+                    class="hidden md:block bg-primary hover:bg-secondary text-white px-8 py-3 rounded-full font-medium transition-colors shadow-md"
                     onclick="searchEvents()">
                     Search
+                </button>
+
+                <!-- Mobile Search Button (Compact) -->
+                <button
+                    class="md:hidden bg-primary hover:bg-secondary text-white p-2 rounded-full shadow-md transition-colors flex items-center justify-center flex-shrink-0 mr-1"
+                    onclick="searchEvents()">
+                    <span class="material-icons text-white text-sm">arrow_forward</span>
                 </button>
             </div>
             <div class="mt-8 md:mt-10 flex flex-wrap justify-center gap-2 md:gap-3 max-w-5xl mx-auto">

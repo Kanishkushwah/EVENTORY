@@ -12,9 +12,14 @@ app.listen(PORT, async () => {
 
     // Initialize Automated Event Sync
     try {
-        // await AutomationService.syncUpcomingMovies();
-        // await AutomationService.syncWorldCupEvents();
-        console.log("✅ Automation Service Disabled (Debugging)");
+        // Run automation with a small delay to ensure DB connection is ready
+        setTimeout(async () => {
+            console.log("🎬 Starting Automation Service...");
+            await AutomationService.syncUpcomingMovies();
+            await AutomationService.syncWorldCupEvents();
+            console.log("✅ Automation Service Completed");
+        }, 5000);
+
     } catch (err) {
         console.error("⚠️ Automation Service Failed:", err);
     }
