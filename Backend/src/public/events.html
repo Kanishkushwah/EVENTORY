@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title id="pageTitle">Event Details - Eventory</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <script src="events-data.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#6B46C1",
+                        secondary: "#805AD5",
+                        "background-light": "#F7FAFC",
+                        "background-dark": "#1A202C",
+                        "surface-light": "#FFFFFF",
+                        "surface-dark": "#2D3748",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                        body: ["Inter", "sans-serif"],
+                    },
+                },
+            },
+        };
+    </script>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-gray-800 dark:text-gray-100 font-body">
+
+    <!-- NAVBAR -->
+    <nav class="bg-surface-light dark:bg-surface-dark shadow-sm py-4 sticky top-0 z-50">
+        <div class="container mx-auto px-4 md:px-8 flex items-center justify-between">
+            <a class="text-2xl font-bold text-primary" href="Index.html">Eventory</a>
+            <div class="hidden md:flex items-center space-x-6 text-sm font-medium">
+                <a class="hover:text-primary transition-colors" href="Index.html">
+                    <span class="material-icons text-lg align-middle">home</span> Browse Events
+                </a>
+                <a class="hover:text-primary transition-colors" href="booking.html">
+                    <span class="material-icons text-lg align-middle">confirmation_number</span> My Bookings
+                </a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span id="userInfo" class="text-sm text-gray-600 dark:text-gray-300"></span>
+                <button onclick="logout()" id="logoutBtn" class="hidden text-sm text-primary hover:text-secondary">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="container mx-auto px-4 py-8" id="eventContent"></main>
+
+    <footer class="bg-surface-light dark:bg-surface-dark border-t mt-12 py-8">
+        <div class="container mx-auto px-4 text-center text-sm text-gray-500 dark:text-gray-400">
+            <p>© 2024 EventHub. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Get event ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const eventId = parseInt(urlParams.get('id')) || getCurrentEvent()?.id || 2;
+
+        // Load event data
+        const eventData = getEventById(eventId);
+
+        if (!eventData) {
+            window.location.href = 'Index.html';
+        }
+
+        // Set page title
+        document.getElementById('pageTitle').textContent = eventData.title + ' - Eventory';
+
+        // Build page HTML
+        const eventHTML = `
+            <div class="bg-surface-light dark:bg-surface-dark rounded-2xl overflow-hidden shadow-xl mb-8">
+                <div class="grid md:grid-cols-2 gap-0">
+                    <div class="relative h-96 md:h-auto">
+                        <img src="${eventData.image}" alt="${eventData.title}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-8 md:p-12 flex flex-col justify-center">
+                        <div class="mb-4">
+                            <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-semibold capitalize">${eventData.category}</span>
+                        </div>
+                        <h1 class="text-4xl md:text-5xl font-bold mb-4">${eventData.title}</h1>
+                        <p class="text-lg text-gray-600 dark:text-gray-300 mb-6">${eventData.description}</p>
+
+                        <div class="grid grid-cols-2 gap-4 mb-8">
+                            <div class="flex items-center gap-3">
+                                <span class="material-icons text-primary text-3xl">calendar_today</span>
+                                <div>
+                                    <p class="text-sm text-gray-500">Date</p>
+                                    <p class="font-semibold">${eventData.fullDate}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="material-icons text-primary text-3xl">schedule</span>
+                                <div>
+                                    <p class="text-sm text-gray-500">Time</p>
+                                    <p class="font-semibold">${eventData.time}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="material-icons text-primary text-3xl">place</span>
+                                <div>
+                                    <p class="text-sm text-gray-500">Venue</p>
+                                    <p class="font-semibold">${eventData.venue}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="material-icons text-primary text-3xl">payments</span>
+                                <div>
+                                    <p class="text-sm text-gray-500">Price</p>
+                                    <p class="font-semibold">${eventData.price === 0 ? 'Free' : 'From ₹' + eventData.price}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button onclick="proceedToBooking()" class="bg-primary hover:bg-secondary text-white font-bold py-4 px-8 rounded-xl shadow-lg transition-all">
+                            <span class="material-icons mr-2">confirmation_number</span>
+                            ${eventData.price === 0 ? 'Register Now' : 'Book Tickets Now'}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="md:col-span-2 space-y-8">
+                    <!-- ABOUT -->
+                    <div class="bg-surface-light dark:bg-surface-dark rounded-xl p-8 shadow-lg">
+                        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                            <span class="material-icons text-primary">info</span>
+                            About This Event
+                        </h2>
+                        <p class="mb-4">${eventData.fullDescription}</p>
+                        <div class="mt-6">
+                            <h3 class="font-bold text-lg mb-3">Event Highlights:</h3>
+                            <ul class="space-y-2">
+                                ${eventData.highlights.map(h => `
+                                <li class="flex items-start gap-2">
+                                    <span class="material-icons text-primary text-sm mt-1">check_circle</span>
+                                    <span>${h}</span>
+                                </li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- ARTISTS -->
+                    <div class="bg-surface-light dark:bg-surface-dark rounded-xl p-8 shadow-lg">
+                        <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                            <span class="material-icons text-primary">queue_music</span>
+                            ${eventData.category === 'music' ? 'Featured Artists' : eventData.category === 'sports' ? 'Star Players' : 'Speakers & Performers'}
+                        </h2>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            ${eventData.artists.map(artist => `
+                            <div class="text-center p-4 rounded-lg bg-gray-50 dark:bg-gray-800">
+                                <div class="w-16 h-16 bg-primary/20 rounded-full mx-auto mb-2 flex items-center justify-center">
+                                    <span class="material-icons text-primary text-2xl">person</span>
+                                </div>
+                                <p class="font-semibold">${artist.name}</p>
+                                <p class="text-xs text-gray-500">${artist.role}</p>
+                            </div>`).join('')}
+                        </div>
+                    </div>
+
+                    <!-- TERMS -->
+                    <div class="bg-surface-light dark:bg-surface-dark rounded-xl p-8 shadow-lg">
+                        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                            <span class="material-icons text-primary">gavel</span>
+                            Terms & Conditions
+                        </h2>
+                        <ul class="space-y-2 text-sm">
+                            <li class="flex gap-2"><span class="material-icons text-primary text-sm">arrow_right</span> Entry is restricted to persons above 18 years.</li>
+                            <li class="flex gap-2"><span class="material-icons text-primary text-sm">arrow_right</span> Valid ID proof required for entry.</li>
+                            <li class="flex gap-2"><span class="material-icons text-primary text-sm">arrow_right</span> Tickets are non-refundable & non-transferable.</li>
+                            <li class="flex gap-2"><span class="material-icons text-primary text-sm">arrow_right</span> Management reserves the right to entry.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- SIDEBAR -->
+                <div class="space-y-6">
+                    <div class="bg-surface-light dark:bg-surface-dark rounded-xl p-6 shadow-lg sticky top-24">
+                        <h3 class="text-xl font-bold mb-4">Select Tickets</h3>
+                        <div class="space-y-4 mb-6">
+                            ${eventData.tickets.map(ticket => `
+                            <div class="border rounded-lg p-4 hover:border-primary cursor-pointer">
+                                <div class="flex justify-between items-start mb-2">
+                                    <div>
+                                        <p class="font-semibold">${ticket.type}</p>
+                                        <p class="text-xs text-gray-500">${ticket.description}</p>
+                                    </div>
+                                    <p class="font-bold text-primary">${ticket.price === 0 ? 'Free' : '₹' + ticket.price}</p>
+                                </div>
+                            </div>`).join('')}
+                        </div>
+
+                        <button onclick="proceedToBooking()" class="w-full bg-primary hover:bg-secondary text-white font-bold py-3 rounded-lg">
+                            ${eventData.price === 0 ? 'Register Now' : 'Proceed to Book'}
+                        </button>
+
+                        <p class="text-xs text-center text-gray-500 mt-4">
+                            <span class="material-icons text-xs align-middle">info</span>
+                            Limited tickets available
+                        </p>
+                    </div>
+
+                    <div class="bg-surface-light dark:bg-surface-dark rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                            <span class="material-icons text-primary">map</span>
+                            Venue Location
+                        </h3>
+                        <div class="aspect-video bg-gray-200 rounded-lg mb-4"></div>
+                        <p class="text-sm mb-2">
+                            <strong>${eventData.venue}</strong><br>
+                            ${eventData.location}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.getElementById('eventContent').innerHTML = eventHTML;
+
+        window.onload = () => {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const userEmail = localStorage.getItem('userEmail');
+
+            if (isLoggedIn === 'true') {
+                document.getElementById('userInfo').textContent = `Welcome, ${userEmail}`;
+                document.getElementById('logoutBtn').classList.remove('hidden');
+            }
+        };
+
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userEmail');
+            alert('Logged out successfully');
+            window.location.href = 'Index.html';
+        }
+
+        function proceedToBooking() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+
+            if (isLoggedIn !== 'true') {
+                if (confirm('Please login to book tickets. Go to login page?')) {
+                    window.location.href = 'login.html';
+                }
+                return;
+            }
+
+            // ⭐ CRITICAL: Save type + poster for the ticket PDF
+            localStorage.setItem("eventType", eventData.category);
+            localStorage.setItem("eventPoster", eventData.image);
+
+            setCurrentEvent(eventId);
+            window.location.href = 'booking.html';
+        }
+    </script>
+
+</body>
+</html>

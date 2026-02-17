@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Eventory - Login</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#7C3AED",
+                        "primary-dark": "#6D28D9",
+                        "primary-light": "#8B5CF6",
+                        "background-light": "#F3F4F6",
+                        "background-dark": "#111827",
+                        "card-light": "#FFFFFF",
+                        "card-dark": "#1F2937",
+                        "text-light": "#1F2937",
+                        "text-dark": "#F9FAFB",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                        body: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.5rem",
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark min-h-screen flex flex-col font-body transition-colors duration-200">
+    <nav class="bg-card-light dark:bg-card-dark shadow-sm border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a class="flex-shrink-0 flex items-center" href="Index.html">
+                        <span class="text-2xl font-bold text-primary dark:text-primary-light">Eventory</span>
+                    </a>
+                </div>
+                <div class="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-8">
+                    <a class="text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light px-3 py-2 rounded-md text-sm font-medium flex items-center gap-1"
+                        href="Index.html">
+                        <span class="material-icons text-base">home</span> Browse Events
+                    </a>
+                    <a class="text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light px-3 py-2 rounded-md text-sm font-medium flex items-center gap-1"
+                        href="#search">
+                        <span class="material-icons text-base">search</span> Search Booking
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a class="text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white flex items-center gap-1"
+                        href="register.html">
+                        <span class="material-icons text-base">person_add</span> Register
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <div
+                class="absolute top-0 left-0 right-0 h-1/2 hero-gradient opacity-10 dark:opacity-20 transform -skew-y-3 origin-top-left scale-110">
+            </div>
+            <div
+                class="absolute bottom-0 right-0 w-96 h-96 bg-purple-200 dark:bg-purple-900 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse">
+            </div>
+            <div
+                class="absolute top-10 left-10 w-72 h-72 bg-indigo-200 dark:bg-indigo-900 rounded-full mix-blend-multiply filter blur-3xl opacity-30">
+            </div>
+        </div>
+
+        <div
+            class="max-w-md w-full space-y-8 relative z-10 bg-card-light dark:bg-card-dark p-8 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700">
+            <div>
+                <h2 class="mt-2 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
+                    Welcome Back
+                </h2>
+                <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
+                    Log in to access your bookings and discover new events.
+                </p>
+            </div>
+
+            <form class="mt-8 space-y-6" onsubmit="loginUser(event)" method="POST">
+                <input name="remember" type="hidden" value="true" />
+                <div class="rounded-md shadow-sm -space-y-px">
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                            for="email-address">Email address</label>
+                        <div class="relative rounded-md shadow-sm">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <span class="material-icons text-gray-400 text-lg">mail</span>
+                            </div>
+                            <input autocomplete="email"
+                                class="appearance-none block w-full pl-10 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition duration-150 ease-in-out"
+                                id="email-address" name="email" placeholder="you@example.com" required=""
+                                type="email" />
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                            for="password">Password</label>
+                        <div class="relative rounded-md shadow-sm">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <span class="material-icons text-gray-400 text-lg">lock</span>
+                            </div>
+                            <input autocomplete="current-password"
+                                class="appearance-none block w-full pl-10 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition duration-150 ease-in-out"
+                                id="password" name="password" placeholder="••••••••" required="" type="password" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input
+                            class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600"
+                            id="remember-me" name="remember-me" type="checkbox" />
+                        <label class="ml-2 block text-sm text-gray-900 dark:text-gray-300" for="remember-me">
+                            Remember me
+                        </label>
+                    </div>
+                    <div class="text-sm">
+                        <a class="font-medium text-primary hover:text-primary-dark dark:text-primary-light dark:hover:text-purple-300"
+                            href="#">
+                            Forgot your password?
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <button
+                        class="group relative w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors duration-200 shadow-lg shadow-purple-500/30"
+                        type="submit">
+                        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                            <span
+                                class="material-icons text-purple-200 group-hover:text-white transition-colors text-lg">login</span>
+                        </span>
+                        Sign in
+                    </button>
+                </div>
+
+                <!-- Divider -->
+                <div class="mt-6">
+                    <div class="relative">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-300 dark:border-gray-600"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-2 bg-card-light dark:bg-card-dark text-gray-500">Or continue with</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Google Sign In Button -->
+                <div class="mt-6">
+                    <a href="http://localhost:8000/auth/google"
+                        class="w-full flex items-center justify-center gap-3 px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24">
+                            <path fill="#4285F4"
+                                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                            <path fill="#34A853"
+                                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                            <path fill="#FBBC05"
+                                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                            <path fill="#EA4335"
+                                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                        </svg>
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Sign in with Google</span>
+                    </a>
+                </div>
+            </form>
+
+            <div class="relative">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-300 dark:border-gray-600"></div>
+                </div>
+                <div class="relative flex justify-center text-sm">
+                    <span class="px-2 bg-card-light dark:bg-card-dark text-gray-500 dark:text-gray-400">Or continue
+                        with</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <button
+                    class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                    type="button">
+                    <span class="sr-only">Sign in with Google</span>
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z">
+                        </path>
+                    </svg>
+                </button>
+                <button
+                    class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                    type="button">
+                    <span class="sr-only">Sign in with Facebook</span>
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path clip-rule="evenodd"
+                            d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"
+                            fill-rule="evenodd"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
+                Don't have an account?
+                <a class="font-medium text-primary hover:text-primary-dark dark:text-primary-light dark:hover:text-purple-300"
+                    href="register.html">
+                    Sign up
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <footer class="bg-card-light dark:bg-card-dark border-t border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <p class="text-center text-xs text-gray-500 dark:text-gray-400">
+                © 2024 EventHub. All rights reserved.
+            </p>
+            <div class="mt-2 flex justify-center space-x-6">
+                <a class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 text-xs" href="#">
+                    Privacy Policy
+                </a>
+                <a class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 text-xs" href="#">
+                    Terms of Service
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        async function loginUser(event) {
+            event.preventDefault();
+
+            const email = document.getElementById("email-address").value;
+            const password = document.getElementById("password").value;
+
+            // 1. Check Demo Credentials
+            if (email === "tanishkushwah6644@gmail.com" && password === "TANISH6644") {
+                localStorage.setItem("loggedInUser", JSON.stringify({ email, name: "Tanish Kushwah" }));
+                alert("Login successful! Redirecting...");
+                window.location.href = "index.html"; // Fixed capitalization
+                return;
+            }
+
+            // 2. Check Registered Users (Offline Mode)
+            const users = JSON.parse(localStorage.getItem("users") || "[]");
+            const registeredUser = users.find(u => u.email === email && u.password === password);
+
+            if (registeredUser) {
+                localStorage.setItem("loggedInUser", JSON.stringify({ email: registeredUser.email, name: registeredUser.name }));
+                alert("Login successful!");
+                window.location.href = "index.html";
+                return;
+            }
+
+            // 3. Backend Login (Attempt)
+            try {
+                const res = await fetch('http://localhost:8000/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    localStorage.setItem("loggedInUser", JSON.stringify(data.user));
+
+                    // Unified Redirect: Admin -> Dashboard, User -> Profile
+                    window.location.href = data.redirect || "user-profile.html";
+                    return;
+                } else {
+                    const errorData = await res.json();
+                    alert(`Login Failed: ${errorData.message || "Unknown error"}`);
+                    return;
+                }
+            } catch (e) {
+                console.log("Backend login failed, using offline mode.");
+            }
+
+            alert("Invalid email or password.\n\nTry Demo:\nEmail: tanishkushwah6644@gmail.com\nPassword: TANISH6644");
+        }
+
+        // CORRECT AUTO-REDIRECT CHECK
+        const user = JSON.parse(localStorage.getItem("loggedInUser"));
+        if (user) {
+            if (confirm("You are already logged in. Go to events page?")) {
+                window.location.href = "Index.html";
+            }
+        }
+    </script>
+</body>
+
+</html>

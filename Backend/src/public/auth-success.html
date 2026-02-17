@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Successful - Eventory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 flex items-center justify-center h-screen">
+    <div class="text-center max-w-md mx-auto p-8">
+        <div class="mb-6">
+            <svg class="w-20 h-20 text-green-500 mx-auto animate-bounce" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+        </div>
+        <h1 class="text-3xl font-bold text-gray-800 mb-3">✓ Login Successful!</h1>
+        <p id="welcome-msg" class="text-xl text-purple-600 font-semibold mb-6"></p>
+        <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-3"></div>
+            <p class="text-sm text-purple-800 font-medium">Redirecting to dashboard...</p>
+        </div>
+    </div>
+
+    <script>
+        console.log('Auth success page loaded on:', window.location.origin);
+
+        // Get user data from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+
+        const userData = {
+            id: urlParams.get('id'),
+            email: urlParams.get('email'),
+            name: urlParams.get('name'),
+            profilePicture: urlParams.get('profilePicture'),
+            loginMethod: urlParams.get('loginMethod') || 'google'
+        };
+
+        console.log('User data received:', userData);
+
+        // Display welcome message
+        if (userData.name) {
+            document.getElementById('welcome-msg').textContent = `Welcome, ${userData.name}!`;
+        }
+
+        // Validate we have required data
+        if (!userData.email || !userData.name) {
+            console.error('Missing required user data');
+            setTimeout(() => {
+                window.location.href = '/EVENTHUB/login.html?error=missing_data';
+            }, 2000);
+        } else {
+            // Store in localStorage (same origin as dashboard now!)
+            try {
+                localStorage.setItem('loggedInUser', JSON.stringify(userData));
+                console.log('✓ User data stored in localStorage on origin:', window.location.origin);
+                console.log('✓ Stored data:', localStorage.getItem('loggedInUser'));
+
+                // Redirect to dashboard after 1.5 seconds
+                setTimeout(() => {
+                    console.log('Redirecting to dashboard...');
+                    window.location.href = '/EVENTHUB/user-dashboard.html';
+                }, 1500);
+
+            } catch (err) {
+                console.error('Failed to store user data:', err);
+                alert('Login successful but failed to save session. Please try again.');
+                setTimeout(() => {
+                    window.location.href = '/EVENTHUB/login.html';
+                }, 2000);
+            }
+        }
+    </script>
+</body>
+
+</html>

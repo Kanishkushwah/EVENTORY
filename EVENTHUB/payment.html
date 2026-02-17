@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Payment & Confirmation - Eventory</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="events-data.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .ticket-perforation {
+            background-image: radial-gradient(circle, #e5e7eb 2px, transparent 2px);
+            background-size: 15px 15px;
+            background-position: center;
+        }
+
+        .gradient-purple {
+            background: linear-gradient(135deg, #6B46C1 0%, #8B5CF6 100%);
+        }
+
+        .ticket-shadow {
+            box-shadow: 0 20px 50px rgba(107, 70, 193, 0.15);
+        }
+    </style>
+
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#6B46C1",
+                        "primary-dark": "#5932a8",
+                        "primary-light": "#8B5CF6"
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+
+<body class="bg-gray-50 text-gray-900 font-sans">
+
+    <!-- NAVBAR -->
+    <nav class="bg-white border-b shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <a href="Index.html" class="flex items-center gap-2">
+                <span class="material-icons-outlined text-primary text-3xl">event</span>
+                <span class="font-bold text-2xl text-primary">Eventory</span>
+            </a>
+
+            <div class="flex items-center gap-6">
+                <a href="Index.html" class="text-gray-600 hover:text-primary text-sm font-medium">Browse Events</a>
+                <a href="#" class="text-gray-600 hover:text-primary text-sm font-medium">My Tickets</a>
+                <a href="#" class="text-gray-600 hover:text-primary text-sm font-medium">Support</a>
+
+                <button class="material-icons-outlined text-gray-600 hover:text-primary">notifications</button>
+                <button class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
+                    <span class="material-icons-outlined text-primary text-lg">person</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto w-full py-10 px-4 sm:px-6 lg:px-8">
+
+        <!-- PAYMENT SECTION -->
+        <div id="payment-section" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- LEFT SIDE PAYMENT -->
+            <div class="lg:col-span-2 space-y-6">
+                <div class="bg-white rounded-xl shadow-lg p-8 border">
+                    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                        <span class="material-icons-outlined text-primary">lock</span>
+                        Secure Payment
+                    </h2>
+
+                    <div class="flex gap-4 mb-6 border-b">
+                        <button id="cardTab" onclick="switchPaymentMethod('card')"
+                            class="flex items-center gap-2 px-4 py-3 text-primary border-b-2 border-primary font-semibold transition">
+                            <span class="material-icons-outlined">credit_card</span>
+                            Credit/Debit Card
+                        </button>
+
+                        <button id="upiTab" onclick="switchPaymentMethod('upi')"
+                            class="flex items-center gap-2 px-4 py-3 text-gray-500 hover:text-primary font-medium transition border-b-2 border-transparent">
+                            <span class="material-icons-outlined">account_balance_wallet</span>
+                            UPI
+                        </button>
+                    </div>
+
+                    <!-- CARD PAYMENT -->
+                    <div id="cardPayment" class="space-y-5">
+                        <form class="space-y-5" onsubmit="event.preventDefault(); processCardPayment();">
+                            <div>
+                                <label class="text-sm font-semibold mb-2 block text-gray-700">Card Number</label>
+                                <div class="relative">
+                                    <input id="cardNumber"
+                                        class="w-full rounded-lg border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 shadow-sm py-3 pl-12 text-lg"
+                                        placeholder="1234 5678 9012 3456" required maxlength="19" />
+                                    <span
+                                        class="material-icons-outlined absolute left-3 top-3 text-gray-400">credit_card</span>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                <div>
+                                    <label class="text-sm font-semibold mb-2 block text-gray-700">Name on Card</label>
+                                    <input id="cardName"
+                                        class="w-full rounded-lg border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 shadow-sm py-3"
+                                        placeholder="JOHN DOE" required />
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="text-sm font-semibold mb-2 block text-gray-700">Expiry</label>
+                                        <input id="expiry"
+                                            class="w-full rounded-lg border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 shadow-sm py-3"
+                                            placeholder="MM/YY" required maxlength="5" />
+                                    </div>
+
+                                    <div>
+                                        <label class="text-sm font-semibold mb-2 block text-gray-700">CVV</label>
+                                        <input id="cvv"
+                                            class="w-full rounded-lg border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 shadow-sm py-3"
+                                            placeholder="123" required maxlength="3" type="password" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit"
+                                class="w-full gradient-purple hover:opacity-90 text-white font-bold py-4 rounded-lg shadow-lg text-lg transition-all transform hover:scale-[1.02]">
+                                Pay <span id="cardPaymentAmount">₹0.00</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- UPI -->
+                    <div id="upiPayment" class="hidden">
+                        <div class="text-center py-8">
+
+                            <p class="text-lg font-semibold mb-6">Scan QR Code to Pay</p>
+
+                            <div class="w-64 h-64 mx-auto bg-white border-2 border-gray-200 rounded-2xl p-4 shadow-lg">
+                                <div id="qrcode" class="w-full h-full flex items-center justify-center"></div>
+                            </div>
+
+                            <p class="text-sm text-gray-600 mt-4 font-semibold" id="qrAmount">Amount: ₹0.00</p>
+
+                            <div class="border-t pt-6 mt-6">
+                                <p class="text-sm font-semibold mb-4 text-gray-700">Or enter UPI ID</p>
+
+                                <form class="max-w-md mx-auto" onsubmit="event.preventDefault(); processUPIPayment();">
+                                    <div class="flex gap-3">
+                                        <input id="upiId"
+                                            class="flex-1 rounded-lg border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 shadow-sm py-3 px-4"
+                                            placeholder="yourname@upi" />
+
+                                        <button
+                                            class="gradient-purple hover:opacity-90 text-white px-8 rounded-lg font-bold transition">
+                                            Pay
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- RIGHT: ORDER SUMMARY -->
+            <div class="bg-white p-6 shadow-lg rounded-xl border h-fit sticky top-24">
+                <h3 class="text-xl font-bold mb-6">Order Summary</h3>
+
+                <div class="flex gap-4 border-b pb-6 mb-6">
+                    <img id="summaryImage" class="w-24 h-24 object-cover rounded-xl shadow-md" />
+                    <div class="flex-1">
+                        <p id="summaryTitle" class="font-bold text-lg mb-1"></p>
+                        <p class="text-xs text-gray-500 flex items-center gap-1 mb-1">
+                            <span class="material-icons-outlined text-xs">place</span>
+                            <span id="summaryLocation"></span>
+                        </p>
+                        <p class="text-xs text-gray-500 flex items-center gap-1">
+                            <span class="material-icons-outlined text-xs">calendar_today</span>
+                            <span id="summaryDate"></span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="text-sm space-y-3 mb-6">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600"><span id="summaryTicketCount"></span> Tickets</span>
+                        <span id="summarySubtotal" class="font-semibold"></span>
+                    </div>
+
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Booking Fee</span>
+                        <span id="summaryFee" class="font-semibold"></span>
+                    </div>
+
+                    <div class="border-t pt-3 flex justify-between text-lg font-bold">
+                        <span>Total Amount</span>
+                        <span id="summaryTotal" class="text-primary"></span>
+                    </div>
+                </div>
+
+                <div class="bg-green-50 border border-green-200 rounded-lg p-3 flex items-start gap-2">
+                    <span class="material-icons-outlined text-green-600 text-lg">verified_user</span>
+                    <div class="text-xs text-green-700">
+                        <p class="font-semibold">100% Safe & Secure</p>
+                        <p>Your payment is encrypted</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- CONFIRMATION SECTION -->
+        <div id="confirmation-section" class="hidden max-w-5xl mx-auto">
+
+            <!-- Success Header -->
+            <div class="text-center mb-8">
+                <div
+                    class="mx-auto w-20 h-20 flex items-center justify-center gradient-purple rounded-full mb-4 animate-bounce">
+                    <span class="material-icons-outlined text-white text-5xl">check_circle</span>
+                </div>
+
+                <h1 class="text-4xl font-extrabold mb-3 text-gray-900">Payment Confirmed</h1>
+                <p class="text-lg text-gray-600">
+                    Your ticket is ready, <span id="userNameDisplay" class="font-semibold text-primary">Alex</span>!
+                    Check your email or download it below for entry.
+                </p>
+            </div>
+
+            <!-- Ticket Card -->
+            <div class="bg-white rounded-2xl shadow-2xl overflow-hidden ticket-shadow">
+
+                <!-- Ticket Header with Event Image -->
+                <div class="relative h-48 gradient-purple overflow-hidden">
+                    <div class="absolute inset-0 bg-black/20"></div>
+                    <img id="confEventImage" class="w-full h-full object-cover opacity-80" />
+                    <div class="absolute top-4 left-4">
+                        <span class="bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                            SPECIAL SCREENING
+                        </span>
+                    </div>
+                    <div class="absolute bottom-4 left-6">
+                        <h2 id="confTitle" class="text-white text-3xl font-extrabold drop-shadow-lg"></h2>
+                    </div>
+                </div>
+
+                <!-- Perforation Line -->
+                <div class="h-2 ticket-perforation"></div>
+
+                <!-- Ticket Body -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-8">
+
+                    <!-- Left Section: Event Details -->
+                    <div class="lg:col-span-2 space-y-6">
+
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <p class="text-xs font-semibold text-gray-500 uppercase mb-1">Date</p>
+                                <p id="confDate" class="text-lg font-bold text-gray-900"></p>
+                            </div>
+                            <div>
+                                <p class="text-xs font-semibold text-gray-500 uppercase mb-1">Time</p>
+                                <p id="confTime" class="text-lg font-bold text-gray-900"></p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <p class="text-xs font-semibold text-gray-500 uppercase mb-1">Venue</p>
+                                <p id="confVenue" class="text-base font-semibold text-gray-900"></p>
+                            </div>
+                            <div>
+                                <p class="text-xs font-semibold text-gray-500 uppercase mb-1">Seat</p>
+                                <p id="confSeats" class="text-base font-bold text-primary"></p>
+                            </div>
+                        </div>
+
+                        <div class="border-t pt-4">
+                            <div class="grid grid-cols-2 gap-6">
+                                <div>
+                                    <p class="text-xs font-semibold text-gray-500 uppercase mb-1">Order ID</p>
+                                    <p id="bookingRef" class="text-sm font-mono font-bold text-gray-900"></p>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-semibold text-gray-500 uppercase mb-1">Total Paid</p>
+                                    <p id="confAmount" class="text-2xl font-extrabold text-primary"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Right Section: QR Code -->
+                    <div
+                        class="flex flex-col items-center justify-center bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6">
+                        <div class="bg-white p-4 rounded-xl shadow-lg mb-3">
+                            <div id="ticketQRCode" class="w-40 h-40"></div>
+                        </div>
+                        <p class="text-sm font-bold text-gray-700 text-center mb-1">SCAN AT ENTRY</p>
+                        <p class="text-xs text-gray-500 flex items-center gap-1">
+                            <span class="material-icons-outlined text-xs">info</span>
+                            Valid for 1 person
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
+                <button onclick="downloadTicket()"
+                    class="gradient-purple hover:opacity-90 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-all transform hover:scale-[1.02] shadow-lg">
+                    <span class="material-icons-outlined">download</span>
+                    Download PDF Ticket
+                </button>
+
+                <button onclick="addToWallet()"
+                    class="bg-black hover:bg-gray-800 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-all transform hover:scale-[1.02]">
+                    <span class="material-icons-outlined">account_balance_wallet</span>
+                    Apple Wallet
+                </button>
+
+                <button onclick="shareTicket()"
+                    class="bg-gray-100 hover:bg-gray-200 text-gray-900 font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-all transform hover:scale-[1.02]">
+                    <span class="material-icons-outlined">share</span>
+                    Share Ticket
+                </button>
+            </div>
+
+            <!-- Help Section -->
+            <div class="mt-12 text-center border-t pt-8">
+                <p class="text-sm text-gray-600 mb-4">Need help with your booking?</p>
+                <div class="flex justify-center gap-6 text-sm">
+                    <a href="#" class="text-primary hover:underline font-semibold flex items-center gap-1">
+                        <span class="material-icons-outlined text-sm">help</span>
+                        Support Center
+                    </a>
+                    <a href="#" class="text-primary hover:underline font-semibold flex items-center gap-1">
+                        <span class="material-icons-outlined text-sm">email</span>
+                        Contact Organizer
+                    </a>
+                    <a href="#" class="text-primary hover:underline font-semibold flex items-center gap-1">
+                        <span class="material-icons-outlined text-sm">replay</span>
+                        Refund Policy
+                    </a>
+                </div>
+            </div>
+
+            <!-- Back Home -->
+            <div class="text-center mt-8">
+                <a href="Index.html"
+                    class="inline-block bg-white border-2 border-primary text-primary hover:bg-primary hover:text-white px-8 py-3 rounded-xl font-bold transition-all transform hover:scale-[1.02]">
+                    Back to Home
+                </a>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+        let method = "card";
+
+        function switchPaymentMethod(m) {
+            method = m;
+            document.getElementById("cardPayment").classList.toggle("hidden", m !== "card");
+            document.getElementById("upiPayment").classList.toggle("hidden", m !== "upi");
+
+            // Update tab styles
+            document.getElementById("cardTab").classList.toggle("text-primary", m === "card");
+            document.getElementById("cardTab").classList.toggle("border-primary", m === "card");
+            document.getElementById("cardTab").classList.toggle("text-gray-500", m !== "card");
+            document.getElementById("cardTab").classList.toggle("border-transparent", m !== "card");
+
+            document.getElementById("upiTab").classList.toggle("text-primary", m === "upi");
+            document.getElementById("upiTab").classList.toggle("border-primary", m === "upi");
+            document.getElementById("upiTab").classList.toggle("text-gray-500", m !== "upi");
+            document.getElementById("upiTab").classList.toggle("border-transparent", m !== "upi");
+
+            // Generate QR code for UPI
+            if (m === "upi") {
+                generateUPIQR();
+            }
+        }
+
+        function generateUPIQR() {
+            const qrContainer = document.getElementById("qrcode");
+            qrContainer.innerHTML = "";
+
+            const reference = localStorage.getItem("bookingReference") || "REF123";
+            const amount = localStorage.getItem("totalAmount") || "0";
+
+            new QRCode(qrContainer, {
+                text: `upi://pay?pa=eventory@upi&pn=Eventory&am=${amount}&tr=${reference}`,
+                width: 220,
+                height: 220,
+                colorDark: "#6B46C1",
+                colorLight: "#ffffff",
+            });
+        }
+
+        function processCardPayment() {
+            completePayment("CARD");
+        }
+
+        function processUPIPayment() {
+            const upiId = document.getElementById("upiId").value.trim();
+            if (!upiId) return alert("Please enter UPI ID");
+            completePayment("UPI");
+        }
+
+        async function loadConfirmationDetails() {
+            const reference = localStorage.getItem("bookingReference");
+            if (!reference) return;
+
+            try {
+                const res = await fetch(`http://localhost:8000/api/bookings/${reference}`);
+                const booking = await res.json();
+
+                fillConfirmationUI(booking);
+
+            } catch (err) {
+                console.error("Error loading confirmation:", err);
+            }
+        }
+
+        async function completePayment(methodType) {
+            const reference = localStorage.getItem("bookingReference");
+
+            if (!reference) {
+                alert("Booking reference not found!");
+                return;
+            }
+
+            try {
+                // Show loading
+                const submitBtn = document.querySelector('button[type="submit"]');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="material-icons-outlined animate-spin">sync</span> Processing...';
+
+                // Call backend (Relative URL is safer)
+                const response = await fetch("/api/payments/confirm", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        reference: reference,
+                        payment_method: methodType
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || "Payment confirmation failed");
+                }
+
+                // Success - show confirmation
+                document.getElementById("payment-section").classList.add("hidden");
+                document.getElementById("confirmation-section").classList.remove("hidden");
+
+                loadConfirmationDetails();
+                generateTicketQR();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            } catch (error) {
+                console.error("Payment Error:", error);
+                alert("Payment failed: " + error.message);
+
+                const submitBtn = document.querySelector('button[type="submit"]');
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Pay ₹" + localStorage.getItem("totalAmount");
+            }
+        }
+
+        function generateTicketQR() {
+            const qrContainer = document.getElementById("ticketQRCode");
+            qrContainer.innerHTML = "";
+
+            const reference = localStorage.getItem("bookingReference") || "BKG123";
+
+            new QRCode(qrContainer, {
+                text: `EVENTORY:${reference}`,
+                width: 160,
+                height: 160,
+                colorDark: "#6B46C1",
+                colorLight: "#ffffff",
+            });
+        }
+
+        window.onload = () => {
+            // SECURITY CHECK
+            const bookingRef = localStorage.getItem("bookingReference");
+            if (!bookingRef) {
+                alert("No active booking found. Redirecting to home.");
+                window.location.href = "index.html";
+                return;
+            }
+
+            const eventTitle = localStorage.getItem("eventTitle") || "Event Name";
+            const eventDate = localStorage.getItem("eventFullDate") || "Date TBD";
+            const eventVenue = localStorage.getItem("eventVenue") || "Venue TBD";
+            // ... existing code ...
+            const eventImage = localStorage.getItem("eventImage") || "https://via.placeholder.com/400x300";
+            const seats = JSON.parse(localStorage.getItem("selectedSeats") || "[]");
+            const totalAmount = Number(localStorage.getItem("totalAmount") || 0);
+            const email = localStorage.getItem("userEmail") || "your email";
+
+            document.title = "Secure Payment Gateway - Eventory";
+
+            // Payment section
+            document.getElementById("summaryTitle").textContent = eventTitle;
+            document.getElementById("summaryLocation").textContent = eventVenue;
+            document.getElementById("summaryDate").textContent = eventDate;
+            document.getElementById("summaryTicketCount").textContent = seats.length;
+            document.getElementById("summaryImage").src = eventImage;
+
+            const fee = Math.round(totalAmount * 0.10);
+            const subtotal = totalAmount - fee;
+
+            document.getElementById("summarySubtotal").textContent = "₹" + subtotal;
+            document.getElementById("summaryFee").textContent = "₹" + fee;
+            document.getElementById("summaryTotal").textContent = "₹" + totalAmount;
+
+            document.getElementById("cardPaymentAmount").textContent = "₹" + totalAmount;
+            document.getElementById("qrAmount").textContent = "Amount: ₹" + totalAmount;
+
+            // Extract user name from email
+            const userName = email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1);
+            document.getElementById("userNameDisplay").textContent = userName;
+        };
+
+        function fillConfirmationUI(booking) {
+            document.getElementById("bookingRef").textContent = booking.reference;
+            document.getElementById("userNameDisplay").textContent = booking.user_email.split('@')[0];
+
+            document.getElementById("confTitle").textContent = booking.event_title;
+
+            // Split date and time
+            const dateTime = booking.event_date.split(' ');
+            document.getElementById("confDate").textContent = dateTime[0] || booking.event_date;
+            document.getElementById("confTime").textContent = booking.event_time || "7:30 PM";
+
+            document.getElementById("confVenue").textContent = booking.venue;
+            document.getElementById("confSeats").textContent = (booking.seats || []).join(", ");
+            document.getElementById("confAmount").textContent = "₹" + booking.amount_paid;
+
+            // Set event image
+            const eventImage = localStorage.getItem("eventImage") || "https://via.placeholder.com/800x400";
+            document.getElementById("confEventImage").src = eventImage;
+        }
+
+        async function downloadTicket() {
+            const reference = localStorage.getItem("bookingReference");
+            if (!reference) {
+                alert("No booking reference found!");
+                return;
+            }
+
+            try {
+                const response = await fetch(
+                    `http://localhost:8000/api/pdf/ticket/${reference}`
+                );
+
+                if (!response.ok) {
+                    throw new Error("Failed to download ticket");
+                }
+
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `Eventory-Ticket-${reference}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+
+                alert("✅ Ticket downloaded successfully!");
+
+            } catch (err) {
+                console.error("Download error:", err);
+                alert("Could not download ticket: " + err.message);
+            }
+        }
+
+        function addToWallet() {
+            alert("Apple Wallet integration coming soon!");
+        }
+
+        function shareTicket() {
+            const reference = localStorage.getItem("bookingReference");
+            const eventTitle = localStorage.getItem("eventTitle");
+
+            if (navigator.share) {
+                navigator.share({
+                    title: `${eventTitle} - Ticket`,
+                    text: `My booking for ${eventTitle}\nBooking Ref: ${reference}`,
+                    url: window.location.href
+                });
+            } else {
+                alert("Share feature not supported on this device");
+            }
+        }
+    </script>
+
+</body>
+
+</html>

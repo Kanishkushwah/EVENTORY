@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Eventory - Discover Amazing Events</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#6B46C1",
+                        secondary: "#805AD5",
+                        "background-light": "#F7FAFC",
+                        "background-dark": "#1A202C",
+                        "surface-light": "#FFFFFF",
+                        "surface-dark": "#2D3748",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                        body: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.5rem",
+                        'xl': '1rem',
+                        '2xl': '1.5rem',
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col font-body transition-colors duration-200">
+    <nav class="bg-surface-light dark:bg-surface-dark shadow-sm py-4 sticky top-0 z-50 transition-colors duration-200">
+        <div class="container mx-auto px-4 md:px-8 flex items-center justify-between">
+            <a class="text-2xl font-bold text-primary tracking-tight flex items-center gap-2" href="Index.html">
+                Eventory
+            </a>
+            <div class="hidden md:flex items-center space-x-6 text-sm font-medium text-gray-600 dark:text-gray-300">
+                <a class="flex items-center hover:text-primary transition-colors gap-1" href="Index.html">
+                    <span class="material-icons text-lg">home</span>
+                    Browse Events
+                </a>
+                <a class="flex items-center hover:text-primary transition-colors gap-1" href="booking.html">
+                    <span class="material-icons text-lg">confirmation_number</span>
+                    My Bookings
+                </a>
+                <a class="flex items-center hover:text-primary transition-colors gap-1" href="#search">
+                    <span class="material-icons text-lg">search</span>
+                    Search Booking
+                </a>
+            </div>
+            <div id="nav-auth-container" class="hidden md:flex items-center space-x-4 text-sm font-medium">
+                <a class="flex items-center text-gray-600 dark:text-gray-300 hover:text-primary transition-colors gap-1"
+                    href="login.html">
+                    <span class="material-icons text-lg">login</span>
+                    Login
+                </a>
+                <a class="flex items-center text-gray-600 dark:text-gray-300 hover:text-primary transition-colors gap-1"
+                    href="register.html">
+                    <span class="material-icons text-lg">person_add</span>
+                    Register
+                </a>
+            </div>
+            <button class="md:hidden text-gray-600 dark:text-gray-300 hover:text-primary focus:outline-none"
+                onclick="toggleMobileMenu()">
+                <span class="material-icons">menu</span>
+            </button>
+        </div>
+    </nav>
+
+    <header class="hero-gradient text-white py-16 md:py-24 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+            <div class="absolute top-10 left-10 w-32 h-32 rounded-full bg-white blur-3xl"></div>
+            <div class="absolute bottom-10 right-10 w-64 h-64 rounded-full bg-pink-500 blur-3xl"></div>
+        </div>
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 drop-shadow-sm">Discover Amazing Events</h1>
+            <p class="text-lg md:text-xl text-purple-100 mb-10 max-w-2xl mx-auto font-light">
+                Find and book tickets for concerts, sports, workshops, and more
+            </p>
+            <div
+                class="bg-white dark:bg-surface-dark p-2 rounded-full shadow-lg max-w-3xl mx-auto flex items-center transition-colors duration-200">
+                <span class="material-icons text-gray-400 ml-4">search</span>
+                <input
+                    class="flex-grow bg-transparent border-none focus:ring-0 text-gray-800 dark:text-gray-100 placeholder-gray-400 px-4 py-2"
+                    placeholder="Search events, venues, or locations..." type="text" id="searchInput"
+                    onkeyup="searchEvents()" />
+                <button
+                    class="bg-primary hover:bg-secondary text-white px-8 py-3 rounded-full font-medium transition-colors shadow-md"
+                    onclick="searchEvents()">
+                    Search
+                </button>
+            </div>
+            <div class="mt-10 flex flex-wrap justify-center gap-3 max-w-5xl mx-auto">
+                <button
+                    class="bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 text-white px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 category-btn active-category"
+                    onclick="filterCategory('all')">
+                    <span class="material-icons text-base">grid_view</span> All Events
+                </button>
+                <button
+                    class="bg-white text-primary px-4 py-2 rounded-full text-sm font-medium shadow-md transition-all hover:scale-105 flex items-center gap-2 category-btn"
+                    onclick="filterCategory('movies')">
+                    <span class="material-icons text-base">movie</span> Movies
+                </button>
+                <button
+                    class="bg-white text-primary px-4 py-2 rounded-full text-sm font-medium shadow-md transition-all hover:scale-105 flex items-center gap-2 category-btn"
+                    onclick="filterCategory('music')">
+                    <span class="material-icons text-base">music_note</span> Music
+                </button>
+                <button
+                    class="bg-white text-primary px-4 py-2 rounded-full text-sm font-medium shadow-md transition-all hover:scale-105 flex items-center gap-2 category-btn"
+                    onclick="filterCategory('sports')">
+                    <span class="material-icons text-base">sports_soccer</span> Sports
+                </button>
+                <button
+                    class="bg-white text-primary px-4 py-2 rounded-full text-sm font-medium shadow-md transition-all hover:scale-105 flex items-center gap-2 category-btn"
+                    onclick="filterCategory('business')">
+                    <span class="material-icons text-base">business_center</span> Business
+                </button>
+                <button
+                    class="bg-white text-primary px-4 py-2 rounded-full text-sm font-medium shadow-md transition-all hover:scale-105"
+                    onclick="filterCategory('other')">
+                    Other
+                </button>
+            </div>
+        </div>
+
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-12 -mt-8 relative z-20">
+
+        <!-- FEATURED: WORLD CUP BANNER -->
+        <div id="wcBanner" class="mb-12 rounded-2xl overflow-hidden shadow-2xl relative group hidden animate-fade-in">
+            <!-- Background Image -->
+            <div class="absolute inset-0">
+                <img src="https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&q=80&w=2000"
+                    class="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-r from-blue-900/90 via-black/60 to-transparent"></div>
+            </div>
+
+            <!-- Content -->
+            <div class="relative p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8">
+                <div class="text-white max-w-lg">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span
+                            class="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded animate-pulse">LIVE</span>
+                        <span class="text-blue-200 font-medium tracking-widest text-sm uppercase">Official Ticketing
+                            Partner</span>
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">ICC World Cup <span
+                            class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-teal-300">2026</span>
+                    </h2>
+                    <p class="text-gray-200 mb-6 text-lg">Book tickets for the biggest cricket showdown. Support your
+                        team from the stands!</p>
+                </div>
+
+                <!-- Team Selector -->
+                <div class="bg-white/10 backdrop-blur-md p-6 rounded-xl border border-white/20 w-full max-w-md">
+                    <label class="text-white text-sm font-bold uppercase tracking-wide mb-3 block">Select Your
+                        Team</label>
+                    <div class="grid grid-cols-3 gap-3">
+                        <button onclick="filterTeam('India')"
+                            class="team-btn hover:bg-blue-600 bg-blue-900/50 text-white border border-blue-400/30 py-2 rounded-lg font-semibold text-sm transition-all focus:ring-2 focus:ring-blue-400">🇮🇳
+                            India</button>
+                        <button onclick="filterTeam('Australia')"
+                            class="team-btn hover:bg-yellow-600 bg-yellow-900/50 text-white border border-yellow-400/30 py-2 rounded-lg font-semibold text-sm transition-all">🇦🇺
+                            Aus</button>
+                        <button onclick="filterTeam('England')"
+                            class="team-btn hover:bg-red-600 bg-red-900/50 text-white border border-red-400/30 py-2 rounded-lg font-semibold text-sm transition-all">🏴󠁧󠁢󠁥󠁮󠁧󠁿
+                            Eng</button>
+                        <button onclick="filterTeam('Pakistan')"
+                            class="team-btn hover:bg-green-600 bg-green-900/50 text-white border border-green-400/30 py-2 rounded-lg font-semibold text-sm transition-all">🇵🇰
+                            Pak</button>
+                        <button onclick="filterTeam('South Africa')"
+                            class="team-btn hover:bg-yellow-600 bg-green-800/50 text-white border border-green-400/30 py-2 rounded-lg font-semibold text-sm transition-all">🇿🇦
+                            SA</button>
+                        <button onclick="filterTeam('All')"
+                            class="team-btn hover:bg-gray-600 bg-gray-800/50 text-white border border-gray-400/30 py-2 rounded-lg font-semibold text-sm transition-all">🌍
+                            All Matches</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUB-FILTERS (Initially Hidden) -->
+        <div id="subFilterContainer" class="hidden animate-fade-in mb-8">
+            <div
+                class="flex flex-wrap gap-2 items-center bg-gray-50 dark:bg-gray-800 p-3 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+                <span class="text-xs font-bold text-gray-500 uppercase tracking-wider mr-2">Filter Teams:</span>
+                <div id="teamChips" class="flex flex-wrap gap-2">
+                    <!-- Chips injected by JS -->
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-between mb-8 px-2">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Trending Events</h2>
+            <a class="text-primary hover:text-secondary font-medium text-sm flex items-center gap-1" href="#all-events">
+                View all <span class="material-icons text-sm">arrow_forward</span>
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="eventGrid">
+            <!-- MOVIE Card 1 - Pushpa 2 -->
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700"
+                data-category="movie">
+                <div class="relative h-72 overflow-hidden">
+                    <img alt="Pushpa 2"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        src="https://assets-in.bmscdn.com/discovery-catalog/events/tr:w-400,h-600,bg-CCCCCC:w-400.0,h-660.0,cm-pad_resize,bg-000000,fo-top:l-image,i-discovery-catalog@@icons@@star-icon-202203010609.png,lx-24,ly-615,w-29,l-end:l-text,ie-OC42LzEwICAzNjlLIFZvdGVz,fs-29,co-FFFFFF,ly-612,lx-70,pa-8_0_0_0,l-end/et00356724-jruwpnhzdg-portrait.jpg" />
+                    <div
+                        class="absolute top-3 right-3 bg-red-600 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm">
+                        MOVIE
+                    </div>
+                    <div
+                        class="absolute bottom-3 left-3 bg-black/70 backdrop-blur-sm text-white px-2 py-1 rounded text-xs font-semibold">
+                        3h 20min • Action/Drama
+                    </div>
+                </div>
+                <div class="p-5 flex flex-col flex-grow">
+                    <div class="flex justify-between items-start mb-2">
+                        <span
+                            class="text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/30 px-2 py-1 rounded">NOW
+                            SHOWING</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"><span
+                                class="material-icons text-sm">location_on</span> Surat</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">Pushpa 2: The Rule
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow line-clamp-3">
+                        The epic conclusion to Pushpa's journey. Allu Arjun returns in this action-packed sequel.
+                    </p>
+                    <div
+                        class="pt-4 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center mt-auto">
+                        <div class="text-sm font-medium text-gray-900 dark:text-white">From ₹150</div>
+                        <button onclick="bookEvent(101)"
+                            class="text-white bg-red-600 hover:bg-red-700 font-medium text-sm px-4 py-1.5 rounded-lg transition-colors">
+                            Book Tickets
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MOVIE Card 2 - Dunki -->
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700"
+                data-category="movie">
+                <div class="relative h-72 overflow-hidden">
+                    <img alt="Dunki"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        src="https://assets-in.bmscdn.com/discovery-catalog/events/tr:w-400,h-600,bg-CCCCCC:w-400.0,h-660.0,cm-pad_resize,bg-000000,fo-top:l-image,i-discovery-catalog@@icons@@star-icon-202203010609.png,lx-24,ly-615,w-29,l-end:l-text,ie-OS44LzEwICAyMDBLIFZvdGVz,fs-29,co-FFFFFF,ly-612,lx-70,pa-8_0_0_0,l-end/et00304730-fwbwbqkjka-portrait.jpg" />
+                    <div
+                        class="absolute top-3 right-3 bg-red-600 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm">
+                        MOVIE
+                    </div>
+                    <div
+                        class="absolute bottom-3 left-3 bg-black/70 backdrop-blur-sm text-white px-2 py-1 rounded text-xs font-semibold">
+                        2h 45min • Drama/Comedy
+                    </div>
+                </div>
+                <div class="p-5 flex flex-col flex-grow">
+                    <div class="flex justify-between items-start mb-2">
+                        <span
+                            class="text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/30 px-2 py-1 rounded">NOW
+                            SHOWING</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"><span
+                                class="material-icons text-sm">location_on</span> Surat</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">Dunki</h3>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow line-clamp-3">
+                        Shah Rukh Khan and Rajkumar Hirani unite for an emotional journey of friendship and dreams.
+                    </p>
+                    <div
+                        class="pt-4 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center mt-auto">
+                        <div class="text-sm font-medium text-gray-900 dark:text-white">From ₹180</div>
+                        <button onclick="bookEvent(102)"
+                            class="text-white bg-red-600 hover:bg-red-700 font-medium text-sm px-4 py-1.5 rounded-lg transition-colors">
+                            Book Tickets
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MOVIE Card 3 - Salaar -->
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700"
+                data-category="movie">
+                <div class="relative h-72 overflow-hidden">
+                    <img alt="Salaar"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        src="https://assets-in.bmscdn.com/discovery-catalog/events/tr:w-400,h-600,bg-CCCCCC:w-400.0,h-660.0,cm-pad_resize,bg-000000,fo-top:l-image,i-discovery-catalog@@icons@@star-icon-202203010609.png,lx-24,ly-615,w-29,l-end:l-text,ie-OS4xLzEwICAzMTZLIFZvdGVz,fs-29,co-FFFFFF,ly-612,lx-70,pa-8_0_0_0,l-end/et00073677-yajymybpzu-portrait.jpg" />
+                    <div
+                        class="absolute top-3 right-3 bg-red-600 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm">
+                        MOVIE
+                    </div>
+                    <div
+                        class="absolute bottom-3 left-3 bg-black/70 backdrop-blur-sm text-white px-2 py-1 rounded text-xs font-semibold">
+                        2h 55min • Action/Thriller
+                    </div>
+                </div>
+                <div class="p-5 flex flex-col flex-grow">
+                    <div class="flex justify-between items-start mb-2">
+                        <span
+                            class="text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/30 px-2 py-1 rounded">NOW
+                            SHOWING</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"><span
+                                class="material-icons text-sm">location_on</span> Surat</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">Salaar: Part 1 -
+                        Ceasefire</h3>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow line-clamp-3">
+                        Prabhas returns with an intense action saga directed by Prashanth Neel.
+                    </p>
+                    <div
+                        class="pt-4 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center mt-auto">
+                        <div class="text-sm font-medium text-gray-900 dark:text-white">From ₹200</div>
+                        <button onclick="bookEvent(103)"
+                            class="text-white bg-red-600 hover:bg-red-700 font-medium text-sm px-4 py-1.5 rounded-lg transition-colors">
+                            Book Tickets
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Card 1 -->
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700"
+                data-category="business">
+                <div class="relative h-48 overflow-hidden">
+                    <img alt="Concert crowd with stage lights"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBC6_SyhJOY8aUXrJ_VaXB_vT_iDTBUmeTEukkGCqMhDv_G88XVjQPUjI6lwXPq96UlyU1thwDxcu4NsfwLtH2I0GxesLvt2B6txbDHiW7bZqhCVzZMPRODG3d1kMwjTp7QPVqcqt91FUKXMe-shTBvTdqHY3tvmzz-0nhglwrACOIQeep3RxlQBPJCwzjWV6xAvvHNYKw5cT-ljJiY7_EECAPRNsusBidYQXTpD493V77cdIdUi6PXzJTASOh94hMCNMUuOd4wUgs" />
+                    <div
+                        class="absolute top-3 right-3 bg-white/90 dark:bg-black/70 backdrop-blur-sm px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide text-primary shadow-sm">
+                        Concert
+                    </div>
+                </div>
+                <div class="p-5 flex flex-col flex-grow">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-xs font-semibold text-primary bg-primary/10 px-2 py-1 rounded">JUN 15</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"><span
+                                class="material-icons text-sm">location_on</span> Mumbai</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">India's Only Concrete
+                        Show 2024</h3>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow line-clamp-3">
+                        Join the biggest gathering of construction professionals featuring the latest innovations in
+                        concrete technology.
+                    </p>
+                    <div
+                        class="pt-4 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center mt-auto">
+                        <div class="text-sm font-medium text-gray-900 dark:text-white">From ₹499</div>
+                        <button onclick="bookEvent(1)"
+                            class="text-primary hover:text-secondary font-medium text-sm border border-primary hover:bg-primary/5 px-4 py-1.5 rounded-lg transition-colors">
+                            Book Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Card 2 -->
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700"
+                data-category="music">
+                <div class="relative h-48 overflow-hidden">
+                    <img alt="Music festival lights and fireworks"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-5rHDZ8M5GGVzvclyI4laXZPhS4nAfnTsmdmu5FE6gwLC6-rXBTyrlHbywyCjJRfk-sNgPoH_2PMsqVSH0ODBpSiuXuwOCp5rnfiaCxNA6NI_hLTxYRhOFeU1EyJEbLpLZNdo5Jhr-g1NHL10lgRgA-FnhtU_edUXup1CGq3luKsJX3HwC9R-lfq-GR63BzRMqjhCbzlV3AH7T5nnAVuVh36F2KHALadRMkVauwmeQ1x1gDCv5KGwX53UACgYZwWkKrhFWRxxoJ4" />
+                    <div
+                        class="absolute top-3 right-3 bg-white/90 dark:bg-black/70 backdrop-blur-sm px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide text-primary shadow-sm">
+                        Music
+                    </div>
+                </div>
+                <div class="p-5 flex flex-col flex-grow">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-xs font-semibold text-primary bg-primary/10 px-2 py-1 rounded">DEC 28</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"><span
+                                class="material-icons text-sm">location_on</span> Goa</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">Sunburn Festival 2025
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow line-clamp-3">
+                        Experience Asia's biggest electronic dance music festival. Get ready to feel the beat with top
+                        international DJs.
+                    </p>
+                    <div
+                        class="pt-4 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center mt-auto">
+                        <div class="text-sm font-medium text-gray-900 dark:text-white">From ₹2,499</div>
+                        <button onclick="bookEvent(2)"
+                            class="text-primary hover:text-secondary font-medium text-sm border border-primary hover:bg-primary/5 px-4 py-1.5 rounded-lg transition-colors">
+                            Book Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Card 3 -->
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700"
+                data-category="sports">
+                <div class="relative h-48 overflow-hidden">
+                    <img alt="Cricket stadium match"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJvRDTKzGrb8wZeUy2yo5-8UDx_CESTXq1iuJuYL166Q5pI35R8r1edhTmHt8JpddwrumyRlZKXIS1RANPvlf9P0bG0raONWeomtzAll_FZt_pC7zMQl57ZdjwcAnycmnSiwOIICRJZtWT_LBVrRff7Y9sMXE3PT87x5BUPG4OASpClyhKBHq-RfDApySOH072QG1i33ZHp9w0uA3_fWNOWsOwN3LRcWAdGrV_tLib7tEsBTp-C60EZZYYFRJAW8tu5cYAcz1NPFY" />
+                    <div
+                        class="absolute top-3 right-3 bg-white/90 dark:bg-black/70 backdrop-blur-sm px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide text-primary shadow-sm">
+                        Sports
+                    </div>
+                </div>
+                <div class="p-5 flex flex-col flex-grow">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-xs font-semibold text-primary bg-primary/10 px-2 py-1 rounded">APR 12</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"><span
+                                class="material-icons text-sm">location_on</span> Wankhede</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">IPL 2024: MI vs RCB
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow line-clamp-3">
+                        The ultimate cricket rivalry! Watch Mumbai Indians take on Royal Challengers Bangalore in a
+                        thrilling T20 match.
+                    </p>
+                    <div
+                        class="pt-4 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center mt-auto">
+                        <div class="text-sm font-medium text-gray-900 dark:text-white">From ₹800</div>
+                        <button onclick="bookEvent(3)"
+                            class="text-primary hover:text-secondary font-medium text-sm border border-primary hover:bg-primary/5 px-4 py-1.5 rounded-lg transition-colors">
+                            Book Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Card 4 -->
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700"
+                data-category="arts">
+                <div class="relative h-48 overflow-hidden">
+                    <img alt="Standup comedy microphone"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8F37f_ZCtKxu76yDk45jqJ7zLIVovQIHH9OhXhJkvB6iKYhX1F1-H6rv_fOafUhRtrhKPMshRXFKWFbQFpB8s7apBFGmNPc6L68_OO9fRraklGP4F7plLJv9v8trTujyLqh1A1WjQUyAKMsIrsOCdbyBR1URJe-58BnvAlRRyZRZZPrdyCqlfCx1PQAvExmFwHXVcgtws9m08hOgmFFdke0k1hWpfp8JvOKPlWhog1IoqLXWkZD2cbjpCHy3gMlNhDE7_G5XTncs" />
+                    <div
+                        class="absolute top-3 right-3 bg-white/90 dark:bg-black/70 backdrop-blur-sm px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide text-primary shadow-sm">
+                        Comedy
+                    </div>
+                </div>
+                <div class="p-5 flex flex-col flex-grow">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-xs font-semibold text-primary bg-primary/10 px-2 py-1 rounded">MAY 20</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"><span
+                                class="material-icons text-sm">location_on</span> Bangalore</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">Laugh Riot: Standup
+                        Special</h3>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow line-clamp-3">
+                        An evening of hilarious standup comedy featuring some of the country's best comedians.
+                    </p>
+                    <div
+                        class="pt-4 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center mt-auto">
+                        <div class="text-sm font-medium text-gray-900 dark:text-white">From ₹399</div>
+                        <button onclick="bookEvent(4)"
+                            class="text-primary hover:text-secondary font-medium text-sm border border-primary hover:bg-primary/5 px-4 py-1.5 rounded-lg transition-colors">
+                            Book Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Card 5 -->
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700"
+                data-category="arts">
+                <div class="relative h-48 overflow-hidden">
+                    <img alt="Workshop setting with people"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRLVa45R5oojqnHubsA7XDhOs8vANFip92o0Yhg4EhwwYCsTNKkf1jGhwnBwZ3AWMplmoNl4Jx6JW7qzOK5qiVJWe83ZzDDorkw9AuJDoV-RV9fhpIe7P2sWXTr-9dH0yBTKxphY1hj-aqEGV9ycOQisFLgWpCKZlKL0d5IANemo4KdxB7doDEOURbG2pWJCMWYeKYfcUaJqEZiD2YRaB2HnC1lCcSqITfr7qhUaAq3SW8r7-8DqdNbiRiCg1edYS4EpojAQbRUQ0" />
+                    <div
+                        class="absolute top-3 right-3 bg-white/90 dark:bg-black/70 backdrop-blur-sm px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide text-primary shadow-sm">
+                        Workshop
+                    </div>
+                </div>
+                <div class="p-5 flex flex-col flex-grow">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-xs font-semibold text-primary bg-primary/10 px-2 py-1 rounded">JUL 08</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"><span
+                                class="material-icons text-sm">location_on</span> Delhi</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">Digital Art
+                        Masterclass</h3>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow line-clamp-3">
+                        Learn the secrets of digital painting from industry experts. Suitable for beginners and
+                        intermediates.
+                    </p>
+                    <div
+                        class="pt-4 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center mt-auto">
+                        <div class="text-sm font-medium text-gray-900 dark:text-white">From ₹1,299</div>
+                        <button onclick="bookEvent(5)"
+                            class="text-primary hover:text-secondary font-medium text-sm border border-primary hover:bg-primary/5 px-4 py-1.5 rounded-lg transition-colors">
+                            Book Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Card 6 -->
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700"
+                data-category="business">
+                <div class="relative h-48 overflow-hidden">
+                    <img alt="Business conference speaker"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsUeWu13WEVN7Szd6mkpBOCpwIgaRV06zAV5G1ZFMiS73PXtsQh6QfnxO-mU8ECFc8d70qzhdZRhFDnyDQlwbosRnHv2174vjH2Uq4aG1ZUGvNv2Cz_Ea0ptlyFOViwNqmyPkBxR0eYvOFjpXN8eSrGmBdoIh8yz7xg55QKyiJdZtZ-KJxR49S7G4p-IJUTHz_5iG6MjW8XGuHLqh-liNfwtduq3ZBDIjoBhvNoRVfcazUn_JXnqmuH7DTX7Pf9QXUT6KG_x2BdcY" />
+                    <div
+                        class="absolute top-3 right-3 bg-white/90 dark:bg-black/70 backdrop-blur-sm px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide text-primary shadow-sm">
+                        Business
+                    </div>
+                </div>
+                <div class="p-5 flex flex-col flex-grow">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-xs font-semibold text-primary bg-primary/10 px-2 py-1 rounded">SEP 10</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"><span
+                                class="material-icons text-sm">location_on</span> Hyderabad</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">Tech Startups Summit
+                        2024</h3>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow line-clamp-3">
+                        Network with founders, investors, and tech enthusiasts. Discover the next big thing in the
+                        startup world.
+                    </p>
+                    <div
+                        class="pt-4 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center mt-auto">
+                        <div class="text-sm font-medium text-gray-900 dark:text-white">Free</div>
+                        <button onclick="bookEvent(6)"
+                            class="text-primary hover:text-secondary font-medium text-sm border border-primary hover:bg-primary/5 px-4 py-1.5 rounded-lg transition-colors">
+                            Register
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-12 text-center">
+            <button
+                class="bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 px-6 py-3 rounded-full font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-sm inline-flex items-center gap-2"
+                onclick="loadMoreEvents()">
+                Load More Events <span class="material-icons text-sm">expand_more</span>
+            </button>
+        </div>
+    </main>
+
+    <footer
+        class="bg-surface-light dark:bg-surface-dark border-t border-gray-200 dark:border-gray-700 mt-12 py-12 transition-colors duration-200">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div class="col-span-1 md:col-span-1">
+                    <a class="text-2xl font-bold text-primary tracking-tight mb-4 block" href="Index.html">
+                        EventHub
+                    </a>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">
+                        Your go-to platform for discovering and booking amazing events around you.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a class="text-gray-400 hover:text-primary" href="#"><i class="material-icons">facebook</i></a>
+                        <a class="text-gray-400 hover:text-primary" href="#"><i
+                                class="material-icons">camera_alt</i></a>
+                        <a class="text-gray-400 hover:text-primary" href="#"><i
+                                class="material-icons">alternate_email</i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-900 dark:text-white mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-sm text-gray-500 dark:text-gray-400">
+                        <li><a class="hover:text-primary" href="#">About Us</a></li>
+                        <li><a class="hover:text-primary" href="#">Contact Support</a></li>
+                        <li><a class="hover:text-primary" href="#">List Your Event</a></li>
+                        <li><a class="hover:text-primary" href="#">Careers</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-900 dark:text-white mb-4">Categories</h4>
+                    <ul class="space-y-2 text-sm text-gray-500 dark:text-gray-400">
+                        <li><a class="hover:text-primary" href="#">Concerts</a></li>
+                        <li><a class="hover:text-primary" href="#">Sports</a></li>
+                        <li><a class="hover:text-primary" href="#">Workshops</a></li>
+                        <li><a class="hover:text-primary" href="#">Theatre</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-900 dark:text-white mb-4">Stay Updated</h4>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Subscribe to our newsletter for the latest
+                        event updates.</p>
+                    <form class="flex flex-col space-y-2" onsubmit="event.preventDefault(); subscribeNewsletter();">
+                        <input
+                            class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-gray-900 dark:text-white"
+                            placeholder="Your email address" type="email" id="newsletterEmail" />
+                        <button
+                            class="bg-primary hover:bg-secondary text-white py-2 rounded-lg text-sm font-medium transition-colors"
+                            type="submit">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div
+                class="border-t border-gray-200 dark:border-gray-700 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500 dark:text-gray-400">
+                <p>© 2024 EventHub. All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a class="hover:text-primary" href="#">Privacy Policy</a>
+                    <a class="hover:text-primary" href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let allEvents = [];
+
+        // Load events from API
+        async function loadEvents() {
+            try {
+                const response = await fetch('http://localhost:8000/api/events');
+                if (!response.ok) throw new Error('Failed to fetch events');
+
+                allEvents = await response.json();
+
+                // Use the filter logic to handle grouping immediately
+                filterCategory('all');
+
+            } catch (err) {
+                console.error('Failed to load events:', err);
+                document.getElementById('eventGrid').innerHTML = `
+                    <div class="col-span-3 text-center py-12 flex flex-col items-center justify-center gap-4">
+                        <p class="text-gray-500 text-lg">Unable to connect to the server.</p>
+                        <button onclick="loadEvents()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition-colors flex items-center gap-2">
+                            <span class="material-icons">refresh</span> Retry Connection
+                        </button>
+                    </div>`;
+            }
+        }
+
+        // Global state for filtering
+        let currentCategory = 'all';
+
+        // Initialize: Load events on page load
+        loadEvents();
+
+        // --- HELPER FUNCTIONS ---
+
+        function formatDate(dateString) {
+            if (!dateString) return 'TBA';
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return dateString;
+            return date.toLocaleString('en-US', { month: 'short' }).toUpperCase() + ' ' + date.getDate();
+        }
+
+        function displayEvents(events) {
+            const grid = document.getElementById('eventGrid');
+            console.log("Rendering Events Count:", events ? events.length : 0);
+
+            if (!events || events.length === 0) {
+                grid.innerHTML = '<div class="col-span-3 text-center py-12 text-gray-500">No events found.</div>';
+                return;
+            }
+
+            // Render cards
+            grid.innerHTML = events.map(event => {
+                if (!event) return ''; // Skip invalid
+
+                // Check if it's the special summary card
+                if (event.isSummary) {
+                    return `
+                    <div class="bg-gradient-to-br from-blue-900 to-indigo-900 rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 md:col-span-2 relative group cursor-pointer border border-blue-700"
+                         onclick="filterCategory('sports')">
+                        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20"></div>
+                        <div class="absolute top-4 right-4 animate-pulse">
+                            <span class="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">LIVE TOURNAMENT</span>
+                        </div>
+                        <div class="p-8 flex flex-col h-full justify-center relative z-10">
+                            <h3 class="text-3xl font-extrabold text-white mb-2">🏏 ICC World Cup 2026</h3>
+                            <p class="text-blue-200 mb-6 max-w-md">Catch the biggest cricket showdown! 50+ Matches, 10 Teams. Book your tickets now.</p>
+                            <button class="bg-white text-blue-900 hover:bg-blue-50 font-bold py-3 px-6 rounded-lg self-start transition-colors flex items-center gap-2">
+                                View All Matches <span class="material-icons">arrow_forward</span>
+                            </button>
+                        </div>
+                    </div>`;
+                }
+
+                // Normal Event Card
+                let cat = (event.category || 'Other').toLowerCase().trim();
+                const mapping = { 'movie': 'movies', 'movies': 'movies', 'sport': 'sports', 'sports': 'sports', 'music': 'music', 'concert': 'music', 'concerts': 'music', 'tech': 'tech', 'technology': 'tech', 'business': 'business', 'food': 'food', 'arts': 'arts', 'art': 'arts' };
+                const normCat = mapping[cat] || 'other';
+
+                // Check if saved
+                const savedEvents = JSON.parse(localStorage.getItem('savedEvents') || '[]');
+                const isSaved = savedEvents.some(e => e.id === event.id);
+
+                return `
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700 animate-fade-in" 
+                     data-id="${event.id}"
+                     data-category="${normCat}"
+                     data-title="${event.title.toLowerCase()}">
+                    <div class="relative h-72 overflow-hidden">
+                        <img alt="${event.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="${event.image_url}" onerror="this.src='https://via.placeholder.com/400x600'"/>
+                        
+                        <!-- Category Badge -->
+                        <div class="absolute top-3 right-3 bg-red-600 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm z-10">
+                            ${event.category}
+                        </div>
+
+                        <!-- Heart Button (Emoji) -->
+                        <button onclick="event.stopPropagation(); toggleSaveEvent('${event.id}', '${event.title.replace(/'/g, "\\'")}', '${event.image_url}', '${formatDate(event.date)}')" 
+                                class="absolute top-3 left-3 bg-white/90 p-2 rounded-full shadow-md z-20 hover:scale-110 transition-transform group/heart flex items-center justify-center w-10 h-10"
+                                title="${isSaved ? 'Remove from Saved' : 'Save Event'}">
+                            <span class="text-2xl leading-none" id="heart-${event.id}">
+                                ${isSaved ? '❤️' : '🤍'}
+                            </span>
+                        </button>
+                    </div>
+                    <div class="p-5 flex flex-col flex-grow">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/30 px-2 py-1 rounded">${formatDate(event.date)}</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"><span class="material-icons text-sm">location_on</span> ${event.venue}</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">${event.title}</h3>
+                        <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow line-clamp-3">
+                            ${event.description || 'No description available'}
+                        </p>
+                        <div class="pt-4 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center mt-auto">
+                            <div class="text-sm font-medium text-gray-900 dark:text-white">From ₹${event.price}</div>
+                            <button onclick="bookEvent(${event.id})" class="text-white bg-red-600 hover:bg-red-700 font-medium text-sm px-4 py-1.5 rounded-lg transition-colors">
+                                Book Tickets
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            }).join('');
+        }
+
+        // --- SAVE EVENT LOGIC ---
+        function toggleSaveEvent(id, title, image, date) {
+            let saved = JSON.parse(localStorage.getItem('savedEvents') || '[]');
+            const index = saved.findIndex(e => e.id == id);
+            const heartSpan = document.getElementById(`heart-${id}`);
+
+            if (index > -1) {
+                // Remove
+                saved.splice(index, 1);
+                if (heartSpan) heartSpan.textContent = '🤍';
+            } else {
+                // Add
+                saved.push({ id, title, image, date });
+                if (heartSpan) heartSpan.textContent = '❤️';
+            }
+
+            localStorage.setItem('savedEvents', JSON.stringify(saved));
+
+            // Full refresh to be safe (optional if DOM update above works)
+            displayEvents(currentCategory === 'all' ? allEvents : allEvents.filter(e => {
+                const cat = (e.category || 'Other').toLowerCase().trim();
+                const mapping = { 'movie': 'movies', 'movies': 'movies', 'sport': 'sports', 'sports': 'sports', 'music': 'music', 'concert': 'music', 'concerts': 'music', 'tech': 'tech', 'technology': 'tech', 'business': 'business', 'food': 'food', 'arts': 'arts', 'art': 'arts' };
+                const normCat = mapping[cat] || 'other';
+                return currentCategory === 'all' || normCat === currentCategory;
+            }));
+        }
+
+        // --- AUTH UI UPDATE ---
+        function updateAuthUI() {
+            const user = JSON.parse(localStorage.getItem('loggedInUser'));
+            // Try to find the nav container using the new ID or failover
+            const navContainer = document.getElementById('nav-auth-container') || document.querySelector('nav .flex.items-center.gap-6') || document.querySelector('nav .flex.items-center.space-x-4');
+
+            if (user && navContainer) {
+                navContainer.innerHTML = `
+                    <a href="user-profile.html" class="text-purple-600 hover:text-purple-800 text-sm font-semibold flex items-center gap-1 transition-colors">
+                        <span class="material-icons text-lg">person</span> ${user.name ? user.name.split(' ')[0].toUpperCase() : 'PROFILE'}
+                    </a>
+                    <button onclick="logout()" class="text-gray-500 hover:text-red-600 text-sm font-medium flex items-center gap-1 transition-colors ml-2">
+                        <span class="material-icons text-lg">logout</span> Logout
+                    </button>
+                `;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('loggedInUser');
+            window.location.href = 'index.html';
+        }
+
+        // Call UI update on load
+        updateAuthUI();
+
+        // --- NEW FILTER LOGIC (Re-Rendering) ---
+        function filterCategory(category) {
+            console.log("Filter Category:", category);
+            currentCategory = category;
+
+            // 1. UI Updates (Buttons & Banner)
+            try {
+                document.querySelectorAll('.category-btn').forEach(btn => {
+                    const isActive = btn.onclick && btn.onclick.toString().includes(`'${category}'`);
+                    if (isActive) {
+                        btn.classList.remove('bg-white', 'text-primary');
+                        btn.classList.add('bg-white/20', 'text-white', 'border-white/30');
+                    } else {
+                        btn.classList.add('bg-white', 'text-primary');
+                        btn.classList.remove('bg-white/20', 'text-white', 'border-white/30');
+                    }
+                });
+
+                const wcBanner = document.getElementById('wcBanner');
+                if (wcBanner) {
+                    if (category === 'sports') {
+                        wcBanner.classList.remove('hidden');
+                        wcBanner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    } else {
+                        wcBanner.classList.add('hidden');
+                    }
+                }
+            } catch (e) { console.warn("UI Update error:", e); }
+
+            // 2. Data Filtering - CRASH PROOFING
+            let filteredEvents = [];
+
+            if (!allEvents || !Array.isArray(allEvents)) {
+                console.error("allEvents is invalid");
+                return;
+            }
+
+            if (category === 'all') {
+                // SPECIAL LOGIC: Group World Cup events
+                const nonWorldCupEvents = allEvents.filter(e => {
+                    // Safe Title Check
+                    const title = e && e.title ? e.title : '';
+                    return !title.includes('World Cup 2026');
+                });
+
+                // Add Summary Card at the top
+                const wcSummary = { isSummary: true, id: 'wc-summary' };
+                filteredEvents = [wcSummary, ...nonWorldCupEvents];
+
+            } else if (category === 'other') {
+                const mainCats = ['movies', 'music', 'sports', 'business', 'tech', 'arts', 'food'];
+                filteredEvents = allEvents.filter(e => {
+                    let c = (e && e.category ? e.category : '').toLowerCase();
+                    if (c === 'movie') c = 'movies';
+                    if (c === 'sport') c = 'sports';
+                    return !mainCats.includes(c);
+                });
+            } else {
+                // Exact Match
+                filteredEvents = allEvents.filter(e => {
+                    let c = (e && e.category ? e.category : '').toLowerCase();
+                    // normalize common typos
+                    if (category === 'movies' && c === 'movie') return true;
+                    if (category === 'sports' && c === 'sport') return true;
+                    if (category === 'music' && (c === 'concert' || c === 'concerts')) return true;
+                    return c === category;
+                });
+            }
+
+            displayEvents(filteredEvents);
+        }
+
+        // Team Filter
+        function filterTeam(teamName) {
+            console.log("Team Filter:", teamName);
+            // Must be in Sports mode
+
+            // Filter from ALL events, keeping only Sports + Team
+            const sportsEvents = allEvents.filter(e => {
+                let c = (e.category || '').toLowerCase();
+                return c === 'sports' || c === 'sport';
+            });
+
+            if (teamName === 'All') {
+                displayEvents(sportsEvents);
+            } else {
+                const teamEvents = sportsEvents.filter(e => e.title.toLowerCase().includes(teamName.toLowerCase()));
+                displayEvents(teamEvents);
+            }
+        }
+
+        // Search functionality
+        function searchEvents() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            cards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const description = card.querySelector('p').textContent.toLowerCase();
+                if (title.includes(query) || description.includes(query)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Helper function to store event for booking
+        function setCurrentEvent(eventId) {
+            localStorage.setItem('currentEventId', eventId);
+            // Find event in loaded events
+            const event = allEvents.find(e => e.id === eventId);
+            if (event) {
+                localStorage.setItem('currentEventData', JSON.stringify(event));
+            }
+        }
+
+        // Book event - stores event ID and redirects
+        function bookEvent(eventId) {
+            setCurrentEvent(eventId);
+            window.location.href = 'booking.html?id=' + eventId;
+        }
+
+        // Newsletter subscription
+        function subscribeNewsletter() {
+            const email = document.getElementById('newsletterEmail').value;
+            if (email) {
+                alert('Thank you for subscribing! We\'ll keep you updated.');
+                document.getElementById('newsletterEmail').value = '';
+            }
+        }
+
+        // Load more events
+        function loadMoreEvents() {
+            alert('More events coming soon!');
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            alert('Mobile menu - Add your mobile menu implementation here');
+        }
+
+        // Initialize: Load events on page load
+        loadEvents();
+    </script>
+</body>
+
+</html>

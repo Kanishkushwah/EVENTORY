@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EventHub - Booking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .seat {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .seat:hover:not(.occupied) {
+            transform: scale(1.1);
+        }
+
+        .seat.selected {
+            background: #10b981 !important;
+            color: #fff;
+        }
+
+        .seat.occupied {
+            background: #d1d5db !important;
+            cursor: not-allowed;
+        }
+
+        .seat-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid #14b8a6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .seat-circle.selected {
+            background: #10b981 !important;
+            color: white;
+        }
+
+        .seat-circle.occupied {
+            background: #d1d5db !important;
+            cursor: not-allowed;
+        }
+
+        .stand-section {
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .stand-section:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+
+        .stand-section.selected-stand {
+            stroke-width: 4;
+            transform: scale(1.07);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <!-- NAVBAR -->
+    <nav class="bg-white shadow border-b sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="Index.html" class="flex items-center gap-2">
+                <span class="material-icons text-purple-600 text-3xl">event_seat</span>
+                <span class="font-bold text-2xl text-purple-600">Eventory</span>
+            </a>
+            <a href="Index.html" class="text-gray-600 hover:text-purple-600 flex items-center gap-1">
+                <span class="material-icons">home</span> Browse Events
+            </a>
+        </div>
+    </nav>
+
+    <!-- MAIN -->
+    <main class="max-w-7xl mx-auto px-4 py-6">
+        <!-- EVENT HEADER -->
+        <div class="bg-white p-6 rounded-xl shadow mb-6">
+            <h1 id="eventTitle" class="text-3xl font-bold mb-2">Loading...</h1>
+            <div id="eventDetails" class="flex flex-wrap gap-3 text-sm"></div>
+        </div>
+
+        <!-- CINEMA & SHOWTIME SELECTION (Movies Only) -->
+        <div id="cinemaShowtimeSection" class="hidden mb-6">
+            <div class="bg-white p-6 rounded-xl shadow">
+                <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                    <span class="material-icons text-purple-600 text-2xl">movie</span>
+                    Select Cinema & Showtime
+                </h2>
+
+                <!-- Cinema Selection -->
+                <div class="mb-6">
+                    <h3 class="font-semibold mb-3">Choose Cinema</h3>
+                    <div id="cinemaList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="text-gray-500">Loading cinemas...</div>
+                    </div>
+                </div>
+
+                <!-- Date Selection -->
+                <div id="dateSelection" class="mb-6 hidden">
+                    <h3 class="font-semibold mb-3">Select Date</h3>
+                    <div id="dateList" class="flex gap-2 overflow-x-auto pb-2"></div>
+                </div>
+
+                <!-- Showtime Selection -->
+                <div id="showtimeSelection" class="hidden">
+                    <h3 class="font-semibold mb-3">Choose Showtime</h3>
+                    <div id="showtimeGrid" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
+                </div>
+
+                <!-- Selection Summary -->
+                <div id="selectionSummary" class="mt-6 p-4 bg-purple-50 rounded-lg hidden">
+                    <h4 class="font-semibold text-purple-900 mb-2">Your Selection:</h4>
+                    <div id="summaryDetails" class="text-sm text-purple-700 space-y-1"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOOKING LAYOUT -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- LEFT SIDE: SEATS -->
+            <div class="lg:col-span-2">
+                <div class="bg-white p-6 rounded-xl shadow">
+                    <h2 class="text-xl font-bold mb-4">Select Seats</h2>
+                    <div id="seatLayout"></div>
+                </div>
+            </div>
+
+            <!-- RIGHT SIDE: SUMMARY -->
+            <div class="lg:col-span-1">
+                <div class="bg-white p-6 rounded-xl shadow sticky top-24">
+                    <h2 class="text-xl font-bold mb-4 pb-4 border-b">Order Summary</h2>
+                    <div class="mb-4">
+                        <div class="flex justify-between mb-2">
+                            <span><span id="ticketCount">0</span> Tickets</span>
+                            <span id="subtotalAmount">₹0</span>
+                        </div>
+                        <p class="text-sm text-gray-600" id="selectedSeatsText">No seats selected</p>
+                    </div>
+                    <div class="border-t pt-4 space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span>Subtotal</span>
+                            <span id="subtotalDisplay">₹0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Booking Fee (10%)</span>
+                            <span id="bookingFee">₹0</span>
+                        </div>
+                        <div class="flex justify-between font-bold text-lg border-t pt-2">
+                            <span>Total</span>
+                            <span id="totalAmount">₹0</span>
+                        </div>
+                    </div>
+
+                    <button onclick="proceedToPayment()"
+                        class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg mt-6 transition">
+                        Proceed to Payment
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- JS LOGIC -->
+    <script>
+        let selectedSeats = [];
+        let selectedCinema = null;
+        let selectedDate = null;
+        let selectedShowtime = null;
+        let showtimes = [];
+        const maxSeats = 10;
+
+        // Get event from localStorage (set by index.html)
+        const currentEvent = JSON.parse(localStorage.getItem('currentEventData'));
+
+        if (!currentEvent) {
+            alert("No event selected");
+            window.location.href = "Index.html";
+        }
+
+        // Normalize category to lowercase for consistency
+        const eventCategory = currentEvent.category.toLowerCase();
+
+        document.getElementById("eventTitle").textContent = currentEvent.title;
+
+        // Helper to format time to 12h AM/PM
+        function formatTime12h(timeString) {
+            if (!timeString) return '';
+            const [hours, minutes] = timeString.split(':');
+            const date = new Date();
+            date.setHours(hours);
+            date.setMinutes(minutes);
+            return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+        }
+
+        document.getElementById("eventDetails").innerHTML = `
+            <span class="bg-gray-100 px-3 py-1 rounded-full flex items-center gap-1">
+                <span class="material-icons text-sm">calendar_today</span> ${currentEvent.date}
+            </span>
+            <span class="bg-gray-100 px-3 py-1 rounded-full flex items-center gap-1">
+                <span class="material-icons text-sm">schedule</span> ${currentEvent.time}
+            </span>
+            <span class="bg-gray-100 px-3 py-1 rounded-full flex items-center gap-1">
+                <span class="material-icons text-sm">place</span> ${currentEvent.venue}
+            </span>
+        `;
+
+        // Initialize - Check if movie event for cinema selection
+        async function initializeBooking() {
+            if (eventCategory === 'movies') {
+                document.getElementById('cinemaShowtimeSection').classList.remove('hidden');
+                await loadCinemas();
+            } else {
+                generateSeats();
+            }
+        }
+
+        // Load cinemas
+        // Load cinemas that ACTUALLY have showtimes
+        async function loadCinemas() {
+            try {
+                // 1. Get all showtimes for this movie first
+                const showtimeRes = await fetch(`http://localhost:8000/api/showtimes/movie/${currentEvent.id}`);
+                const movieShowtimes = await showtimeRes.json();
+
+                // 2. Get the list of cinemas that have showtimes
+                const validCinemaIds = movieShowtimes.map(group => group.cinema.id);
+
+                if (validCinemaIds.length === 0) {
+                    document.getElementById('cinemaList').innerHTML = '<p class="text-red-500">No showtimes available for this movie yet.</p>';
+                    return;
+                }
+
+                // 3. Render only valid cinemas
+                const cinemaList = document.getElementById('cinemaList');
+                cinemaList.innerHTML = movieShowtimes.map(group => `
+                    <div class="cinema-card border-2 rounded-lg p-4 cursor-pointer hover:border-purple-500 transition hover:bg-purple-50"
+                         onclick="selectCinema(${group.cinema.id}, '${group.cinema.name}')"
+                         data-cinema-id="${group.cinema.id}">
+                        <h4 class="font-bold text-lg text-gray-800">${group.cinema.name}</h4>
+                        <p class="text-sm text-gray-600">${group.cinema.location}</p>
+                        <div class="flex gap-2 mt-2">
+                            ${group.showtimes.slice(0, 3).map(t =>
+                    `<span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">${formatTime12h(t.show_time)}</span>`
+                ).join('')}
+                            ${group.showtimes.length > 3 ? `<span class="text-xs text-gray-500">+${group.showtimes.length - 3} more</span>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (err) {
+                console.error('Error loading cinemas:', err);
+                document.getElementById('cinemaList').innerHTML = '<p class="text-red-500">Failed to load cinemas.</p>';
+            }
+        }
+
+        // Select cinema
+        async function selectCinema(cinemaId, cinemaName) {
+            selectedCinema = { id: cinemaId, name: cinemaName };
+
+            // Highlight selected
+            document.querySelectorAll('.cinema-card').forEach(card => {
+                card.classList.remove('border-purple-500', 'bg-purple-50');
+            });
+            event.target.closest('.cinema-card').classList.add('border-purple-500', 'bg-purple-50');
+
+            // Load dates
+            await loadDates();
+        }
+
+        // Load available dates for the movie
+        async function loadDates() {
+            try {
+                const response = await fetch(`http://localhost:8000/api/showtimes/movie/${currentEvent.id}`);
+                const data = await response.json();
+
+                // Find showtimes for selected cinema - CORRECTED PROPERTY ACCESS
+                const cinemaShowtimes = data.find(c => c.cinema.id === selectedCinema.id);
+                if (!cinemaShowtimes) {
+                    alert('No showtimes available at this cinema');
+                    return;
+                }
+
+                showtimes = cinemaShowtimes.showtimes;
+                const uniqueDates = [...new Set(showtimes.map(st => st.show_date))];
+
+                document.getElementById('dateSelection').classList.remove('hidden');
+                const dateList = document.getElementById('dateList');
+                dateList.innerHTML = uniqueDates.map(date => {
+                    const d = new Date(date);
+                    return `
+                        <button class="date-btn px-4 py-2 border-2 rounded-lg hover:border-purple-500 whitespace-nowrap"
+                                onclick="selectDate('${date}')">
+                            <div class="font-bold">${d.getDate()}</div>
+                            <div class="text-xs">${d.toLocaleDateString('en-US', { month: 'short' })}</div>
+                        </button>
+                    `;
+                }).join('');
+            } catch (err) {
+                console.error('Error loading dates:', err);
+            }
+        }
+
+        // Select date
+        function selectDate(date) {
+            selectedDate = date;
+
+            // Highlight selected
+            document.querySelectorAll('.date-btn').forEach(btn => {
+                btn.classList.remove('border-purple-500', 'bg-purple-50');
+            });
+            event.target.closest('.date-btn').classList.add('border-purple-500', 'bg-purple-50');
+
+            loadShowtimes(date);
+        }
+
+
+
+        // Load showtimes for selected date
+        function loadShowtimes(date) {
+            const dateShowtimes = showtimes.filter(st => st.show_date === date);
+
+            document.getElementById('showtimeSelection').classList.remove('hidden');
+            const showtimeGrid = document.getElementById('showtimeGrid');
+            showtimeGrid.innerHTML = dateShowtimes.map(st => `
+                <button class="showtime-btn border-2 rounded-lg p-3 hover:border-purple-500 transition"
+                        onclick='selectShowtime(${JSON.stringify(st).replace(/'/g, "&apos;")})'>
+                    <div class="font-bold">${formatTime12h(st.show_time)}</div>
+                    <div class="text-xs text-gray-600">₹${st.price}</div>
+                    <div class="text-xs text-green-600">${st.available_seats} seats</div>
+                </button>
+            `).join('');
+        }
+
+        // Select showtime
+        function selectShowtime(showtimeData) {
+            selectedShowtime = showtimeData;
+
+            // Highlight selected
+            document.querySelectorAll('.showtime-btn').forEach(btn => {
+                btn.classList.remove('border-purple-500', 'bg-purple-50');
+            });
+            event.target.closest('.showtime-btn').classList.add('border-purple-500', 'bg-purple-50');
+
+            // Update summary
+            document.getElementById('selectionSummary').classList.remove('hidden');
+            document.getElementById('summaryDetails').innerHTML = `
+                <div>🎬 <strong>Cinema:</strong> ${selectedCinema.name}</div>
+                <div>📅 <strong>Date:</strong> ${new Date(selectedDate).toLocaleDateString()}</div>
+                <div>🕐 <strong>Time:</strong> ${formatTime12h(selectedShowtime.show_time)}</div>
+                <div>💰 <strong>Price:</strong> ₹${selectedShowtime.price} per seat</div>
+            `;
+
+            // Generate seats with showtime price
+            generateSeats();
+        }
+
+        /** MOVIE / MUSIC / SPORTS LAYOUTS **/
+        function generateSeats() {
+            const layout = document.getElementById("seatLayout");
+
+            // DEBUG: Log the category
+            console.log("🎯 Event Category:", eventCategory);
+            console.log("📋 Current Event:", currentEvent);
+
+            // FREE EVENT
+            if (currentEvent.price === 0) {
+                layout.innerHTML = `
+                    <div class="text-center py-12 bg-green-50 rounded-xl border-2 border-green-200">
+                        <span class="material-icons text-green-600 text-6xl">event_available</span>
+                        <h3 class="text-2xl font-bold mt-4 text-gray-800">Free Entry Event</h3>
+                        <p class="text-gray-600 mt-2 mb-4">No seat selection required</p>
+                        <select id="freeCount" class="border-2 rounded-lg px-4 py-2">
+                            <option value="1">1 Person</option>
+                            <option value="2">2 People</option>
+                            <option value="3">3 People</option>
+                            <option value="4">4 People</option>
+                        </select>
+                    </div>
+                `;
+                document.getElementById("freeCount").onchange = e => {
+                    selectedSeats = Array.from({ length: parseInt(e.target.value) }, (_, i) => ({ id: "REG-" + (i + 1), price: 0 }));
+                    updateSummary();
+                };
+                selectedSeats = [{ id: "REG-1", price: 0 }];
+                updateSummary();
+                return;
+            }
+
+            // MOVIE LAYOUT - handles both "movie" and "movies"
+            if (eventCategory === "movies" || eventCategory === "movie") {
+                const seatPrice = selectedShowtime ? selectedShowtime.price : currentEvent.price;
+
+                layout.innerHTML = `
+                    <div class="screen-curve"></div>
+                    <span class="block text-center text-xs text-gray-400 mb-8 tracking-widest">SCREEN</span>
+                `;
+                const rows = [
+                    { name: 'A', seats: 12, price: seatPrice, label: 'Standard', occupied: [5, 6] },
+                    { name: 'B', seats: 12, price: seatPrice, label: 'Standard', occupied: [1, 2] },
+                    { name: 'C', seats: 12, price: seatPrice, label: 'Standard', occupied: [] },
+                    { name: 'D', seats: 12, price: seatPrice, label: 'Standard', occupied: [] },
+                    { name: 'E', seats: 12, price: seatPrice, label: 'Standard', occupied: [] },
+                    { name: 'F', seats: 12, price: seatPrice + 100, label: 'Premium', occupied: [3, 8] },
+                    { name: 'G', seats: 12, price: seatPrice + 100, label: 'Premium', occupied: [] }
+                ];
+                rows.forEach(r => {
+                    const rowDiv = document.createElement("div");
+                    rowDiv.className = "mb-4";
+                    rowDiv.innerHTML = `
+                        <div class="flex justify-between px-2 mb-2 items-center">
+                            <span class="text-sm font-bold flex items-center gap-2">
+                                Row ${r.name} 
+                                <span class="text-[10px] font-normal text-gray-500 uppercase tracking-wide border border-gray-200 px-1.5 py-0.5 rounded">${r.label || 'Standard'}</span>
+                            </span>
+                            <span class="text-xs font-medium px-3 py-1 rounded-full bg-purple-100 text-purple-700">₹${r.price}</span>
+                        </div>
+                        <div id="row-${r.name}" class="flex gap-2 justify-center"></div>
+                    `;
+                    layout.appendChild(rowDiv);
+
+                    for (let i = 1; i <= r.seats; i++) {
+                        const seat = document.createElement("div");
+                        seat.className = "seat border-2 bg-white border-gray-300";
+                        const id = `${r.name}${i}`;
+
+                        if (r.occupied.includes(i)) seat.classList.add("occupied");
+                        else seat.onclick = () => toggleSeat(id, seat, r.price);
+
+                        document.getElementById(`row-${r.name}`).appendChild(seat);
+                    }
+                });
+            }
+
+            // MUSIC/CONCERT LAYOUT - handles both "music" and singular forms
+            else if (eventCategory === "music" || eventCategory === "concert") {
+                layout.innerHTML = `
+                    <div class="concert-venue-container bg-gradient-to-b from-gray-50 to-white p-6 rounded-2xl">
+                        <h3 class="text-center text-lg font-bold text-gray-600 mb-6 tracking-wide">CONCERT VENUE SEATING</h3>
+                        
+                        <div class="relative">
+                            <svg id="concertSVG" viewBox="0 0 800 700" class="w-full max-w-3xl mx-auto" style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));">
+                                <!-- Stage -->
+                                <rect x="250" y="30" width="300" height="80" rx="8" fill="#2D3748" stroke="#1A202C" stroke-width="2"/>
+                                <text x="400" y="75" text-anchor="middle" font-size="20" font-weight="bold" fill="white">STAGE</text>
+                                
+                                <!-- Ground Seating (Center Floor) -->
+                                <rect x="300" y="140" width="200" height="120" rx="8" fill="#E0E7FF" stroke="#818CF8" stroke-width="2" opacity="0.9" class="concert-section" data-section="ground"/>
+                                <text x="400" y="190" text-anchor="middle" font-size="14" font-weight="600" fill="#4338CA">GROUND SEATING</text>
+                                <text x="400" y="210" text-anchor="middle" font-size="16" font-weight="bold" fill="#4338CA">Category 1</text>
+                                <text x="400" y="230" text-anchor="middle" font-size="14" fill="#4338CA">₹5,000</text>
+                                
+                                <!-- Left Balcony 1 -->
+                                <path d="M 140 280 Q 120 320 140 360 L 220 360 L 220 280 Z" 
+                                      fill="#FBCFE8" stroke="#EC4899" stroke-width="2" opacity="0.9" 
+                                      class="concert-section" data-section="balcony-left-1"/>
+                                <text x="165" y="315" font-size="11" font-weight="600" fill="#BE185D">Balcony L1</text>
+                                <text x="165" y="330" font-size="10" fill="#BE185D">₹3,500</text>
+                                
+                                <!-- Left Balcony 2 -->
+                                <path d="M 140 380 Q 120 420 140 460 L 220 460 L 220 380 Z" 
+                                      fill="#DBEAFE" stroke="#3B82F6" stroke-width="2" opacity="0.9" 
+                                      class="concert-section" data-section="balcony-left-2"/>
+                                <text x="165" y="415" font-size="11" font-weight="600" fill="#1E40AF">Balcony L2</text>
+                                <text x="165" y="430" font-size="10" fill="#1E40AF">₹2,800</text>
+                                
+                                <!-- Right Balcony 1 -->
+                                <path d="M 660 280 Q 680 320 660 360 L 580 360 L 580 280 Z" 
+                                      fill="#FBCFE8" stroke="#EC4899" stroke-width="2" opacity="0.9" 
+                                      class="concert-section" data-section="balcony-right-1"/>
+                                <text x="615" y="315" font-size="11" font-weight="600" fill="#BE185D">Balcony R1</text>
+                                <text x="615" y="330" font-size="10" fill="#BE185D">₹3,500</text>
+                                
+                                <!-- Right Balcony 2 -->
+                                <path d="M 660 380 Q 680 420 660 460 L 580 460 L 580 380 Z" 
+                                      fill="#DBEAFE" stroke="#3B82F6" stroke-width="2" opacity="0.9" 
+                                      class="concert-section" data-section="balcony-right-2"/>
+                                <text x="615" y="415" font-size="11" font-weight="600" fill="#1E40AF">Balcony R2</text>
+                                <text x="615" y="430" font-size="10" fill="#1E40AF">₹2,800</text>
+                                
+                                <!-- Category 2 -->
+                                <rect x="280" y="280" width="240" height="50" rx="6" 
+                                      fill="#FED7AA" stroke="#F97316" stroke-width="2" opacity="0.9" 
+                                      class="concert-section" data-section="cat-2"/>
+                                <text x="400" y="302" text-anchor="middle" font-size="12" font-weight="600" fill="#C2410C">Category 2</text>
+                                <text x="400" y="318" text-anchor="middle" font-size="11" fill="#C2410C">₹4,000</text>
+                                
+                                <!-- Category 3 -->
+                                <rect x="260" y="340" width="280" height="50" rx="6" 
+                                      fill="#FEF08A" stroke="#EAB308" stroke-width="2" opacity="0.9" 
+                                      class="concert-section" data-section="cat-3"/>
+                                <text x="400" y="362" text-anchor="middle" font-size="12" font-weight="600" fill="#A16207">Category 3</text>
+                                <text x="400" y="378" text-anchor="middle" font-size="11" fill="#A16207">₹3,200</text>
+                                
+                                <!-- Category 4 -->
+                                <rect x="240" y="400" width="320" height="50" rx="6" 
+                                      fill="#FCA5A5" stroke="#EF4444" stroke-width="2" opacity="0.9" 
+                                      class="concert-section" data-section="cat-4"/>
+                                <text x="400" y="422" text-anchor="middle" font-size="12" font-weight="600" fill="#991B1B">Category 4</text>
+                                <text x="400" y="438" text-anchor="middle" font-size="11" fill="#991B1B">₹2,500</text>
+                                
+                                <!-- Category 5 -->
+                                <rect x="220" y="460" width="360" height="50" rx="6" 
+                                      fill="#D8B4FE" stroke="#A855F7" stroke-width="2" opacity="0.9" 
+                                      class="concert-section" data-section="cat-5"/>
+                                <text x="400" y="482" text-anchor="middle" font-size="12" font-weight="600" fill="#6B21A8">Category 5</text>
+                                <text x="400" y="498" text-anchor="middle" font-size="11" fill="#6B21A8">₹2,000</text>
+                                
+                                <!-- Category 6 Left -->
+                                <ellipse cx="180" cy="580" rx="80" ry="60" 
+                                         fill="#A7F3D0" stroke="#10B981" stroke-width="2" opacity="0.9" 
+                                         class="concert-section" data-section="cat-6-left"/>
+                                <text x="180" y="575" text-anchor="middle" font-size="11" font-weight="600" fill="#065F46">Category 6</text>
+                                <text x="180" y="590" text-anchor="middle" font-size="10" fill="#065F46">₹1,500</text>
+                                
+                                <!-- Category 6 Right -->
+                                <ellipse cx="620" cy="580" rx="80" ry="60" 
+                                         fill="#A7F3D0" stroke="#10B981" stroke-width="2" opacity="0.9" 
+                                         class="concert-section" data-section="cat-6-right"/>
+                                <text x="620" y="575" text-anchor="middle" font-size="11" font-weight="600" fill="#065F46">Category 6</text>
+                                <text x="620" y="590" text-anchor="middle" font-size="10" fill="#065F46">₹1,500</text>
+                                
+                                <!-- Category 7 -->
+                                <path d="M 260 540 Q 400 560 540 540 L 540 600 Q 400 620 260 600 Z" 
+                                      fill="#BAE6FD" stroke="#0EA5E9" stroke-width="2" opacity="0.9" 
+                                      class="concert-section" data-section="cat-7"/>
+                                <text x="400" y="570" text-anchor="middle" font-size="12" font-weight="600" fill="#075985">Category 7</text>
+                                <text x="400" y="586" text-anchor="middle" font-size="11" fill="#075985">₹1,200</text>
+                            </svg>
+                        </div>
+                        
+                        <div id="concert-selection" class="mt-8 p-6 bg-white rounded-xl shadow-lg border-2 border-purple-200">
+                            <p class="text-center text-gray-700 mb-4 font-medium">
+                                <span class="material-icons text-purple-600 align-middle">touch_app</span>
+                                Click on any section above to select seats
+                            </p>
+                            <div id="concert-seat-selector" class="hidden">
+                                <div class="border-t pt-4 mt-4">
+                                    <h4 id="selected-section-name" class="font-bold text-lg mb-3"></h4>
+                                    <p class="text-sm text-gray-600 mb-3">How many seats would you like?</p>
+                                    <div class="grid grid-cols-5 gap-2" id="concert-seat-buttons"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                const concertSections = {
+                    'ground': { name: 'Ground Seating - Category 1', price: 5000, capacity: 10, occupied: [7, 9] },
+                    'balcony-left-1': { name: 'Left Balcony 1', price: 3500, capacity: 10, occupied: [3] },
+                    'balcony-left-2': { name: 'Left Balcony 2', price: 2800, capacity: 10, occupied: [] },
+                    'balcony-right-1': { name: 'Right Balcony 1', price: 3500, capacity: 10, occupied: [5] },
+                    'balcony-right-2': { name: 'Right Balcony 2', price: 2800, capacity: 10, occupied: [] },
+                    'cat-2': { name: 'Category 2', price: 4000, capacity: 10, occupied: [8] },
+                    'cat-3': { name: 'Category 3', price: 3200, capacity: 10, occupied: [] },
+                    'cat-4': { name: 'Category 4', price: 2500, capacity: 10, occupied: [6] },
+                    'cat-5': { name: 'Category 5', price: 2000, capacity: 10, occupied: [] },
+                    'cat-6-left': { name: 'Category 6 Left', price: 1500, capacity: 10, occupied: [4] },
+                    'cat-6-right': { name: 'Category 6 Right', price: 1500, capacity: 10, occupied: [] },
+                    'cat-7': { name: 'Category 7', price: 1200, capacity: 10, occupied: [2, 9] }
+                };
+
+                document.querySelectorAll('.concert-section').forEach(section => {
+                    section.style.cursor = 'pointer';
+                    section.addEventListener('click', function () {
+                        const sectionKey = this.getAttribute('data-section');
+                        openConcertSeatSelector(sectionKey, concertSections[sectionKey]);
+                    });
+                });
+
+                window.openConcertSeatSelector = (sectionKey, section) => {
+                    document.getElementById('concert-seat-selector').classList.remove('hidden');
+                    document.getElementById('selected-section-name').textContent = `${section.name} - ₹${section.price} per seat`;
+
+                    const availableSeats = [];
+                    for (let i = 1; i <= section.capacity; i++) {
+                        if (!section.occupied.includes(i)) availableSeats.push(i);
+                    }
+
+                    const buttonsContainer = document.getElementById('concert-seat-buttons');
+                    buttonsContainer.innerHTML = '';
+
+                    for (let i = 1; i <= section.capacity; i++) {
+                        const btn = document.createElement('button');
+                        btn.className = 'px-4 py-3 border-2 rounded-lg font-semibold transition-all';
+                        btn.textContent = i;
+
+                        if (i > availableSeats.length) {
+                            btn.className += ' bg-gray-200 border-gray-300 text-gray-400 cursor-not-allowed';
+                            btn.disabled = true;
+                        } else {
+                            btn.className += ' bg-white border-purple-400 hover:bg-purple-50 text-purple-700';
+                            btn.onclick = () => selectConcertSeats(sectionKey, section, i, availableSeats);
+                        }
+                        buttonsContainer.appendChild(btn);
+                    }
+                };
+
+                window.selectConcertSeats = (sectionKey, section, count, availableSeats) => {
+                    selectedSeats = selectedSeats.filter(s => !s.id.startsWith(sectionKey.toUpperCase()));
+
+                    for (let i = 0; i < Math.min(count, availableSeats.length); i++) {
+                        if (selectedSeats.length >= maxSeats) {
+                            alert("Maximum 10 seats allowed");
+                            break;
+                        }
+                        selectedSeats.push({ id: `${sectionKey.toUpperCase()}-${availableSeats[i]}`, price: section.price });
+                    }
+                    updateSummary();
+                };
+            }
+
+            // SPORTS/CRICKET LAYOUT - handles both "sports" and "sport"
+            else if (eventCategory === "sports" || eventCategory === "sport" || eventCategory === "cricket") {
+                layout.innerHTML = `
+                    <div class="cricket-stadium-container bg-gradient-to-b from-green-50 to-white p-6 rounded-2xl">
+                        <h3 class="text-center text-xl font-bold text-gray-700 mb-2">CRICKET STADIUM</h3>
+                        <p class="text-center text-sm text-gray-500 mb-6">Eden Gardens, Kolkata</p>
+                        
+                        <div class="relative">
+                            <svg id="cricketSVG" viewBox="0 0 1000 1000" class="w-full max-w-4xl mx-auto" style="filter: drop-shadow(0 6px 12px rgba(0,0,0,0.15));">
+                                <defs>
+                                    <radialGradient id="fieldGradient" cx="50%" cy="50%">
+                                        <stop offset="0%" style="stop-color:#7FD957;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#5FB035;stop-opacity:1" />
+                                    </radialGradient>
+                                    <linearGradient id="pitchGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#E8D4A0;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#C4A76D;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                
+                                <!-- Outer Stadium Circle -->
+                                <circle cx="500" cy="500" r="480" fill="#F0F4F8" stroke="#CBD5E0" stroke-width="2"/>
+                                
+                                <!-- Cricket Field -->
+                                <circle cx="500" cy="500" r="280" fill="url(#fieldGradient)" stroke="#4A7C35" stroke-width="3"/>
+                                
+                                <!-- Boundary Line -->
+                                <circle cx="500" cy="500" r="270" fill="none" stroke="white" stroke-width="4" stroke-dasharray="10,5"/>
+                                
+                                <!-- Cricket Pitch -->
+                                <ellipse cx="500" cy="500" rx="40" ry="100" fill="url(#pitchGradient)" stroke="#8B6F3E" stroke-width="2"/>
+                                <text x="500" y="505" text-anchor="middle" font-size="16" font-weight="bold" fill="#6B5432">PITCH</text>
+                                
+                                <!-- INNER RING - Premium Blocks -->
+                                <!-- Block A (Top) - VIP -->
+                                <path d="M 500,220 L 570,240 A 260,260 0 0,1 430,240 Z" 
+                                      fill="#FFD700" stroke="#DAA520" stroke-width="3" opacity="0.95"
+                                      class="cricket-block" data-block="A" data-tier="vip"/>
+                                <text x="500" y="235" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B6914">BLOCK A - VIP</text>
+                                <text x="500" y="250" text-anchor="middle" font-size="12" font-weight="bold" fill="#8B6914">₹7,500</text>
+                                
+                                <!-- Block B (Right Upper) -->
+                                <path d="M 570,240 L 640,280 A 260,260 0 0,1 690,380 L 630,355 A 260,260 0 0,0 570,240 Z" 
+                                      fill="#FF6B9D" stroke="#D63384" stroke-width="3" opacity="0.92"
+                                      class="cricket-block" data-block="B" data-tier="premium"/>
+                                <text x="635" y="305" font-size="13" font-weight="bold" fill="#8B0049" transform="rotate(35 635 305)">BLOCK B</text>
+                                <text x="635" y="320" font-size="11" font-weight="bold" fill="#8B0049" transform="rotate(35 635 320)">₹5,000</text>
+                                
+                                <!-- Block C (Right) -->
+                                <path d="M 690,380 L 750,450 A 260,260 0 0,1 750,550 L 690,520 A 260,260 0 0,0 690,380 Z" 
+                                      fill="#60D0FF" stroke="#0EA5E9" stroke-width="3" opacity="0.92"
+                                      class="cricket-block" data-block="C" data-tier="premium"/>
+                                <text x="730" y="460" font-size="13" font-weight="bold" fill="#075985" transform="rotate(75 730 460)">BLOCK C</text>
+                                <text x="730" y="475" font-size="11" font-weight="bold" fill="#075985" transform="rotate(75 730 475)">₹5,000</text>
+                                
+                                <!-- Block D (Right Lower) -->
+                                <path d="M 750,550 L 690,620 A 260,260 0 0,1 640,720 L 630,645 A 260,260 0 0,0 690,520 Z" 
+                                      fill="#A78BFA" stroke="#7C3AED" stroke-width="3" opacity="0.92"
+                                      class="cricket-block" data-block="D" data-tier="premium"/>
+                                <text x="685" y="605" font-size="13" font-weight="bold" fill="#5B21B6" transform="rotate(115 685 605)">BLOCK D</text>
+                                <text x="685" y="620" font-size="11" font-weight="bold" fill="#5B21B6" transform="rotate(115 685 620)">₹5,000</text>
+                                
+                                <!-- Block E (Bottom) -->
+                                <path d="M 640,720 L 570,760 A 260,260 0 0,1 430,760 L 360,720 A 260,260 0 0,0 640,720 Z" 
+                                      fill="#FCA5A5" stroke="#EF4444" stroke-width="3" opacity="0.92"
+                                      class="cricket-block" data-block="E" data-tier="standard"/>
+                                <text x="500" y="750" text-anchor="middle" font-size="13" font-weight="bold" fill="#991B1B">BLOCK E</text>
+                                <text x="500" y="765" text-anchor="middle" font-size="11" font-weight="bold" fill="#991B1B">₹3,500</text>
+                                
+                                <!-- Block F (Left Lower) -->
+                                <path d="M 360,720 L 310,645 A 260,260 0 0,1 250,550 L 310,520 A 260,260 0 0,0 360,720 Z" 
+                                      fill="#FDE047" stroke="#EAB308" stroke-width="3" opacity="0.92"
+                                      class="cricket-block" data-block="F" data-tier="standard"/>
+                                <text x="285" y="605" font-size="13" font-weight="bold" fill="#854D0E" transform="rotate(-115 285 605)">BLOCK F</text>
+                                <text x="285" y="620" font-size="11" font-weight="bold" fill="#854D0E" transform="rotate(-115 285 620)">₹3,500</text>
+                                
+                                <!-- Block G (Left) -->
+                                <path d="M 250,550 L 250,450 A 260,260 0 0,1 310,380 L 310,520 A 260,260 0 0,0 250,550 Z" 
+                                      fill="#86EFAC" stroke="#22C55E" stroke-width="3" opacity="0.92"
+                                      class="cricket-block" data-block="G" data-tier="standard"/>
+                                <text x="270" y="460" font-size="13" font-weight="bold" fill="#15803D" transform="rotate(-75 270 460)">BLOCK G</text>
+                                <text x="270" y="475" font-size="11" font-weight="bold" fill="#15803D" transform="rotate(-75 270 475)">₹3,500</text>
+                                
+                                <!-- Block H (Left Upper) -->
+                                <path d="M 310,380 L 360,280 A 260,260 0 0,1 430,240 L 370,355 A 260,260 0 0,0 310,380 Z" 
+                                      fill="#FED7AA" stroke="#F97316" stroke-width="3" opacity="0.92"
+                                      class="cricket-block" data-block="H" data-tier="standard"/>
+                                <text x="365" y="305" font-size="13" font-weight="bold" fill="#9A3412" transform="rotate(-35 365 305)">BLOCK H</text>
+                                <text x="365" y="320" font-size="11" font-weight="bold" fill="#9A3412" transform="rotate(-35 365 320)">₹3,500</text>
+                                
+                                <!-- OUTER RING - General Admission Blocks -->
+                                <!-- Block J1 -->
+                                <path d="M 570,240 L 660,180 A 380,380 0 0,1 500,120 L 500,220 A 260,260 0 0,0 570,240 Z" 
+                                      fill="#C7D2FE" stroke="#6366F1" stroke-width="2" opacity="0.85"
+                                      class="cricket-block" data-block="J1" data-tier="general"/>
+                                <text x="555" y="175" text-anchor="middle" font-size="11" font-weight="600" fill="#3730A3">J1 - ₹1,500</text>
+                                
+                                <!-- Block J2 -->
+                                <path d="M 500,120 L 340,180 A 380,380 0 0,1 430,240 L 500,220 A 260,260 0 0,0 500,120 Z" 
+                                      fill="#C7D2FE" stroke="#6366F1" stroke-width="2" opacity="0.85"
+                                      class="cricket-block" data-block="J2" data-tier="general"/>
+                                <text x="445" y="175" text-anchor="middle" font-size="11" font-weight="600" fill="#3730A3">J2 - ₹1,500</text>
+                                
+                                <!-- Block K1 -->
+                                <path d="M 660,180 L 790,280 A 380,380 0 0,1 850,450 L 750,450 A 260,260 0 0,0 640,280 L 660,180 Z" 
+                                      fill="#BAE6FD" stroke="#0284C7" stroke-width="2" opacity="0.85"
+                                      class="cricket-block" data-block="K1" data-tier="general"/>
+                                <text x="750" y="320" font-size="11" font-weight="600" fill="#075985" transform="rotate(45 750 320)">K1 - ₹1,000</text>
+                                
+                                <!-- Block K2 -->
+                                <path d="M 850,450 L 850,550 A 380,380 0 0,1 790,720 L 690,620 A 260,260 0 0,0 750,550 L 850,550 Z" 
+                                      fill="#BAE6FD" stroke="#0284C7" stroke-width="2" opacity="0.85"
+                                      class="cricket-block" data-block="K2" data-tier="general"/>
+                                <text x="785" y="590" font-size="11" font-weight="600" fill="#075985" transform="rotate(90 785 590)">K2 - ₹1,000</text>
+                                
+                                <!-- Block L1 -->
+                                <path d="M 790,720 L 660,820 A 380,380 0 0,1 570,760 L 640,720 A 260,260 0 0,0 790,720 Z" 
+                                      fill="#FDE68A" stroke="#F59E0B" stroke-width="2" opacity="0.85"
+                                      class="cricket-block" data-block="L1" data-tier="general"/>
+                                <text x="680" y="775" font-size="11" font-weight="600" fill="#92400E" transform="rotate(135 680 775)">L1 - ₹800</text>
+                                
+                                <!-- Block L2 -->
+                                <path d="M 660,820 L 500,880 A 380,380 0 0,1 340,820 L 430,760 A 260,260 0 0,0 570,760 L 660,820 Z" 
+                                      fill="#FDE68A" stroke="#F59E0B" stroke-width="2" opacity="0.85"
+                                      class="cricket-block" data-block="L2" data-tier="general"/>
+                                <text x="500" y="825" text-anchor="middle" font-size="11" font-weight="600" fill="#92400E">L2 - ₹800</text>
+                                
+                                <!-- Block L3 -->
+                                <path d="M 340,820 L 210,720 A 380,380 0 0,1 360,720 L 430,760 A 260,260 0 0,0 340,820 Z" 
+                                      fill="#FDE68A" stroke="#F59E0B" stroke-width="2" opacity="0.85"
+                                      class="cricket-block" data-block="L3" data-tier="general"/>
+                                <text x="320" y="775" font-size="11" font-weight="600" fill="#92400E" transform="rotate(-135 320 775)">L3 - ₹800</text>
+                                
+                                <!-- Block M1 -->
+                                <path d="M 210,720 L 150,550 A 380,380 0 0,1 150,450 L 250,450 A 260,260 0 0,0 310,620 L 210,720 Z" 
+                                      fill="#D1FAE5" stroke="#10B981" stroke-width="2" opacity="0.85"
+                                      class="cricket-block" data-block="M1" data-tier="general"/>
+                                <text x="195" y="590" font-size="11" font-weight="600" fill="#065F46" transform="rotate(-90 195 590)">M1 - ₹1,000</text>
+                                
+                                <!-- Block M2 -->
+                                <path d="M 150,450 L 210,280 A 380,380 0 0,1 340,180 L 360,280 A 260,260 0 0,0 250,450 L 150,450 Z" 
+                                      fill="#D1FAE5" stroke="#10B981" stroke-width="2" opacity="0.85"
+                                      class="cricket-block" data-block="M2" data-tier="general"/>
+                                <text x="230" y="320" font-size="11" font-weight="600" fill="#065F46" transform="rotate(-45 230 320)">M2 - ₹1,000</text>
+                            </svg>
+                        </div>
+                        
+                        <!-- Selection Panel -->
+                        <div id="cricket-selection" class="mt-8 p-6 bg-white rounded-xl shadow-xl border-2 border-green-300">
+                            <div class="text-center mb-4">
+                                <span class="material-icons text-green-600 text-3xl">sports_cricket</span>
+                                <p class="text-gray-700 font-medium mt-2">Click on any block to select seats</p>
+                            </div>
+                            <div id="cricket-seat-selector" class="hidden">
+                                <div class="border-t-2 pt-4 mt-4 border-green-200">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h4 id="selected-block-name" class="font-bold text-xl"></h4>
+                                        <span id="selected-block-badge" class="px-3 py-1 rounded-full text-sm font-bold"></span>
+                                    </div>
+                                    <p class="text-sm text-gray-600 mb-4">Select number of seats (Max 10):</p>
+                                    <div class="grid grid-cols-5 gap-3" id="cricket-seat-buttons"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Tier Legend -->
+                        <div class="mt-6 bg-gradient-to-r from-blue-50 to-green-50 p-4 rounded-xl">
+                            <h4 class="font-bold text-center mb-3 text-gray-700">Seating Categories</h4>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+                                <div class="flex items-center gap-2 bg-white p-2 rounded-lg shadow-sm">
+                                    <div class="w-6 h-6 bg-yellow-400 rounded-full border-2 border-yellow-600"></div>
+                                    <span class="font-semibold">VIP (₹7,500)</span>
+                                </div>
+                                <div class="flex items-center gap-2 bg-white p-2 rounded-lg shadow-sm">
+                                    <div class="w-6 h-6 bg-pink-400 rounded-full border-2 border-pink-600"></div>
+                                    <span class="font-semibold">Premium (₹5,000)</span>
+                                </div>
+                                <div class="flex items-center gap-2 bg-white p-2 rounded-lg shadow-sm">
+                                    <div class="w-6 h-6 bg-orange-300 rounded-full border-2 border-orange-500"></div>
+                                    <span class="font-semibold">Standard (₹3,500)</span>
+                                </div>
+                                <div class="flex items-center gap-2 bg-white p-2 rounded-lg shadow-sm">
+                                    <div class="w-6 h-6 bg-blue-300 rounded-full border-2 border-blue-500"></div>
+                                    <span class="font-semibold">General (₹800-1,500)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                const cricketBlocks = {
+                    'A': { name: 'Block A', tier: 'VIP', price: 7500, capacity: 10, occupied: [8], color: '#FFD700' },
+                    'B': { name: 'Block B', tier: 'Premium', price: 5000, capacity: 10, occupied: [3, 7], color: '#FF6B9D' },
+                    'C': { name: 'Block C', tier: 'Premium', price: 5000, capacity: 10, occupied: [5], color: '#60D0FF' },
+                    'D': { name: 'Block D', tier: 'Premium', price: 5000, capacity: 10, occupied: [], color: '#A78BFA' },
+                    'E': { name: 'Block E', tier: 'Standard', price: 3500, capacity: 10, occupied: [6, 9], color: '#FCA5A5' },
+                    'F': { name: 'Block F', tier: 'Standard', price: 3500, capacity: 10, occupied: [4], color: '#FDE047' },
+                    'G': { name: 'Block G', tier: 'Standard', price: 3500, capacity: 10, occupied: [], color: '#86EFAC' },
+                    'H': { name: 'Block H', tier: 'Standard', price: 3500, capacity: 10, occupied: [2], color: '#FED7AA' },
+                    'J1': { name: 'Block J1', tier: 'General', price: 1500, capacity: 10, occupied: [], color: '#C7D2FE' },
+                    'J2': { name: 'Block J2', tier: 'General', price: 1500, capacity: 10, occupied: [7], color: '#C7D2FE' },
+                    'K1': { name: 'Block K1', tier: 'General', price: 1000, capacity: 10, occupied: [3, 8], color: '#BAE6FD' },
+                    'K2': { name: 'Block K2', tier: 'General', price: 1000, capacity: 10, occupied: [], color: '#BAE6FD' },
+                    'L1': { name: 'Block L1', tier: 'General', price: 800, capacity: 10, occupied: [9], color: '#FDE68A' },
+                    'L2': { name: 'Block L2', tier: 'General', price: 800, capacity: 10, occupied: [], color: '#FDE68A' },
+                    'L3': { name: 'Block L3', tier: 'General', price: 800, capacity: 10, occupied: [4, 6], color: '#FDE68A' },
+                    'M1': { name: 'Block M1', tier: 'General', price: 1000, capacity: 10, occupied: [5], color: '#D1FAE5' },
+                    'M2': { name: 'Block M2', tier: 'General', price: 1000, capacity: 10, occupied: [], color: '#D1FAE5' }
+                };
+
+                // Add interactive hover and click handlers
+                document.querySelectorAll('.cricket-block').forEach(block => {
+                    block.style.cursor = 'pointer';
+                    block.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+
+                    block.addEventListener('mouseenter', function () {
+                        this.style.transform = 'scale(1.08)';
+                        this.style.filter = 'brightness(1.15) drop-shadow(0 4px 8px rgba(0,0,0,0.3))';
+                        this.style.strokeWidth = '4';
+                    });
+
+                    block.addEventListener('mouseleave', function () {
+                        if (!this.classList.contains('selected-block')) {
+                            this.style.transform = 'scale(1)';
+                            this.style.filter = 'none';
+                            this.style.strokeWidth = this.getAttribute('data-tier') === 'general' ? '2' : '3';
+                        }
+                    });
+
+                    block.addEventListener('click', function () {
+                        const blockKey = this.getAttribute('data-block');
+                        openCricketSeatSelector(blockKey, cricketBlocks[blockKey]);
+                    });
+                });
+
+                window.openCricketSeatSelector = (blockKey, block) => {
+                    document.getElementById('cricket-seat-selector').classList.remove('hidden');
+                    document.getElementById('selected-block-name').textContent = `${block.name} - ${block.tier}`;
+
+                    const badge = document.getElementById('selected-block-badge');
+                    badge.textContent = `₹${block.price} per seat`;
+                    badge.style.backgroundColor = block.color;
+                    badge.style.color = '#1F2937';
+
+                    const availableSeats = [];
+                    for (let i = 1; i <= block.capacity; i++) {
+                        if (!block.occupied.includes(i)) availableSeats.push(i);
+                    }
+
+                    const buttonsContainer = document.getElementById('cricket-seat-buttons');
+                    buttonsContainer.innerHTML = '';
+
+                    const infoDiv = document.createElement('div');
+                    infoDiv.className = 'col-span-5 mb-2 text-sm';
+                    infoDiv.innerHTML = `<span class="font-semibold text-green-700">✓ ${availableSeats.length} seats available</span> in this block`;
+                    buttonsContainer.appendChild(infoDiv);
+
+                    for (let i = 1; i <= block.capacity; i++) {
+                        const btn = document.createElement('button');
+                        btn.className = 'px-5 py-4 rounded-xl font-bold text-lg transition-all duration-300 transform';
+                        btn.textContent = i;
+
+                        if (i > availableSeats.length) {
+                            btn.className += ' bg-gray-200 text-gray-400 border-2 border-gray-300 cursor-not-allowed opacity-50';
+                            btn.innerHTML = `${i}<br><span class="text-xs">N/A</span>`;
+                            btn.disabled = true;
+                        } else {
+                            btn.className += ' bg-white hover:bg-gradient-to-br hover:scale-110 hover:shadow-xl border-3 shadow-md';
+                            btn.style.borderColor = block.color;
+                            btn.style.color = '#374151';
+                            btn.onclick = () => selectCricketSeats(blockKey, block, i, availableSeats);
+                        }
+
+                        buttonsContainer.appendChild(btn);
+                    }
+
+                    // Highlight selected block
+                    document.querySelectorAll('.cricket-block').forEach(el => {
+                        el.classList.remove('selected-block');
+                        el.style.transform = 'scale(1)';
+                        el.style.filter = 'none';
+                        el.style.strokeWidth = el.getAttribute('data-tier') === 'general' ? '2' : '3';
+                    });
+
+                    const selectedBlock = document.querySelector(`[data-block="${blockKey}"]`);
+                    selectedBlock.classList.add('selected-block');
+                    selectedBlock.style.transform = 'scale(1.1)';
+                    selectedBlock.style.filter = 'brightness(1.2) drop-shadow(0 6px 12px rgba(0,0,0,0.4))';
+                    selectedBlock.style.strokeWidth = '5';
+                };
+
+                window.selectCricketSeats = (blockKey, block, count, availableSeats) => {
+                    selectedSeats = selectedSeats.filter(s => !s.id.startsWith(blockKey + '-'));
+
+                    let seatsAdded = 0;
+                    const bookedSeats = [];
+                    for (let i = 0; i < Math.min(count, availableSeats.length); i++) {
+                        if (selectedSeats.length >= maxSeats) {
+                            alert("Maximum 10 seats allowed");
+                            break;
+                        }
+                        const seatNum = availableSeats[i];
+                        selectedSeats.push({ id: `${blockKey}-SEAT${seatNum}`, price: block.price });
+                        bookedSeats.push(seatNum);
+                        seatsAdded++;
+                    }
+
+                    if (seatsAdded < count) {
+                        alert(`Only ${seatsAdded} seats were available in ${block.name}`);
+                    }
+
+                    updateSummary();
+
+                    // Visual feedback
+                    const blockEl = document.querySelector(`[data-block="${blockKey}"]`);
+                    blockEl.style.opacity = '1';
+                    blockEl.style.filter = 'brightness(1.3) saturate(1.3) drop-shadow(0 0 15px rgba(139, 92, 246, 0.6))';
+
+                    setTimeout(() => {
+                        const seatList = bookedSeats.join(', ');
+                        alert(`✅ ${seatsAdded} seat(s) selected in ${block.name} (${block.tier})\nSeats: ${seatList}\nPrice: ₹${block.price} × ${seatsAdded} = ₹${block.price * seatsAdded}`);
+                    }, 100);
+                };
+            }
+
+            // STANDUP/EVENT LAYOUT - Theater Style Seating (DEFAULT FALLBACK)
+            else {
+                layout.innerHTML = `
+                    <div class="standup-venue-container bg-gradient-to-b from-purple-50 to-white p-6 rounded-2xl border border-purple-100">
+                        <h3 class="text-center text-xl font-bold text-gray-800 mb-2">COMEDY THEATER</h3>
+                        <p class="text-center text-sm text-purple-600 mb-6 font-medium">Select Your Seats</p>
+                        
+                        <!-- Stage -->
+                        <div class="text-center mb-8 py-8 bg-gradient-to-r from-purple-600 to-purple-700 rounded-xl shadow-lg relative overflow-hidden">
+                            <div class="absolute inset-0 bg-black/10"></div>
+                            <div class="relative z-10">
+                                <span class="material-icons text-white" style="font-size: 48px;">mic</span>
+                                <p class="text-white text-xl font-bold mt-2 tracking-wider">STAGE</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Seating Grid -->
+                        <div class="space-y-8">
+                            <!-- Premium Section (Purple gradient - Front Rows) -->
+                            <div class="premium-section">
+                                <div class="flex items-center justify-between mb-4 px-2">
+                                    <div>
+                                        <span class="text-lg font-bold text-gray-800">Premium Seating</span>
+                                        <p class="text-xs text-gray-500">Rows A-D · Best View</p>
+                                    </div>
+                                    <span class="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-4 py-2 rounded-full text-sm font-bold shadow-md">₹2,500</span>
+                                </div>
+                                <div id="premium-seats-container" class="space-y-2"></div>
+                            </div>
+                            
+                            <!-- Standard Section (Blue/Teal - Back Rows) -->
+                            <div class="standard-section mt-8">
+                                <div class="flex items-center justify-between mb-4 px-2">
+                                    <div>
+                                        <span class="text-lg font-bold text-gray-800">Standard Seating</span>
+                                        <p class="text-xs text-gray-500">Rows E-L · Great Value</p>
+                                    </div>
+                                    <span class="bg-gradient-to-r from-teal-500 to-teal-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-md">₹1,500</span>
+                                </div>
+                                <div id="standard-seats-container" class="space-y-2"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Zoom Controls -->
+                        <div class="flex justify-center gap-3 mt-8 bg-gray-100 rounded-lg p-3 w-fit mx-auto">
+                            <button onclick="zoomSeats(-1)" class="w-10 h-10 bg-white hover:bg-purple-50 border-2 border-purple-200 hover:border-purple-400 rounded-lg flex items-center justify-center transition shadow-sm">
+                                <span class="material-icons text-purple-600 text-lg">remove</span>
+                            </button>
+                            <span class="flex items-center px-4 text-sm font-semibold text-gray-700">Zoom</span>
+                            <button onclick="zoomSeats(1)" class="w-10 h-10 bg-white hover:bg-purple-50 border-2 border-purple-200 hover:border-purple-400 rounded-lg flex items-center justify-center transition shadow-sm">
+                                <span class="material-icons text-purple-600 text-lg">add</span>
+                            </button>
+                        </div>
+                        
+                        <!-- Legend -->
+                        <div class="mt-8 grid grid-cols-3 gap-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100">
+                            <div class="flex items-center gap-2">
+                                <div class="w-5 h-5 bg-white border-2 border-purple-300 rounded shadow-sm"></div>
+                                <span class="text-xs font-semibold text-gray-700">Available</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-5 h-5 bg-green-500 border-2 border-green-600 rounded shadow-sm"></div>
+                                <span class="text-xs font-semibold text-gray-700">Selected</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-5 h-5 bg-gray-300 border-2 border-gray-400 rounded shadow-sm"></div>
+                                <span class="text-xs font-semibold text-gray-700">Occupied</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // Premium Section Configuration (Front 4 rows - Purple gradient)
+                const premiumConfig = {
+                    rows: 4,
+                    rowLabels: ['A', 'B', 'C', 'D'],
+                    seatsPerRow: 30,
+                    price: 2500,
+                    baseColor: 'from-purple-500 to-purple-600',
+                    borderColor: 'border-purple-600',
+                    hoverColor: 'hover:from-purple-600 hover:to-purple-700',
+                    occupied: [15, 28, 45, 67, 89, 102] // Some random occupied seats
+                };
+
+                // Standard Section Configuration (Back 8 rows - Teal gradient, curved layout)
+                const standardConfig = {
+                    rows: 8,
+                    rowLabels: ['E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'],
+                    seatsPerRow: 30,
+                    price: 1500,
+                    baseColor: 'from-teal-500 to-teal-600',
+                    borderColor: 'border-teal-600',
+                    hoverColor: 'hover:from-teal-600 hover:to-teal-700',
+                    occupied: [12, 34, 56, 78, 90, 112, 145, 167, 189, 201, 223],
+                    // Curve pattern: reduce seats on sides for back rows
+                    curvePattern: [30, 30, 28, 28, 26, 24, 20, 16]
+                };
+
+                // Generate Premium Seats (Front Section - Purple)
+                const premiumContainer = document.getElementById('premium-seats-container');
+                for (let row = 0; row < premiumConfig.rows; row++) {
+                    const rowLabel = premiumConfig.rowLabels[row];
+                    const rowDiv = document.createElement('div');
+                    rowDiv.className = 'flex items-center gap-3';
+
+                    // Row Label
+                    const label = document.createElement('div');
+                    label.className = 'w-8 h-8 flex items-center justify-center font-bold text-purple-700 bg-purple-100 rounded-lg border-2 border-purple-300 text-sm flex-shrink-0';
+                    label.textContent = rowLabel;
+                    rowDiv.appendChild(label);
+
+                    // Seats Container - SCROLLABLE
+                    const seatsDiv = document.createElement('div');
+                    seatsDiv.className = 'flex-1 grid gap-2 overflow-x-auto pb-2';
+                    seatsDiv.style.gridTemplateColumns = `repeat(${premiumConfig.seatsPerRow}, minmax(28px, 1fr))`;
+                    seatsDiv.style.gridAutoFlow = 'column';
+
+                    for (let seat = 0; seat < premiumConfig.seatsPerRow; seat++) {
+                        const seatNum = seat + 1;
+                        const seatId = `${rowLabel}${seatNum}`;
+                        const globalId = row * premiumConfig.seatsPerRow + seatNum;
+
+                        const seatEl = document.createElement('div');
+                        seatEl.className = `seat-box w-7 h-7 bg-gradient-to-br ${premiumConfig.baseColor} ${premiumConfig.borderColor} border-2 rounded-md cursor-pointer transition-all transform ${premiumConfig.hoverColor} hover:scale-110 shadow-sm`;
+                        seatEl.setAttribute('data-seat-id', seatId);
+                        seatEl.setAttribute('data-price', premiumConfig.price);
+                        seatEl.setAttribute('data-section', 'Premium');
+                        seatEl.setAttribute('data-row', rowLabel);
+                        seatEl.setAttribute('title', `Seat ${seatId} - Premium ₹${premiumConfig.price}`);
+
+                        if (premiumConfig.occupied.includes(globalId)) {
+                            seatEl.className = 'seat-box w-7 h-7 bg-gray-300 border-2 border-gray-400 rounded-md cursor-not-allowed opacity-60';
+                            seatEl.setAttribute('data-occupied', 'true');
+                        } else {
+                            seatEl.onclick = () => toggleStandupSeat(seatEl, seatId, premiumConfig.price, 'Premium', rowLabel, seatNum);
+                        }
+
+                        seatsDiv.appendChild(seatEl);
+                    }
+
+                    rowDiv.appendChild(seatsDiv);
+                    premiumContainer.appendChild(rowDiv);
+                }
+
+                // Generate Standard Seats (Back Section - Teal, with curve)
+                const standardContainer = document.getElementById('standard-seats-container');
+                let globalSeatCounter = premiumConfig.rows * premiumConfig.seatsPerRow;
+
+                for (let row = 0; row < standardConfig.rows; row++) {
+                    const rowLabel = standardConfig.rowLabels[row];
+                    const seatsInThisRow = standardConfig.curvePattern[row];
+                    const emptySeatsOnSide = Math.floor((standardConfig.seatsPerRow - seatsInThisRow) / 2);
+
+                    const rowDiv = document.createElement('div');
+                    rowDiv.className = 'flex items-center gap-3';
+
+                    // Row Label
+                    const label = document.createElement('div');
+                    label.className = 'w-8 h-8 flex items-center justify-center font-bold text-teal-700 bg-teal-100 rounded-lg border-2 border-teal-300 text-sm flex-shrink-0';
+                    label.textContent = rowLabel;
+                    rowDiv.appendChild(label);
+
+                    // Seats Container - SCROLLABLE
+                    const seatsDiv = document.createElement('div');
+                    seatsDiv.className = 'flex-1 grid gap-2 overflow-x-auto pb-2';
+                    seatsDiv.style.gridTemplateColumns = `repeat(${standardConfig.seatsPerRow}, minmax(28px, 1fr))`;
+                    seatsDiv.style.gridAutoFlow = 'column';
+
+                    // Add empty spacers for curve effect
+                    for (let i = 0; i < emptySeatsOnSide; i++) {
+                        const spacer = document.createElement('div');
+                        seatsDiv.appendChild(spacer);
+                    }
+
+                    // Add actual seats
+                    for (let seat = 0; seat < seatsInThisRow; seat++) {
+                        const seatNum = seat + 1;
+                        const seatId = `${rowLabel}${seatNum}`;
+                        globalSeatCounter++;
+
+                        const seatEl = document.createElement('div');
+                        seatEl.className = `seat-box w-7 h-7 bg-gradient-to-br ${standardConfig.baseColor} ${standardConfig.borderColor} border-2 rounded-md cursor-pointer transition-all transform ${standardConfig.hoverColor} hover:scale-110 shadow-sm`;
+                        seatEl.setAttribute('data-seat-id', seatId);
+                        seatEl.setAttribute('data-price', standardConfig.price);
+                        seatEl.setAttribute('data-section', 'Standard');
+                        seatEl.setAttribute('data-row', rowLabel);
+                        seatEl.setAttribute('title', `Seat ${seatId} - Standard ₹${standardConfig.price}`);
+
+                        if (standardConfig.occupied.includes(globalSeatCounter)) {
+                            seatEl.className = 'seat-box w-7 h-7 bg-gray-300 border-2 border-gray-400 rounded-md cursor-not-allowed opacity-60';
+                            seatEl.setAttribute('data-occupied', 'true');
+                        } else {
+                            seatEl.onclick = () => toggleStandupSeat(seatEl, seatId, standardConfig.price, 'Standard', rowLabel, seatNum);
+                        }
+
+                        seatsDiv.appendChild(seatEl);
+                    }
+
+                    // Add remaining empty spacers
+                    for (let i = 0; i < emptySeatsOnSide; i++) {
+                        const spacer = document.createElement('div');
+                        seatsDiv.appendChild(spacer);
+                    }
+
+                    rowDiv.appendChild(seatsDiv);
+                    standardContainer.appendChild(rowDiv);
+                }
+
+                // Seat selection function for standup events
+                window.toggleStandupSeat = function (element, seatId, price, section, row, seatNum) {
+                    if (element.getAttribute('data-occupied') === 'true') return;
+
+                    const isSelected = element.classList.contains('bg-green-500');
+
+                    if (isSelected) {
+                        // Deselect
+                        element.classList.remove('bg-green-500', 'border-green-600', 'bg-gradient-to-br');
+                        if (section === 'Premium') {
+                            element.className = `seat-box w-7 h-7 bg-gradient-to-br ${premiumConfig.baseColor} ${premiumConfig.borderColor} border-2 rounded-md cursor-pointer transition-all transform ${premiumConfig.hoverColor} hover:scale-110 shadow-sm`;
+                        } else {
+                            element.className = `seat-box w-7 h-7 bg-gradient-to-br ${standardConfig.baseColor} ${standardConfig.borderColor} border-2 rounded-md cursor-pointer transition-all transform ${standardConfig.hoverColor} hover:scale-110 shadow-sm`;
+                        }
+                        element.setAttribute('data-seat-id', seatId);
+                        element.setAttribute('data-price', price);
+                        element.setAttribute('data-section', section);
+                        element.setAttribute('data-row', row);
+                        element.onclick = () => toggleStandupSeat(element, seatId, price, section, row, seatNum);
+
+                        selectedSeats = selectedSeats.filter(s => s.id !== seatId);
+                    } else {
+                        // Select
+                        if (selectedSeats.length >= maxSeats) {
+                            return alert("Maximum 10 seats allowed");
+                        }
+
+                        element.className = 'seat-box w-7 h-7 bg-green-500 border-2 border-green-600 rounded-md cursor-pointer transition-all transform hover:scale-110 shadow-lg';
+                        element.onclick = () => toggleStandupSeat(element, seatId, price, section, row, seatNum);
+
+                        selectedSeats.push({
+                            id: seatId,
+                            price: price,
+                            section: section,
+                            row: row,
+                            seatNumber: seatNum
+                        });
+                    }
+
+                    updateSummary();
+                };
+
+                // Zoom functionality
+                let currentZoom = 1;
+                window.zoomSeats = function (delta) {
+                    currentZoom = Math.max(0.7, Math.min(1.4, currentZoom + delta * 0.15));
+                    document.querySelectorAll('.seat-box').forEach(seat => {
+                        const baseSize = 28; // 7 in tailwind = 28px
+                        const newSize = baseSize * currentZoom;
+                        seat.style.width = newSize + 'px';
+                        seat.style.height = newSize + 'px';
+                    });
+                };
+            }
+        }
+
+        function toggleSeat(id, el, price) {
+            if (el.classList.contains("occupied")) return;
+
+            if (el.classList.contains("selected")) {
+                el.classList.remove("selected");
+                selectedSeats = selectedSeats.filter(s => s.id !== id);
+            } else {
+                if (selectedSeats.length >= maxSeats) return alert("Maximum 10 seats allowed");
+                el.classList.add("selected");
+                selectedSeats.push({ id, price });
+            }
+            updateSummary();
+        }
+
+        function updateSummary() {
+            const subtotal = selectedSeats.reduce((s, x) => s + x.price, 0);
+            const fee = Math.round(subtotal * 0.10);
+            const total = subtotal + fee;
+
+            document.getElementById("ticketCount").textContent = selectedSeats.length;
+            document.getElementById("subtotalAmount").textContent = `₹${subtotal}`;
+            document.getElementById("subtotalDisplay").textContent = `₹${subtotal}`;
+            document.getElementById("bookingFee").textContent = `₹${fee}`;
+            document.getElementById("totalAmount").textContent = `₹${total}`;
+            document.getElementById("selectedSeatsText").textContent =
+                selectedSeats.length ? selectedSeats.map(s => s.id).join(", ") : "No seats selected";
+        }
+
+        /** PROCEED TO PAYMENT **/
+        async function proceedToPayment() {
+            if (selectedSeats.length === 0) return alert("Please select at least one seat.");
+
+            const user = JSON.parse(localStorage.getItem("loggedInUser") || "null");
+            if (!user) {
+                alert("Please login first.");
+                return (window.location.href = "login.html");
+            }
+
+            const subtotal = selectedSeats.reduce((s, x) => s + x.price, 0);
+            const bookingFee = Math.round(subtotal * 0.10);
+            const total = subtotal + bookingFee;
+
+            const bookingData = {
+                event_id: currentEvent.id,
+                event_title: currentEvent.title,
+                event_date: currentEvent.date,
+                event_time: currentEvent.time,
+                venue: currentEvent.venue,
+                user_email: user.email,
+                seats: selectedSeats.map(s => s.id),
+                amount_paid: total,
+                event_type: currentEvent.category,
+                poster_url: currentEvent.image_url || currentEvent.image
+            };
+
+            // Add cinema/showtime info if movie
+            if (selectedCinema && selectedShowtime) {
+                bookingData.cinema_id = selectedCinema.id;
+                bookingData.showtime_id = selectedShowtime.id;
+            }
+
+            try {
+                const res = await fetch("http://localhost:8000/api/bookings/create", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(bookingData)
+                });
+
+                const data = await res.json();
+                if (!res.ok) return alert("Booking failed: " + data.message);
+
+                localStorage.setItem("eventTitle", currentEvent.title);
+                localStorage.setItem("eventFullDate", currentEvent.date);
+                localStorage.setItem("eventVenue", currentEvent.venue);
+                localStorage.setItem("eventType", currentEvent.category);
+                localStorage.setItem("eventImage", currentEvent.image_url || currentEvent.image);
+                localStorage.setItem("bookingReference", data.reference);
+                localStorage.setItem("selectedSeats", JSON.stringify(bookingData.seats));
+                localStorage.setItem("ticketCount", bookingData.seats.length);
+                localStorage.setItem("totalAmount", bookingData.amount_paid);
+                localStorage.setItem("userEmail", user.email);
+
+                window.location.href = "payment.html";
+
+            } catch (err) {
+                console.error("Booking error:", err);
+                alert("Server error during booking.");
+            }
+        }
+
+        // Initialize on page load
+        initializeBooking();
+    </script>
+</body>
+
+</html>
