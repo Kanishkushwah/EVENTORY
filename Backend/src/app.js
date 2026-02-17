@@ -105,4 +105,8 @@ app.use((err, req, res, next) => {
     });
 });
 
+app.get('/api/health', (req, res) => {
+    res.status(200).json({ status: 'ok', message: 'Server is running 🚀' });
+});
+
 export default app;
