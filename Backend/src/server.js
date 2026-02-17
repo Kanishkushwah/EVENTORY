@@ -14,10 +14,14 @@ app.listen(PORT, async () => {
     try {
         // Run automation with a small delay to ensure DB connection is ready
         setTimeout(async () => {
-            console.log("🎬 Starting Automation Service...");
-            await AutomationService.syncUpcomingMovies();
-            await AutomationService.syncWorldCupEvents();
-            console.log("✅ Automation Service Completed");
+            try {
+                console.log("🎬 Starting Automation Service...");
+                await AutomationService.syncUpcomingMovies();
+                await AutomationService.syncWorldCupEvents();
+                console.log("✅ Automation Service Completed");
+            } catch (innerErr) {
+                console.error("⚠️ Automation Service Error (Non-fatal):", innerErr);
+            }
         }, 5000);
 
     } catch (err) {
