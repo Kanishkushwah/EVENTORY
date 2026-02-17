@@ -28,9 +28,9 @@ app.use(cors({
         'http://localhost:5500',
         'http://127.0.0.1:5501',
         'http://localhost:5501',
-        'http://127.0.0.1:5502',
-        'http://localhost:5502',
-        'http://localhost:8000' // Allow self
+        'http://localhost:5173',
+        'http://localhost:3000',
+        'https://eventory-cyzy.onrender.com' // Allow deployed frontend
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
