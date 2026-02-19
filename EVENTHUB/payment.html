@@ -541,7 +541,10 @@
             try {
                 // 2. Fetch Booking Details from Backend (Reliable Source)
                 const res = await fetch(`/api/bookings/${bookingRef}`);
-                if (!res.ok) throw new Error("Booking not found");
+                if (!res.ok) {
+                    const errData = await res.json().catch(() => ({}));
+                    throw new Error(errData.message || `Server Error: ${res.status}`);
+                }
 
                 const booking = await res.json();
 
@@ -577,7 +580,7 @@
 
             } catch (err) {
                 console.error("Error loading booking:", err);
-                alert("Failed to load booking details. Please try again.");
+                alert("Correction: Failed to load booking (" + err.message + ")");
             }
         };
 
