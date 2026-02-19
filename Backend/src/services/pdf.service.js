@@ -44,7 +44,7 @@ export const PdfService = {
                     .lineTo(cardX + cardWidth - 16, cardY)
                     .quadraticCurveTo(cardX + cardWidth, cardY, cardX + cardWidth, cardY + 16)
                     .lineTo(cardX + cardWidth, cardY + headerHeight)
-                    .close();
+                    .closePath();
                 doc.clip();
 
                 // Draw Poster Image (or Fallback)
