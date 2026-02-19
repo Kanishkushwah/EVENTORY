@@ -583,38 +583,7 @@
 
         // ... existing functions ...
 
-        async function completePayment(methodType) {
-            const reference = localStorage.getItem("bookingReference");
-            // ... rest of logic uses reference ...
-            // Simulate network delay
-            const btn = document.getElementById("payButton");
-            if (btn) {
-                btn.disabled = true;
-                btn.innerHTML = `<span class="material-icons animate-spin">refresh</span> Processing...`;
-            }
 
-            setTimeout(async () => {
-                try {
-                    const response = await fetch("/api/bookings/payment-success", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ reference: reference }) // Send Reference, not ID
-                    });
-
-                    if (response.ok) {
-                        showSuccess();
-                    } else {
-                        throw new Error("Payment verification failed");
-                    }
-                } catch (e) {
-                    alert("Payment failed: " + e.message);
-                    if (btn) {
-                        btn.disabled = false;
-                        btn.innerText = "Proceed to Pay";
-                    }
-                }
-            }, 2000);
-        }
 
         function fillConfirmationUI(booking) {
             document.getElementById("bookingRef").textContent = booking.reference;
