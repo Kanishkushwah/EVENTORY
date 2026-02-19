@@ -9,11 +9,17 @@ router.get('/google',
 );
 
 // Google OAuth Callback - SIMPLEST SOLUTION: Direct redirect to dashboard
+// Google OAuth Callback - DYNAMIC REDIRECT FIX
 router.get('/google/callback',
-    passport.authenticate('google', { failureRedirect: 'http://127.0.0.1:5500/EVENTHUB/login.html?error=auth_failed' }),
+    passport.authenticate('google', { failureRedirect: '/EVENTHUB/login.html?error=auth_failed' }),
     (req, res) => {
-        // Redirect to Backend-Served Frontend (Reliable)
-        const dashboardUrl = new URL('http://localhost:8000/EVENTHUB/user-profile.html');
+        // Construct dynamic base URL to work on Localhost, Mobile (LAN), and Production (Render)
+        const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+        const host = req.get('host');
+        const baseUrl = `${protocol}://${host}`;
+        
+        // Redirect to Backend-Served Frontend
+        const dashboardUrl = new URL(`${baseUrl}/EVENTHUB/user-profile.html`);
         dashboardUrl.searchParams.set('googleauth', '1');
         dashboardUrl.searchParams.set('id', req.user.id);
         dashboardUrl.searchParams.set('email', req.user.email);
