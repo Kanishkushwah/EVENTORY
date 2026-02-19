@@ -741,16 +741,22 @@
                 // Check if it's the special summary card
                 if (event.isSummary) {
                     return `
-                    <div class="bg-gradient-to-br from-blue-900 to-indigo-900 rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 md:col-span-2 relative group cursor-pointer border border-blue-700"
+                    <div class="relative rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 md:col-span-2 group cursor-pointer border border-blue-700 bg-gray-900"
                          onclick="filterCategory('sports')">
-                        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20"></div>
-                        <div class="absolute top-4 right-4 animate-pulse">
-                            <span class="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">LIVE TOURNAMENT</span>
+                        <!-- Background Image -->
+                        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" 
+                             style="background-image: url('https://scontent.fstv5-1.fna.fbcdn.net/v/t39.30808-6/629225282_1375341887943839_8233480659945814975_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=13d280&_nc_ohc=dy8s1wqarZwQ7kNvwGnn_Fl&_nc_oc=AdkCnJpTs98hlFC8Gel43Mit-zdGpsv_PB3gRy4C8F78g3TuMdgdMiTFFEL6YUiXBf8Px4iCuR5QWTlVXqm70M_0&_nc_zt=23&_nc_ht=scontent.fstv5-1.fna&_nc_gid=kSUb0-KZbGsN6tasy3kKTQ&oh=00_AfsACJgjrDrQ4AJz0PIAuHuoiBHOMnrvDQYYDz4OHIYoeQ&oe=699CFABA');">
+                        </div>
+                        <!-- Gradient Overlay for Text Readability -->
+                        <div class="absolute inset-0 bg-gradient-to-r from-blue-900/90 via-blue-900/40 to-transparent"></div>
+
+                        <div class="absolute top-4 right-4 animate-pulse z-10">
+                            <span class="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded shadow">LIVE TOURNAMENT</span>
                         </div>
                         <div class="p-8 flex flex-col h-full justify-center relative z-10">
-                            <h3 class="text-3xl font-extrabold text-white mb-2">🏏 ICC World Cup 2026</h3>
-                            <p class="text-blue-200 mb-6 max-w-md">Catch the biggest cricket showdown! 50+ Matches, 10 Teams. Book your tickets now.</p>
-                            <button class="bg-white text-blue-900 hover:bg-blue-50 font-bold py-3 px-6 rounded-lg self-start transition-colors flex items-center gap-2">
+                            <h3 class="text-3xl font-extrabold text-white mb-2 drop-shadow-md">🏏 ICC World Cup 2026</h3>
+                            <p class="text-blue-100 mb-6 max-w-md font-medium drop-shadow-sm">Catch the biggest cricket showdown! 50+ Matches, 10 Teams. Book your tickets now.</p>
+                            <button class="bg-white text-blue-900 hover:bg-blue-50 font-bold py-3 px-6 rounded-lg self-start transition-transform hover:scale-105 flex items-center gap-2 shadow-lg">
                                 View All Matches <span class="material-icons">arrow_forward</span>
                             </button>
                         </div>
