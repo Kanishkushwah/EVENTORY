@@ -1365,7 +1365,7 @@
                 localStorage.setItem("totalAmount", bookingData.amount_paid);
                 localStorage.setItem("userEmail", user.email);
 
-                window.location.href = "payment.html";
+                window.location.href = `payment.html?ref=${data.reference}`;
 
             } catch (err) {
                 console.error("Booking error:", err);

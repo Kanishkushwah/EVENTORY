@@ -49,7 +49,7 @@
     </script>
 </head>
 
-<body class="bg-gray-50 text-gray-900 font-sans">
+<body class="bg-gray-50 text-gray-900 font-sans pb-32">
 
     <!-- NAVBAR -->
     <nav class="bg-white border-b shadow-sm sticky top-0 z-50">
@@ -154,6 +154,11 @@
                             <div class="w-64 h-64 mx-auto bg-white border-2 border-gray-200 rounded-2xl p-4 shadow-lg">
                                 <div id="qrcode" class="w-full h-full flex items-center justify-center"></div>
                             </div>
+
+                            <a id="upiDeepLink" href="#"
+                                class="md:hidden block w-full mt-4 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg shadow transition-all text-center">
+                                Open UPI App to Pay
+                            </a>
 
                             <p class="text-sm text-gray-600 mt-4 font-semibold" id="qrAmount">Amount: ₹0.00</p>
 
@@ -410,8 +415,14 @@
             const reference = localStorage.getItem("bookingReference") || "REF123";
             const amount = localStorage.getItem("totalAmount") || "0";
 
+            const upiString = `upi://pay?pa=eventory@upi&pn=Eventory&am=${amount}&tr=${reference}`;
+
+            // Update Deep Link Button for Mobile
+            const deepLinkBtn = document.getElementById("upiDeepLink");
+            if (deepLinkBtn) deepLinkBtn.href = upiString;
+
             new QRCode(qrContainer, {
-                text: `upi://pay?pa=eventory@upi&pn=Eventory&am=${amount}&tr=${reference}`,
+                text: upiString,
                 width: 220,
                 height: 220,
                 colorDark: "#6B46C1",
@@ -507,47 +518,103 @@
             });
         }
 
-        window.onload = () => {
-            // SECURITY CHECK
-            const bookingRef = localStorage.getItem("bookingReference");
+        // Initialize Payment Page
+        window.onload = async () => {
+            // 1. Try to get Reference from URL (Cross-Device Support) or LocalSotrage
+            const urlParams = new URLSearchParams(window.location.search);
+            const refFromUrl = urlParams.get('ref');
+            const refFromLocal = localStorage.getItem("bookingReference");
+
+            const bookingRef = refFromUrl || refFromLocal;
+
             if (!bookingRef) {
                 alert("No active booking found. Redirecting to home.");
                 window.location.href = "index.html";
                 return;
             }
 
-            const eventTitle = localStorage.getItem("eventTitle") || "Event Name";
-            const eventDate = localStorage.getItem("eventFullDate") || "Date TBD";
-            const eventVenue = localStorage.getItem("eventVenue") || "Venue TBD";
-            // ... existing code ...
-            const eventImage = localStorage.getItem("eventImage") || "https://via.placeholder.com/400x300";
-            const seats = JSON.parse(localStorage.getItem("selectedSeats") || "[]");
-            const totalAmount = Number(localStorage.getItem("totalAmount") || 0);
-            const email = localStorage.getItem("userEmail") || "your email";
+            // Save to local for consistency if came from URL
+            if (refFromUrl) {
+                localStorage.setItem("bookingReference", refFromUrl);
+            }
 
-            document.title = "Secure Payment Gateway - Eventory";
+            try {
+                // 2. Fetch Booking Details from Backend (Reliable Source)
+                const res = await fetch(`/api/bookings/${bookingRef}`);
+                if (!res.ok) throw new Error("Booking not found");
 
-            // Payment section
-            document.getElementById("summaryTitle").textContent = eventTitle;
-            document.getElementById("summaryLocation").textContent = eventVenue;
-            document.getElementById("summaryDate").textContent = eventDate;
-            document.getElementById("summaryTicketCount").textContent = seats.length;
-            document.getElementById("summaryImage").src = eventImage;
+                const booking = await res.json();
 
-            const fee = Math.round(totalAmount * 0.10);
-            const subtotal = totalAmount - fee;
+                // 3. Populate UI with Real Data
+                document.title = "Secure Payment - Eventory";
 
-            document.getElementById("summarySubtotal").textContent = "₹" + subtotal;
-            document.getElementById("summaryFee").textContent = "₹" + fee;
-            document.getElementById("summaryTotal").textContent = "₹" + totalAmount;
+                // Save essential data for payment logic
+                localStorage.setItem("totalAmount", booking.amount_paid); // Needed for logic below
 
-            document.getElementById("cardPaymentAmount").textContent = "₹" + totalAmount;
-            document.getElementById("qrAmount").textContent = "Amount: ₹" + totalAmount;
+                // Update Summary UI
+                document.getElementById("summaryTitle").textContent = booking.event_title;
+                document.getElementById("summaryLocation").textContent = booking.venue;
+                document.getElementById("summaryDate").textContent = booking.event_date + " • " + (booking.event_time || "");
+                document.getElementById("summaryTicketCount").textContent = booking.seats ? booking.seats.length : 1;
+                document.getElementById("summaryImage").src = booking.poster_url || "https://via.placeholder.com/400x300";
 
-            // Extract user name from email
-            const userName = email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1);
-            document.getElementById("userNameDisplay").textContent = userName;
+                const totalAmount = parseFloat(booking.amount_paid);
+                const fee = Math.round(totalAmount * 0.10); // Example logic, ideally comes from backend
+                const subtotal = totalAmount - fee;
+
+                document.getElementById("summarySubtotal").textContent = "₹" + subtotal;
+                document.getElementById("summaryFee").textContent = "₹" + fee;
+                document.getElementById("summaryTotal").textContent = "₹" + totalAmount;
+                document.getElementById("payBtnAmount").textContent = totalAmount; // Update CTA Button
+
+                // Payment Section UI
+                document.getElementById("cardPaymentAmount").textContent = "₹" + totalAmount;
+                document.getElementById("qrAmount").textContent = "Amount: ₹" + totalAmount;
+
+                // User Info
+                const userName = booking.user_email ? booking.user_email.split('@')[0] : "User";
+                document.getElementById("userNameDisplay").textContent = userName.charAt(0).toUpperCase() + userName.slice(1);
+
+            } catch (err) {
+                console.error("Error loading booking:", err);
+                alert("Failed to load booking details. Please try again.");
+            }
         };
+
+        // ... existing functions ...
+
+        async function completePayment(methodType) {
+            const reference = localStorage.getItem("bookingReference");
+            // ... rest of logic uses reference ...
+            // Simulate network delay
+            const btn = document.getElementById("payButton");
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = `<span class="material-icons animate-spin">refresh</span> Processing...`;
+            }
+
+            setTimeout(async () => {
+                try {
+                    const response = await fetch("/api/bookings/payment-success", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ reference: reference }) // Send Reference, not ID
+                    });
+
+                    if (response.ok) {
+                        showSuccess();
+                    } else {
+                        throw new Error("Payment verification failed");
+                    }
+                } catch (e) {
+                    alert("Payment failed: " + e.message);
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerText = "Proceed to Pay";
+                    }
+                }
+            }, 2000);
+        }
 
         function fillConfirmationUI(booking) {
             document.getElementById("bookingRef").textContent = booking.reference;
