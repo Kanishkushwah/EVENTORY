@@ -373,7 +373,7 @@
 
             try {
                 // Fetch from Backend
-                const res = await fetch(`http://localhost:8000/api/users/bookings/${loggedInUser.email}`);
+                const res = await fetch(`/api/users/bookings/${loggedInUser.email}`);
                 const data = await res.json();
                 allBookingsCache = data.all || [];
 
@@ -431,7 +431,7 @@
         }
 
         async function downloadTicket(ref) {
-            window.open(`http://localhost:8000/api/pdf/ticket/${ref}`, '_blank');
+            window.open(`/api/pdf/ticket/${ref}`, '_blank');
         }
 
         // --- 3. LOGIC FOR PAYMENTS ---

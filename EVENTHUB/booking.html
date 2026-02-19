@@ -298,7 +298,7 @@
         async function loadCinemas() {
             try {
                 // 1. Get all showtimes for this movie first
-                const showtimeRes = await fetch(`http://localhost:8000/api/showtimes/movie/${currentEvent.id}`);
+                const showtimeRes = await fetch(`/api/showtimes/movie/${currentEvent.id}`);
                 const movieShowtimes = await showtimeRes.json();
 
                 // 2. Get the list of cinemas that have showtimes
@@ -349,7 +349,7 @@
         // Load available dates for the movie
         async function loadDates() {
             try {
-                const response = await fetch(`http://localhost:8000/api/showtimes/movie/${currentEvent.id}`);
+                const response = await fetch(`/api/showtimes/movie/${currentEvent.id}`);
                 const data = await response.json();
 
                 // Find showtimes for selected cinema - CORRECTED PROPERTY ACCESS
@@ -1345,7 +1345,7 @@
             }
 
             try {
-                const res = await fetch("http://localhost:8000/api/bookings/create", {
+                const res = await fetch("/api/bookings/create", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(bookingData)
