@@ -24,10 +24,12 @@ passport.deserializeUser(async (id, done) => {
 });
 
 // Google OAuth Strategy
+// Google OAuth Strategy
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: process.env.GOOGLE_CALLBACK_URL || 'http://localhost:8000/auth/google/callback'
+    callbackURL: '/auth/google/callback', // Use relative path to support both Localhost & Production
+    proxy: true // Trust the reverse proxy (Render) to correctly resolve protocol (https)
 },
     async (accessToken, refreshToken, profile, done) => {
         try {
