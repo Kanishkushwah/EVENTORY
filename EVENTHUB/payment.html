@@ -621,19 +621,23 @@
         }
 
         async function downloadTicket() {
-            const reference = localStorage.getItem("bookingReference");
+            const urlParams = new URLSearchParams(window.location.search);
+            const reference = urlParams.get('ref') || localStorage.getItem("bookingReference");
+
             if (!reference) {
                 alert("No booking reference found!");
                 return;
             }
 
             try {
+                // Show loading state (optional, can add spinner here)
                 const response = await fetch(
                     `/api/pdf/ticket/${reference}`
                 );
 
                 if (!response.ok) {
-                    throw new Error("Failed to download ticket");
+                    const err = await response.json().catch(() => ({}));
+                    throw new Error(err.message || `Server Error (${response.status})`);
                 }
 
                 const blob = await response.blob();
