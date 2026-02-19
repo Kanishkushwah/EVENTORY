@@ -636,8 +636,9 @@
                 );
 
                 if (!response.ok) {
-                    const err = await response.json().catch(() => ({}));
-                    throw new Error(err.message || `Server Error (${response.status})`);
+                    const errData = await response.json().catch(() => ({}));
+                    // Prioritize specific 'error' field from backend
+                    throw new Error(errData.error || errData.message || `Server Error (${response.status})`);
                 }
 
                 const blob = await response.blob();
