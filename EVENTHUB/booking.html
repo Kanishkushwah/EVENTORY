@@ -510,8 +510,8 @@
                 });
             }
 
-            // MUSIC/CONCERT LAYOUT - handles both "music", "concert", "concerts"
-            else if (eventCategory === "music" || eventCategory === "concert" || eventCategory === "concerts") {
+            // MUSIC/CONCERT LAYOUT - handles music, concert, business, exhibition, show
+            else if (["music", "concert", "concerts", "business", "exhibition", "show"].includes(eventCategory)) {
                 layout.innerHTML = `
                     <div class="concert-venue-container bg-gradient-to-b from-gray-50 to-white p-6 rounded-2xl">
                         <h3 class="text-center text-lg font-bold text-gray-600 mb-6 tracking-wide">CONCERT VENUE SEATING</h3>
@@ -1015,9 +1015,10 @@
 
             // STANDUP/EVENT LAYOUT - Theater Style Seating (DEFAULT FALLBACK)
             else {
+                const layoutTitle = ["comedy", "standup"].includes(eventCategory) ? "COMEDY THEATER" : "MAIN AUDITORIUM";
                 layout.innerHTML = `
                     <div class="standup-venue-container bg-gradient-to-b from-purple-50 to-white p-6 rounded-2xl border border-purple-100">
-                        <h3 class="text-center text-xl font-bold text-gray-800 mb-2">COMEDY THEATER</h3>
+                        <h3 class="text-center text-xl font-bold text-gray-800 mb-2">${layoutTitle}</h3>
                         <p class="text-center text-sm text-purple-600 mb-6 font-medium">Select Your Seats</p>
                         
                         <!-- Stage -->
