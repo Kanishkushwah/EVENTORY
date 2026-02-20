@@ -45,6 +45,34 @@
             background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
         }
     </style>
+    <script>
+        // Check local storage for theme early to prevent FOUC
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+                updateThemeIcons('dark_mode');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+                updateThemeIcons('light_mode');
+            }
+        }
+
+        function updateThemeIcons(icon) {
+            document.querySelectorAll('.theme-icon').forEach(el => el.textContent = icon);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateThemeIcons(document.documentElement.classList.contains('dark') ? 'light_mode' : 'dark_mode');
+        });
+    </script>
 </head>
 
 <body
@@ -62,6 +90,11 @@
 
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center space-x-6 text-sm font-medium">
+                    <button onclick="toggleTheme()"
+                        class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light transition-colors focus:outline-none"
+                        title="Toggle Dark Mode">
+                        <span class="material-icons theme-icon text-lg">dark_mode</span>
+                    </button>
                     <a class="text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light flex items-center gap-1 transition-colors"
                         href="index.html">
                         <span class="material-icons text-base">home</span> Browse Events

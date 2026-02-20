@@ -13,7 +13,73 @@
         body {
             font-family: 'Inter', sans-serif;
         }
+
+        /* Essential Global Dark Mode Overrides */
+        .dark body {
+            background-color: #111827 !important;
+            color: #F3F4F6 !important;
+        }
+
+        .dark .bg-white {
+            background-color: #1F2937 !important;
+            border-color: #374151 !important;
+            color: #F3F4F6 !important;
+        }
+
+        .dark .bg-gray-50 {
+            background-color: #111827 !important;
+        }
+
+        .dark .bg-gray-100 {
+            background-color: #374151 !important;
+        }
+
+        .dark .border-b,
+        .dark .border-t,
+        .dark .border {
+            border-color: #374151 !important;
+        }
+
+        .dark .text-gray-900,
+        .dark .text-gray-800,
+        .dark .text-gray-700 {
+            color: #F9FAFB !important;
+        }
+
+        .dark .text-gray-600,
+        .dark .text-gray-500 {
+            color: #9CA3AF !important;
+        }
+
+        .dark input,
+        .dark select,
+        .dark textarea {
+            background-color: #374151 !important;
+            border-color: #4B5563 !important;
+            color: #F3F4F6 !important;
+        }
+
+        .dark nav.bg-white {
+            background-color: #1F2937 !important;
+            border-bottom-color: #374151 !important;
+        }
     </style>
+    <script>
+        tailwind.config = { darkMode: 'class' };
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+            document.querySelectorAll('.theme-icon').forEach(el => el.textContent = localStorage.theme === 'dark' ? 'light_mode' : 'dark_mode');
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.theme-icon').forEach(el => el.textContent = document.documentElement.classList.contains('dark') ? 'light_mode' : 'dark_mode');
+        });
+    </script>
 </head>
 
 <body class="bg-gray-50">
@@ -27,6 +93,11 @@
             </a>
 
             <div id="nav-auth-container" class="flex items-center gap-6">
+                <button onclick="toggleTheme()"
+                    class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-purple-600 transition-colors focus:outline-none"
+                    title="Toggle Dark Mode">
+                    <span class="material-icons-outlined theme-icon text-lg">dark_mode</span>
+                </button>
                 <a href="index.html" class="text-gray-600 hover:text-purple-600 text-sm font-medium">Browse Events</a>
                 <a href="user-dashboard.html" class="text-purple-600 text-sm font-semibold">My Tickets</a>
                 <a href="user-profile.html" class="text-purple-600 hover:text-purple-800 text-sm font-medium">My
