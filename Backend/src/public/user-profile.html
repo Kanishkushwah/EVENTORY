@@ -7,7 +7,7 @@
     <title>My Profile - Eventory</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
     <script src="toast.js"></script>
 
     <style>
@@ -35,7 +35,7 @@
     </style>
 </head>
 
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-gray-50 text-gray-800 pb-20 md:pb-0">
 
     <!-- NAVBAR -->
     <nav class="bg-white border-b shadow-sm sticky top-0 z-50">
@@ -45,14 +45,23 @@
                 <span class="font-bold text-2xl text-purple-600">Eventory</span>
             </a>
 
-            <div class="flex items-center gap-6">
-                <a href="index.html" class="text-gray-600 hover:text-purple-600 text-sm font-medium">Browse Events</a>
-                <a href="user-profile.html"
-                    class="text-purple-600 text-sm font-semibold border-b-2 border-purple-600">My Profile</a>
-                <button onclick="logout()"
-                    class="flex items-center gap-1 text-gray-600 hover:text-red-600 text-sm font-medium transition">
-                    <span class="material-icons-outlined text-lg">logout</span> Logout
+            <div class="flex items-center gap-4">
+                <!-- Mobile Logout -->
+                <button onclick="logout()" class="md:hidden text-gray-600 hover:text-red-600 transition">
+                    <span class="material-icons-outlined text-2xl">logout</span>
                 </button>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center gap-6">
+                    <a href="index.html" class="text-gray-600 hover:text-purple-600 text-sm font-medium">Browse
+                        Events</a>
+                    <a href="user-profile.html"
+                        class="text-purple-600 text-sm font-semibold border-b-2 border-purple-600">My Profile</a>
+                    <button onclick="logout()"
+                        class="flex items-center gap-1 text-gray-600 hover:text-red-600 text-sm font-medium transition">
+                        <span class="material-icons-outlined text-lg">logout</span> Logout
+                    </button>
+                </div>
             </div>
         </div>
     </nav>
@@ -364,7 +373,7 @@
 
             try {
                 // Fetch from Backend
-                const res = await fetch(`http://localhost:8000/api/users/bookings/${loggedInUser.email}`);
+                const res = await fetch(`/api/users/bookings/${loggedInUser.email}`);
                 const data = await res.json();
                 allBookingsCache = data.all || [];
 
@@ -422,7 +431,7 @@
         }
 
         async function downloadTicket(ref) {
-            window.open(`http://localhost:8000/api/pdf/ticket/${ref}`, '_blank');
+            window.open(`/api/pdf/ticket/${ref}`, '_blank');
         }
 
         // --- 3. LOGIC FOR PAYMENTS ---
@@ -526,6 +535,31 @@
         loadBookings();
 
     </script>
+    <!-- Mobile Bottom Navigation -->
+    <nav
+        class="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] border-t border-gray-100 z-50">
+        <div class="flex justify-around items-center h-16">
+            <a href="index.html"
+                class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-purple-600 transition-colors">
+                <span class="material-icons">home</span>
+                <span class="text-[10px] font-medium mt-1">Home</span>
+            </a>
+            <a href="booking.html"
+                class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-purple-600 transition-colors">
+                <span class="material-icons">confirmation_number</span>
+                <span class="text-[10px] font-medium mt-1">Bookings</span>
+            </a>
+            <a href="index.html#search"
+                class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-purple-600 transition-colors">
+                <span class="material-icons">search</span>
+                <span class="text-[10px] font-medium mt-1">Search</span>
+            </a>
+            <a href="user-profile.html" class="flex flex-col items-center justify-center w-full h-full text-purple-600">
+                <span class="material-icons">person</span>
+                <span class="text-[10px] font-medium mt-1">Profile</span>
+            </a>
+        </div>
+    </nav>
 </body>
 
 </html>

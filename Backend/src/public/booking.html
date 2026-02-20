@@ -77,7 +77,7 @@
     </style>
 </head>
 
-<body class="bg-gray-50">
+<body class="bg-gray-50 flex flex-col min-h-screen pb-20 md:pb-0 font-sans">
     <!-- NAVBAR -->
     <nav class="bg-white shadow border-b sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
@@ -85,11 +85,70 @@
                 <span class="material-icons text-purple-600 text-3xl">event_seat</span>
                 <span class="font-bold text-2xl text-purple-600">Eventory</span>
             </a>
-            <a href="Index.html" class="text-gray-600 hover:text-purple-600 flex items-center gap-1">
-                <span class="material-icons">home</span> Browse Events
-            </a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center space-x-6 text-sm font-medium text-gray-600">
+                <a class="flex items-center hover:text-purple-600 transition-colors gap-1" href="Index.html">
+                    <span class="material-icons text-lg">home</span> Browse Events
+                </a>
+                <a class="flex items-center hover:text-purple-600 transition-colors gap-1" href="booking.html">
+                    <span class="material-icons text-lg">confirmation_number</span> My Bookings
+                </a>
+                <a class="flex items-center hover:text-purple-600 transition-colors gap-1" href="#search">
+                    <span class="material-icons text-lg">search</span> Search Booking
+                </a>
+                <a class="flex items-center hover:text-purple-600 transition-colors gap-1" href="login.html">
+                    <span class="material-icons text-lg">login</span> Login
+                </a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden text-gray-600 hover:text-purple-600 focus:outline-none"
+                onclick="toggleMobileMenu()">
+                <span class="material-icons text-3xl">menu</span>
+            </button>
         </div>
     </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu"
+        class="fixed inset-0 z-50 bg-white transform translate-x-full transition-transform duration-300 md:hidden flex flex-col h-full shadow-2xl">
+        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <span class="text-xl font-bold text-purple-600">Menu</span>
+            <button onclick="toggleMobileMenu()" class="text-gray-500 hover:text-red-500 transition-colors">
+                <span class="material-icons text-2xl">close</span>
+            </button>
+        </div>
+        <div class="flex-1 overflow-y-auto py-6 px-6 space-y-6">
+            <div class="space-y-4">
+                <a href="Index.html"
+                    class="flex items-center gap-3 text-lg font-medium text-gray-700 hover:text-purple-600 transition-colors p-2 rounded-lg hover:bg-gray-50">
+                    <span class="material-icons">home</span> Browse Events
+                </a>
+                <a href="booking.html"
+                    class="flex items-center gap-3 text-lg font-medium text-gray-700 hover:text-purple-600 transition-colors p-2 rounded-lg hover:bg-gray-50">
+                    <span class="material-icons">confirmation_number</span> My Bookings
+                </a>
+                <a href="#search"
+                    class="flex items-center gap-3 text-lg font-medium text-gray-700 hover:text-purple-600 transition-colors p-2 rounded-lg hover:bg-gray-50"
+                    onclick="toggleMobileMenu()">
+                    <span class="material-icons">search</span> Search Booking
+                </a>
+            </div>
+
+            <div class="border-t border-gray-100 pt-6 space-y-4">
+                <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Account</p>
+                <a href="login.html"
+                    class="flex items-center gap-3 text-lg font-medium text-gray-700 hover:text-purple-600 transition-colors p-2 rounded-lg hover:bg-gray-50">
+                    <span class="material-icons">login</span> Login
+                </a>
+                <a href="register.html"
+                    class="flex items-center gap-3 text-lg font-medium text-gray-700 hover:text-purple-600 transition-colors p-2 rounded-lg hover:bg-gray-50">
+                    <span class="material-icons">person_add</span> Register
+                </a>
+            </div>
+        </div>
+    </div>
 
     <!-- MAIN -->
     <main class="max-w-7xl mx-auto px-4 py-6">
@@ -239,7 +298,7 @@
         async function loadCinemas() {
             try {
                 // 1. Get all showtimes for this movie first
-                const showtimeRes = await fetch(`http://localhost:8000/api/showtimes/movie/${currentEvent.id}`);
+                const showtimeRes = await fetch(`/api/showtimes/movie/${currentEvent.id}`);
                 const movieShowtimes = await showtimeRes.json();
 
                 // 2. Get the list of cinemas that have showtimes
@@ -290,7 +349,7 @@
         // Load available dates for the movie
         async function loadDates() {
             try {
-                const response = await fetch(`http://localhost:8000/api/showtimes/movie/${currentEvent.id}`);
+                const response = await fetch(`/api/showtimes/movie/${currentEvent.id}`);
                 const data = await response.json();
 
                 // Find showtimes for selected cinema - CORRECTED PROPERTY ACCESS
@@ -387,7 +446,7 @@
                 layout.innerHTML = `
                     <div class="text-center py-12 bg-green-50 rounded-xl border-2 border-green-200">
                         <span class="material-icons text-green-600 text-6xl">event_available</span>
-                        <h3 class="text-2xl font-bold mt-4 text-gray-800">Free Entry Event</h3>
+                        <h3 class="2xl font-bold mt-4 text-gray-800">Free Entry Event</h3>
                         <p class="text-gray-600 mt-2 mb-4">No seat selection required</p>
                         <select id="freeCount" class="border-2 rounded-lg px-4 py-2">
                             <option value="1">1 Person</option>
@@ -451,8 +510,8 @@
                 });
             }
 
-            // MUSIC/CONCERT LAYOUT - handles both "music" and singular forms
-            else if (eventCategory === "music" || eventCategory === "concert") {
+            // MUSIC/CONCERT LAYOUT - handles music, concert, business, exhibition, show
+            else if (["music", "concert", "concerts", "business", "exhibition", "show"].includes(eventCategory)) {
                 layout.innerHTML = `
                     <div class="concert-venue-container bg-gradient-to-b from-gray-50 to-white p-6 rounded-2xl">
                         <h3 class="text-center text-lg font-bold text-gray-600 mb-6 tracking-wide">CONCERT VENUE SEATING</h3>
@@ -956,18 +1015,21 @@
 
             // STANDUP/EVENT LAYOUT - Theater Style Seating (DEFAULT FALLBACK)
             else {
+                const layoutTitle = ["comedy", "standup"].includes(eventCategory) ? "COMEDY THEATER" : "MAIN AUDITORIUM";
                 layout.innerHTML = `
                     <div class="standup-venue-container bg-gradient-to-b from-purple-50 to-white p-6 rounded-2xl border border-purple-100">
-                        <h3 class="text-center text-xl font-bold text-gray-800 mb-2">COMEDY THEATER</h3>
+                        <h3 class="text-center text-xl font-bold text-gray-800 mb-2">${layoutTitle}</h3>
                         <p class="text-center text-sm text-purple-600 mb-6 font-medium">Select Your Seats</p>
                         
                         <!-- Stage -->
-                        <div class="text-center mb-8 py-8 bg-gradient-to-r from-purple-600 to-purple-700 rounded-xl shadow-lg relative overflow-hidden">
-                            <div class="absolute inset-0 bg-black/10"></div>
-                            <div class="relative z-10">
-                                <span class="material-icons text-white" style="font-size: 48px;">mic</span>
-                                <p class="text-white text-xl font-bold mt-2 tracking-wider">STAGE</p>
+                        <!-- Stage - Modernized -->
+                        <div class="text-center mb-12 relative group rounded-3xl">
+                            <!-- Stage Floor Effect -->
+                            <div class="mx-auto w-3/4 h-16 bg-gradient-to-b from-purple-900 to-purple-800 rounded-lg transform perspective-1000 rotateX-45 shadow-2xl border-b-4 border-purple-700 relative z-10 flex items-center justify-center">
+                                <span class="text-purple-200 tracking-[0.5em] font-bold text-sm opacity-80">STAGE</span>
                             </div>
+                            <!-- Glow -->
+                            <div class="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-1/2 h-20 bg-purple-500 blur-[60px] opacity-40 rounded-full pointer-events-none"></div>
                         </div>
                         
                         <!-- Seating Grid -->
@@ -1057,151 +1119,155 @@
                 for (let row = 0; row < premiumConfig.rows; row++) {
                     const rowLabel = premiumConfig.rowLabels[row];
                     const rowDiv = document.createElement('div');
-                    rowDiv.className = 'flex items-center gap-3';
+                    rowDiv.className = 'flex items-center gap-4 justify-center'; // Centered
 
-                    // Row Label
-                    const label = document.createElement('div');
-                    label.className = 'w-8 h-8 flex items-center justify-center font-bold text-purple-700 bg-purple-100 rounded-lg border-2 border-purple-300 text-sm flex-shrink-0';
-                    label.textContent = rowLabel;
-                    rowDiv.appendChild(label);
+                    // Row Label Left
+                    const labelL = document.createElement('span');
+                    labelL.className = 'text-xs font-bold text-gray-400 w-4';
+                    labelL.textContent = rowLabel;
+                    rowDiv.appendChild(labelL);
 
-                    // Seats Container - SCROLLABLE
+                    // Seats
                     const seatsDiv = document.createElement('div');
-                    seatsDiv.className = 'flex-1 grid gap-2 overflow-x-auto pb-2';
-                    seatsDiv.style.gridTemplateColumns = `repeat(${premiumConfig.seatsPerRow}, minmax(28px, 1fr))`;
-                    seatsDiv.style.gridAutoFlow = 'column';
+                    seatsDiv.className = 'flex gap-1 justify-center';
 
-                    for (let seat = 0; seat < premiumConfig.seatsPerRow; seat++) {
+                    for (let seat = 0; seat < 20; seat++) { // 20 seats per row for cleaner look
                         const seatNum = seat + 1;
+                        const globalId = row * 20 + seatNum; // Simplified ID logic
                         const seatId = `${rowLabel}${seatNum}`;
-                        const globalId = row * premiumConfig.seatsPerRow + seatNum;
 
-                        const seatEl = document.createElement('div');
-                        seatEl.className = `seat-box w-7 h-7 bg-gradient-to-br ${premiumConfig.baseColor} ${premiumConfig.borderColor} border-2 rounded-md cursor-pointer transition-all transform ${premiumConfig.hoverColor} hover:scale-110 shadow-sm`;
-                        seatEl.setAttribute('data-seat-id', seatId);
-                        seatEl.setAttribute('data-price', premiumConfig.price);
-                        seatEl.setAttribute('data-section', 'Premium');
-                        seatEl.setAttribute('data-row', rowLabel);
-                        seatEl.setAttribute('title', `Seat ${seatId} - Premium ₹${premiumConfig.price}`);
+                        const seatBtn = document.createElement('button');
+                        seatBtn.className = 'w-8 h-8 flex items-center justify-center transition-all duration-300 relative group';
 
-                        if (premiumConfig.occupied.includes(globalId)) {
-                            seatEl.className = 'seat-box w-7 h-7 bg-gray-300 border-2 border-gray-400 rounded-md cursor-not-allowed opacity-60';
-                            seatEl.setAttribute('data-occupied', 'true');
+                        // Seat Icon (SVG)
+                        const isOccupied = premiumConfig.occupied.includes(globalId);
+
+                        seatBtn.innerHTML = `
+                            <svg viewBox="0 0 24 24" class="w-full h-full drop-shadow-sm transition-colors duration-300 ${isOccupied ? 'text-gray-300 cursor-not-allowed' : 'text-purple-200 hover:text-purple-500 cursor-pointer seat-icon'}">
+                                <path fill="currentColor" d="M4 18v3h3v-3h10v3h3v-6H4zm15-8h3v3h-3zM2 10h3v3H2zm15 3H7V5c0-1.1.9-2 2-2h6c1.1 0 2 .9 2 2v8z"/>
+                            </svg>
+                            ${!isOccupied ? `<div class="absolute -top-8 bg-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 pointer-events-none">Rs.${premiumConfig.price} | ${rowLabel}${seatNum}</div>` : ''}
+                        `;
+
+                        if (isOccupied) {
+                            seatBtn.disabled = true;
                         } else {
-                            seatEl.onclick = () => toggleStandupSeat(seatEl, seatId, premiumConfig.price, 'Premium', rowLabel, seatNum);
+                            seatBtn.onclick = function () {
+                                // Toggle Selection Visuals
+                                const icon = this.querySelector('svg');
+                                const isSelected = icon.classList.contains('text-green-500');
+
+                                if (isSelected) {
+                                    // Deselect
+                                    icon.classList.remove('text-green-500');
+                                    icon.classList.add('text-purple-200');
+                                    selectedSeats = selectedSeats.filter(s => s.id !== seatId);
+                                } else {
+                                    // Select
+                                    if (selectedSeats.length >= maxSeats) return alert("Max 10 seats!");
+                                    icon.classList.remove('text-purple-200', 'hover:text-purple-500');
+                                    icon.classList.add('text-green-500');
+
+                                    // Bouncing animation
+                                    this.style.transform = "scale(1.2)";
+                                    setTimeout(() => this.style.transform = "scale(1)", 200);
+
+                                    selectedSeats.push({ id: seatId, price: premiumConfig.price });
+                                }
+                                updateSummary();
+                            };
                         }
-
-                        seatsDiv.appendChild(seatEl);
+                        seatsDiv.appendChild(seatBtn);
                     }
-
                     rowDiv.appendChild(seatsDiv);
+
+                    // Row Label Right
+                    const labelR = document.createElement('span');
+                    labelR.className = 'text-xs font-bold text-gray-400 w-4 text-right';
+                    labelR.textContent = rowLabel;
+                    rowDiv.appendChild(labelR);
+
                     premiumContainer.appendChild(rowDiv);
                 }
 
-                // Generate Standard Seats (Back Section - Teal, with curve)
+                // Generate Standard Seats (Back Section - Teal)
                 const standardContainer = document.getElementById('standard-seats-container');
-                let globalSeatCounter = premiumConfig.rows * premiumConfig.seatsPerRow;
-
                 for (let row = 0; row < standardConfig.rows; row++) {
                     const rowLabel = standardConfig.rowLabels[row];
-                    const seatsInThisRow = standardConfig.curvePattern[row];
-                    const emptySeatsOnSide = Math.floor((standardConfig.seatsPerRow - seatsInThisRow) / 2);
-
                     const rowDiv = document.createElement('div');
-                    rowDiv.className = 'flex items-center gap-3';
+                    rowDiv.className = 'flex items-center gap-4 justify-center';
 
-                    // Row Label
-                    const label = document.createElement('div');
-                    label.className = 'w-8 h-8 flex items-center justify-center font-bold text-teal-700 bg-teal-100 rounded-lg border-2 border-teal-300 text-sm flex-shrink-0';
-                    label.textContent = rowLabel;
-                    rowDiv.appendChild(label);
+                    // Labels
+                    const labelL = document.createElement('span');
+                    labelL.className = 'text-xs font-bold text-gray-400 w-4';
+                    labelL.textContent = rowLabel;
+                    rowDiv.appendChild(labelL);
 
-                    // Seats Container - SCROLLABLE
                     const seatsDiv = document.createElement('div');
-                    seatsDiv.className = 'flex-1 grid gap-2 overflow-x-auto pb-2';
-                    seatsDiv.style.gridTemplateColumns = `repeat(${standardConfig.seatsPerRow}, minmax(28px, 1fr))`;
-                    seatsDiv.style.gridAutoFlow = 'column';
+                    seatsDiv.className = 'flex gap-1 justify-center';
 
-                    // Add empty spacers for curve effect
-                    for (let i = 0; i < emptySeatsOnSide; i++) {
-                        const spacer = document.createElement('div');
-                        seatsDiv.appendChild(spacer);
-                    }
+                    // Staggered layout for theater feel
+                    const seatsInRow = 24 - (row % 2) * 2;
 
-                    // Add actual seats
-                    for (let seat = 0; seat < seatsInThisRow; seat++) {
+                    for (let seat = 0; seat < seatsInRow; seat++) {
                         const seatNum = seat + 1;
                         const seatId = `${rowLabel}${seatNum}`;
-                        globalSeatCounter++;
+                        const isOccupied = standardConfig.occupied.includes(seat * (row + 1)); // distinct pattern
 
-                        const seatEl = document.createElement('div');
-                        seatEl.className = `seat-box w-7 h-7 bg-gradient-to-br ${standardConfig.baseColor} ${standardConfig.borderColor} border-2 rounded-md cursor-pointer transition-all transform ${standardConfig.hoverColor} hover:scale-110 shadow-sm`;
-                        seatEl.setAttribute('data-seat-id', seatId);
-                        seatEl.setAttribute('data-price', standardConfig.price);
-                        seatEl.setAttribute('data-section', 'Standard');
-                        seatEl.setAttribute('data-row', rowLabel);
-                        seatEl.setAttribute('title', `Seat ${seatId} - Standard ₹${standardConfig.price}`);
+                        const seatBtn = document.createElement('button');
+                        seatBtn.className = 'w-7 h-7 flex items-center justify-center transition-all duration-300 relative group';
 
-                        if (standardConfig.occupied.includes(globalSeatCounter)) {
-                            seatEl.className = 'seat-box w-7 h-7 bg-gray-300 border-2 border-gray-400 rounded-md cursor-not-allowed opacity-60';
-                            seatEl.setAttribute('data-occupied', 'true');
+                        seatBtn.innerHTML = `
+                            <svg viewBox="0 0 24 24" class="w-full h-full drop-shadow-sm transition-colors duration-300 ${isOccupied ? 'text-gray-300 cursor-not-allowed' : 'text-teal-200 hover:text-teal-500 cursor-pointer seat-icon'}">
+                                <path fill="currentColor" d="M4 18v3h3v-3h10v3h3v-6H4zm15-8h3v3h-3zM2 10h3v3H2zm15 3H7V5c0-1.1.9-2 2-2h6c1.1 0 2 .9 2 2v8z"/>
+                            </svg>
+                             ${!isOccupied ? `<div class="absolute -top-8 bg-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 pointer-events-none">Rs.${standardConfig.price} | ${rowLabel}${seatNum}</div>` : ''}
+                        `;
+
+                        if (isOccupied) {
+                            seatBtn.disabled = true;
                         } else {
-                            seatEl.onclick = () => toggleStandupSeat(seatEl, seatId, standardConfig.price, 'Standard', rowLabel, seatNum);
+                            seatBtn.onclick = function () {
+                                const icon = this.querySelector('svg');
+                                const isSelected = icon.classList.contains('text-green-500');
+
+                                if (isSelected) {
+                                    icon.classList.remove('text-green-500');
+                                    icon.classList.add('text-teal-200');
+                                    selectedSeats = selectedSeats.filter(s => s.id !== seatId);
+                                } else {
+                                    if (selectedSeats.length >= maxSeats) return alert("Max 10 seats!");
+                                    icon.classList.remove('text-teal-200', 'hover:text-teal-500');
+                                    icon.classList.add('text-green-500');
+
+                                    this.style.transform = "scale(1.2)";
+                                    setTimeout(() => this.style.transform = "scale(1)", 200);
+
+                                    selectedSeats.push({ id: seatId, price: standardConfig.price });
+                                }
+                                updateSummary();
+                            };
                         }
-
-                        seatsDiv.appendChild(seatEl);
+                        seatsDiv.appendChild(seatBtn);
                     }
-
-                    // Add remaining empty spacers
-                    for (let i = 0; i < emptySeatsOnSide; i++) {
-                        const spacer = document.createElement('div');
-                        seatsDiv.appendChild(spacer);
-                    }
-
                     rowDiv.appendChild(seatsDiv);
+
+                    const labelR = document.createElement('span');
+                    labelR.className = 'text-xs font-bold text-gray-400 w-4 text-right';
+                    labelR.textContent = rowLabel;
+                    rowDiv.appendChild(labelR);
+
                     standardContainer.appendChild(rowDiv);
                 }
 
-                // Seat selection function for standup events
-                window.toggleStandupSeat = function (element, seatId, price, section, row, seatNum) {
-                    if (element.getAttribute('data-occupied') === 'true') return;
-
-                    const isSelected = element.classList.contains('bg-green-500');
-
-                    if (isSelected) {
-                        // Deselect
-                        element.classList.remove('bg-green-500', 'border-green-600', 'bg-gradient-to-br');
-                        if (section === 'Premium') {
-                            element.className = `seat-box w-7 h-7 bg-gradient-to-br ${premiumConfig.baseColor} ${premiumConfig.borderColor} border-2 rounded-md cursor-pointer transition-all transform ${premiumConfig.hoverColor} hover:scale-110 shadow-sm`;
-                        } else {
-                            element.className = `seat-box w-7 h-7 bg-gradient-to-br ${standardConfig.baseColor} ${standardConfig.borderColor} border-2 rounded-md cursor-pointer transition-all transform ${standardConfig.hoverColor} hover:scale-110 shadow-sm`;
-                        }
-                        element.setAttribute('data-seat-id', seatId);
-                        element.setAttribute('data-price', price);
-                        element.setAttribute('data-section', section);
-                        element.setAttribute('data-row', row);
-                        element.onclick = () => toggleStandupSeat(element, seatId, price, section, row, seatNum);
-
-                        selectedSeats = selectedSeats.filter(s => s.id !== seatId);
+                // Add Toggle Mobile Menu Function
+                window.toggleMobileMenu = function () {
+                    const menu = document.getElementById('mobile-menu');
+                    if (menu.classList.contains('translate-x-full')) {
+                        menu.classList.remove('translate-x-full');
                     } else {
-                        // Select
-                        if (selectedSeats.length >= maxSeats) {
-                            return alert("Maximum 10 seats allowed");
-                        }
-
-                        element.className = 'seat-box w-7 h-7 bg-green-500 border-2 border-green-600 rounded-md cursor-pointer transition-all transform hover:scale-110 shadow-lg';
-                        element.onclick = () => toggleStandupSeat(element, seatId, price, section, row, seatNum);
-
-                        selectedSeats.push({
-                            id: seatId,
-                            price: price,
-                            section: section,
-                            row: row,
-                            seatNumber: seatNum
-                        });
+                        menu.classList.add('translate-x-full');
                     }
-
-                    updateSummary();
                 };
 
                 // Zoom functionality
@@ -1280,7 +1346,7 @@
             }
 
             try {
-                const res = await fetch("http://localhost:8000/api/bookings/create", {
+                const res = await fetch("/api/bookings/create", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(bookingData)
@@ -1300,7 +1366,7 @@
                 localStorage.setItem("totalAmount", bookingData.amount_paid);
                 localStorage.setItem("userEmail", user.email);
 
-                window.location.href = "payment.html";
+                window.location.href = `payment.html?ref=${data.reference}`;
 
             } catch (err) {
                 console.error("Booking error:", err);
@@ -1311,6 +1377,31 @@
         // Initialize on page load
         initializeBooking();
     </script>
+    <!-- Mobile Bottom Navigation -->
+    <nav
+        class="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] border-t border-gray-100 z-50">
+        <div class="flex justify-around items-center h-16">
+            <a href="index.html"
+                class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-purple-600 transition-colors">
+                <span class="material-icons">home</span>
+                <span class="text-[10px] font-medium mt-1">Home</span>
+            </a>
+            <a href="booking.html" class="flex flex-col items-center justify-center w-full h-full text-purple-600">
+                <span class="material-icons">confirmation_number</span>
+                <span class="text-[10px] font-medium mt-1">Bookings</span>
+            </a>
+            <a href="index.html#search"
+                class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-purple-600 transition-colors">
+                <span class="material-icons">search</span>
+                <span class="text-[10px] font-medium mt-1">Search</span>
+            </a>
+            <a href="user-profile.html"
+                class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-purple-600 transition-colors">
+                <span class="material-icons">person</span>
+                <span class="text-[10px] font-medium mt-1">Profile</span>
+            </a>
+        </div>
+    </nav>
 </body>
 
 </html>
