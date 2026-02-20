@@ -60,9 +60,10 @@
                 <span class="font-bold text-2xl text-primary">Eventory</span>
             </a>
 
-            <div class="flex items-center gap-6">
-                <a href="Index.html" class="text-gray-600 hover:text-primary text-sm font-medium">Browse Events</a>
-                <a href="#" class="text-gray-600 hover:text-primary text-sm font-medium">My Tickets</a>
+            <div class="hidden md:flex items-center gap-6">
+                <a href="index.html" class="text-gray-600 hover:text-primary text-sm font-medium">Browse Events</a>
+                <a href="user-dashboard.html" class="text-gray-600 hover:text-primary text-sm font-medium">My
+                    Tickets</a>
                 <a href="#" class="text-gray-600 hover:text-primary text-sm font-medium">Support</a>
 
                 <button class="material-icons-outlined text-gray-600 hover:text-primary">notifications</button>
@@ -163,7 +164,8 @@
                 <h3 class="text-xl font-bold mb-6">Order Summary</h3>
 
                 <div class="flex gap-4 border-b pb-6 mb-6">
-                    <img id="summaryImage" class="w-24 h-24 object-cover rounded-xl shadow-md" />
+                    <img id="summaryImage" class="w-24 h-24 object-cover rounded-xl shadow-md"
+                        onerror="this.src='https://via.placeholder.com/400x300'" />
                     <div class="flex-1">
                         <p id="summaryTitle" class="font-bold text-lg mb-1"></p>
                         <p class="text-xs text-gray-500 flex items-center gap-1 mb-1">

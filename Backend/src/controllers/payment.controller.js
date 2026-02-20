@@ -4,7 +4,8 @@ import { PdfService } from "../services/pdf.service.js";
 import { QRService } from "../services/qr.service.js";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_mock'); // Replace with user's actual key
+// Use Stripe's official test secret key as a fallback so that Payment Elements can render locally without errors
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_4eC39HqLyjWDarjtT1zdp7dc');
 
 export const PaymentController = {
     async confirmPayment(req, res) {
