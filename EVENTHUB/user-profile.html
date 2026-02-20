@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile - Eventory</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
     <script src="toast.js"></script>
 
@@ -33,12 +34,21 @@
             /* Firefox */
         }
 
-        
+
         /* =============== PREMIUM AESTHETICS =============== */
-        html { scroll-behavior: smooth; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.01em; }
-        
-        ::selection { background: rgba(139, 92, 246, 0.3); color: inherit; }
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: -0.01em;
+        }
+
+        ::selection {
+            background: rgba(139, 92, 246, 0.3);
+            color: inherit;
+        }
 
         /* Glassmorphism Navbar */
         nav {
@@ -47,38 +57,60 @@
             background-color: rgba(255, 255, 255, 0.75) !important;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
         }
+
         .dark nav {
             background-color: rgba(17, 24, 39, 0.75) !important;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
         }
 
         /* Smooth Interactive Elements */
-        button, a, .card, .cinema-card, .date-btn, .showtime-btn, input, select {
+        button,
+        a,
+        .card,
+        .cinema-card,
+        .date-btn,
+        .showtime-btn,
+        input,
+        select {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         /* Bouncy Button Hover */
-        button:hover, a.nav-link:hover, .hover\:-translate-y-1:hover {
+        button:hover,
+        a.nav-link:hover,
+        .hover\:-translate-y-1:hover {
             transform: translateY(-2px);
         }
+
         button:active {
             transform: translateY(0) scale(0.98);
         }
 
         /* Input Focus Glow */
-        input:focus, select:focus, textarea:focus {
+        input:focus,
+        select:focus,
+        textarea:focus {
             box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15) !important;
             border-color: #8B5CF6 !important;
         }
 
         /* Soft Card Shadows */
-        .shadow-sm, .shadow, .shadow-md, .shadow-lg, .shadow-xl {
-            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08) !important;
+        .shadow-sm,
+        .shadow,
+        .shadow-md,
+        .shadow-lg,
+        .shadow-xl {
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08) !important;
         }
-        .dark .shadow-sm, .dark .shadow, .dark .shadow-md, .dark .shadow-lg, .dark .shadow-xl {
-            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.3) !important;
+
+        .dark .shadow-sm,
+        .dark .shadow,
+        .dark .shadow-md,
+        .dark .shadow-lg,
+        .dark .shadow-xl {
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.3) !important;
         }
-        
+
         /* Premium Gradient Text for Primary Headers */
         .text-primary {
             background: linear-gradient(135deg, #6B46C1 0%, #8B5CF6 100%);
@@ -86,23 +118,29 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
+
         .dark .text-primary {
             background: linear-gradient(135deg, #A78BFA 0%, #C4B5FD 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        
+
         /* Fix for icons turning into gradient text */
-        .material-icons, .material-icons-outlined, .text-primary.bg-purple-100 {
+        .material-icons,
+        .material-icons-outlined,
+        .text-primary.bg-purple-100 {
             background: none;
             -webkit-text-fill-color: currentColor;
             color: #7C3AED;
         }
-        .dark .material-icons, .dark .material-icons-outlined {
+
+        .dark .material-icons,
+        .dark .material-icons-outlined {
             background: none;
             -webkit-text-fill-color: currentColor;
         }
+
         /* ================================================= */
 
         /* Essential Global Dark Mode Overrides */
@@ -217,8 +255,54 @@
                     </button>
                 </div>
             </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden text-gray-600 hover:text-purple-600 focus:outline-none ml-auto"
+                onclick="toggleMobileMenu()">
+                <span class="material-icons text-3xl">menu</span>
+            </button>
         </div>
     </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu"
+        class="fixed inset-0 z-50 bg-white dark:bg-gray-900 transform translate-x-full transition-transform duration-300 md:hidden flex flex-col h-full shadow-2xl">
+        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <span class="text-xl font-bold text-purple-600">Menu</span>
+            <div class="flex items-center gap-4">
+                <button onclick="toggleTheme()"
+                    class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-purple-600 transition-colors focus:outline-none">
+                    <span class="material-icons-outlined theme-icon text-lg">dark_mode</span>
+                </button>
+                <button onclick="toggleMobileMenu()" class="text-gray-500 hover:text-red-500 transition-colors">
+                    <span class="material-icons text-2xl">close</span>
+                </button>
+            </div>
+        </div>
+        <div class="flex-1 overflow-y-auto py-6 px-6 space-y-6">
+            <div class="space-y-4">
+                <a href="index.html"
+                    class="flex items-center gap-3 text-lg font-medium text-gray-700 hover:text-purple-600 transition-colors p-2 rounded-lg hover:bg-gray-50">
+                    <span class="material-icons">home</span> Browse Events
+                </a>
+                <a href="user-dashboard.html"
+                    class="flex items-center gap-3 text-lg font-medium text-gray-700 hover:text-purple-600 transition-colors p-2 rounded-lg hover:bg-gray-50">
+                    <span class="material-icons">confirmation_number</span> My Tickets
+                </a>
+                <a href="user-profile.html"
+                    class="flex items-center gap-3 text-lg font-medium text-purple-600 transition-colors p-2 rounded-lg hover:bg-gray-50">
+                    <span class="material-icons">person</span> My Profile
+                </a>
+            </div>
+
+            <div class="border-t border-gray-100 pt-6 space-y-4">
+                <button onclick="logout()"
+                    class="w-full flex items-center gap-3 text-lg font-medium text-red-600 hover:text-red-700 transition-colors p-2 rounded-lg hover:bg-red-50">
+                    <span class="material-icons">logout</span> Logout
+                </button>
+            </div>
+        </div>
+    </div>
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
@@ -714,6 +798,19 @@
             </a>
         </div>
     </nav>
+    <script>
+        // Global Mobile Menu Toggle
+        window.toggleMobileMenu = function () {
+            const menu = document.getElementById('mobile-menu');
+            if (menu) {
+                if (menu.classList.contains('translate-x-full')) {
+                    menu.classList.remove('translate-x-full');
+                } else {
+                    menu.classList.add('translate-x-full');
+                }
+            }
+        };
+    </script>
 </body>
 
 </html>
