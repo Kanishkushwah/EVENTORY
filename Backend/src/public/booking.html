@@ -199,7 +199,29 @@
             <!-- LEFT SIDE: SEATS -->
             <div class="lg:col-span-2">
                 <div class="bg-white p-6 rounded-xl shadow">
-                    <h2 class="text-xl font-bold mb-4">Select Seats</h2>
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3">
+                        <h2 class="text-xl font-bold flex items-center gap-2">
+                            Select Seats <span id="surgePricingBadge"
+                                class="hidden text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full animate-pulse border border-red-300">🔥
+                                Selling Fast!</span>
+                        </h2>
+
+                        <!-- Smart Recommendations UI -->
+                        <div id="smartRecBtn"
+                            class="hidden flex items-center bg-purple-50 rounded-lg p-1 border border-purple-200">
+                            <select id="autoSeatCount"
+                                class="bg-transparent border-none text-sm font-semibold text-purple-800 focus:ring-0 cursor-pointer pl-2 pr-6">
+                                <option value="1">1</option>
+                                <option value="2" selected>2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                            </select>
+                            <button onclick="autoSelectSeats()"
+                                class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold px-3 py-1.5 rounded-md flex items-center gap-1 transition shadow-sm ml-1">
+                                <span class="material-icons text-sm">auto_awesome</span> Best Seats
+                            </button>
+                        </div>
+                    </div>
                     <div id="seatLayout"></div>
                 </div>
             </div>
@@ -441,6 +463,9 @@
             console.log("🎯 Event Category:", eventCategory);
             console.log("📋 Current Event:", currentEvent);
 
+            document.getElementById("smartRecBtn").classList.add("hidden");
+            document.getElementById("surgePricingBadge").classList.add("hidden");
+
             // FREE EVENT
             if (currentEvent.price === 0) {
                 layout.innerHTML = `
@@ -469,10 +494,6 @@
             if (eventCategory === "movies" || eventCategory === "movie") {
                 const seatPrice = selectedShowtime ? selectedShowtime.price : currentEvent.price;
 
-                layout.innerHTML = `
-                    <div class="screen-curve"></div>
-                    <span class="block text-center text-xs text-gray-400 mb-8 tracking-widest">SCREEN</span>
-                `;
                 const rows = [
                     { name: 'A', seats: 12, price: seatPrice, label: 'Standard', occupied: [5, 6] },
                     { name: 'B', seats: 12, price: seatPrice, label: 'Standard', occupied: [1, 2] },
@@ -482,6 +503,25 @@
                     { name: 'F', seats: 12, price: seatPrice + 100, label: 'Premium', occupied: [3, 8] },
                     { name: 'G', seats: 12, price: seatPrice + 100, label: 'Premium', occupied: [] }
                 ];
+
+                // Surge Pricing Logic (Simulation based on occupancy)
+                // Let's pretend row A and B are occupied + random ones, if > 30% full, increase price
+                let currentOccupiedCount = rows.reduce((acc, r) => acc + r.occupied.length, 0);
+                let totalSeatsCount = rows.reduce((acc, r) => acc + r.seats, 0);
+
+                if (currentOccupiedCount / totalSeatsCount > 0.15) { // Just for demo, trigger early
+                    document.getElementById("surgePricingBadge").classList.remove("hidden");
+                    // Add 10%
+                    rows.forEach(r => r.price = Math.round(r.price * 1.10));
+                }
+
+                document.getElementById("smartRecBtn").classList.remove("hidden");
+
+                layout.innerHTML = `
+                    <div class="screen-curve"></div>
+                    <span class="block text-center text-xs text-gray-400 mb-8 tracking-widest">SCREEN</span>
+                `;
+
                 rows.forEach(r => {
                     const rowDiv = document.createElement("div");
                     rowDiv.className = "mb-4";
@@ -1293,9 +1333,68 @@
             } else {
                 if (selectedSeats.length >= maxSeats) return alert("Maximum 10 seats allowed");
                 el.classList.add("selected");
+
+                // Add pop animation
+                el.style.transform = "scale(1.2)";
+                setTimeout(() => el.style.transform = "", 200);
+
                 selectedSeats.push({ id, price });
             }
             updateSummary();
+        }
+
+        // SMART SEAT RECOMMENDATIONS
+        function autoSelectSeats() {
+            const count = parseInt(document.getElementById("autoSeatCount").value);
+
+            // Clear existing
+            selectedSeats.forEach(s => {
+                const el = document.getElementById(`seat-btn-${s.id}`) || document.querySelector(`[onclick*="'${s.id}'"]`) || document.querySelector(`[onclick*='"${s.id}"']`) || Array.from(document.querySelectorAll('.seat')).find(e => e.innerText === s.id || e.onclick?.toString().includes(s.id));
+                if (el) el.classList.remove("selected");
+            });
+            selectedSeats = [];
+
+            // We need to look for contiguous sets of `.seat` that are NOT `.occupied`
+            // Prefer middle rows (D, E) and middle seats
+            const allRows = Array.from(document.getElementById("seatLayout").children).filter(c => c.id && c.id.startsWith("row-"));
+
+            let found = false;
+
+            // Start checking from middle rows outwards (heuristic)
+            const rowOrder = [3, 4, 5, 2, 6, 1, 0]; // Index of rows (D, E, F, C, G, B, A)
+
+            for (let rowIndex of rowOrder) {
+                if (!allRows[rowIndex]) continue;
+                const row = allRows[rowIndex];
+                const seatsItems = Array.from(row.querySelectorAll('.seat'));
+
+                // Find n contiguous seats
+                for (let i = 0; i <= seatsItems.length - count; i++) {
+                    let isAvailable = true;
+                    for (let j = 0; j < count; j++) {
+                        if (seatsItems[i + j].classList.contains('occupied')) {
+                            isAvailable = false;
+                            break;
+                        }
+                    }
+                    if (isAvailable) {
+                        // Select them!
+                        for (let j = 0; j < count; j++) {
+                            seatsItems[i + j].click(); // Simulate click to trigger toggleSeat
+                        }
+                        found = true;
+
+                        // Scroll to center
+                        seatsItems[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        break;
+                    }
+                }
+                if (found) break;
+            }
+
+            if (!found) {
+                alert("Could not find " + count + " seats together. Please select manually.");
+            }
         }
 
         function updateSummary() {

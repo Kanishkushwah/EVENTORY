@@ -49,11 +49,23 @@
     </script>
 </head>
 
-<body class="bg-gray-50">
+<body class="bg-gray-50 overflow-hidden">
 
-    <!-- SIDEBAR -->
-    <div class="flex h-screen">
-        <aside class="w-64 bg-white border-r shadow-sm">
+    <!-- MOBILE TOP HEADER -->
+    <div class="md:hidden bg-white border-b shadow-sm sticky top-0 z-50 px-4 py-3 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <span class="material-icons-outlined text-primary text-2xl">event</span>
+            <span class="font-bold text-xl text-primary">Eventory</span>
+        </div>
+        <button onclick="logout()" class="p-2 text-red-600 bg-red-50 rounded-lg flex items-center">
+            <span class="material-icons-outlined">logout</span>
+        </button>
+    </div>
+
+    <!-- MAIN WRAPPER -->
+    <div class="flex h-[calc(100vh-60px)] md:h-screen relative">
+        <!-- DESKTOP SIDEBAR -->
+        <aside class="hidden md:flex flex-col w-64 bg-white border-r shadow-sm flex-shrink-0 z-10">
             <div class="p-6">
                 <div class="flex items-center gap-2 mb-8">
                     <span class="material-icons-outlined text-primary text-3xl">event</span>
@@ -62,26 +74,26 @@
 
                 <nav class="space-y-2">
                     <a href="#dashboard" onclick="showSection('dashboard')" id="nav-dashboard"
-                        class="nav-link flex items-center gap-3 px-4 py-3 rounded-lg bg-purple-50 text-primary font-semibold">
+                        class="nav-link flex items-center gap-3 px-4 py-3 rounded-lg bg-purple-50 text-primary font-semibold transition">
                         <span class="material-icons-outlined">dashboard</span>
                         Dashboard
                     </a>
                     <a href="#bookings" onclick="showSection('bookings')" id="nav-bookings"
-                        class="nav-link flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50">
+                        class="nav-link flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition">
                         <span class="material-icons-outlined">confirmation_number</span>
                         Bookings
                     </a>
                     <a href="#events" onclick="showSection('events')" id="nav-events"
-                        class="nav-link flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50">
+                        class="nav-link flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition">
                         <span class="material-icons-outlined">event_note</span>
                         Events
                     </a>
                 </nav>
             </div>
 
-            <div class="absolute bottom-0 w-64 p-6 border-t">
+            <div class="mt-auto p-6 border-t">
                 <button onclick="logout()"
-                    class="flex items-center gap-3 px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 w-full">
+                    class="flex items-center justify-center gap-3 px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 w-full transition font-semibold">
                     <span class="material-icons-outlined">logout</span>
                     Logout
                 </button>
@@ -89,8 +101,8 @@
         </aside>
 
         <!-- MAIN CONTENT -->
-        <main class="flex-1 overflow-y-auto">
-            <div class="p-8">
+        <main class="flex-1 overflow-y-auto pb-20 md:pb-0 bg-gray-50 w-full h-full relative z-0">
+            <div class="p-4 md:p-8 max-w-7xl mx-auto">
                 <!-- HEADER -->
                 <div class="mb-8 flex justify-between items-center">
                     <div>
@@ -351,7 +363,7 @@
         // Load dashboard stats
         async function loadDashboardStats() {
             try {
-                const res = await fetch('http://localhost:8000/api/admin/stats');
+                const res = await fetch('/api/admin/stats');
                 const data = await res.json();
 
                 document.getElementById('stat-revenue').textContent = '₹' + data.totalRevenue.toLocaleString();
@@ -424,7 +436,7 @@
                 const status = document.getElementById('filter-status').value;
                 const search = document.getElementById('search-bookings').value;
 
-                const res = await fetch(`http://localhost:8000/api/admin/bookings?page=${currentPage}&limit=${limit}&status=${status}&search=${search}`);
+                const res = await fetch(`/api/admin/bookings?page=${currentPage}&limit=${limit}&status=${status}&search=${search}`);
                 const data = await res.json();
 
                 const tbody = document.getElementById('all-bookings-table');
@@ -450,7 +462,7 @@
         // Export bookings to CSV
         async function exportBookingsCSV() {
             try {
-                const res = await fetch('http://localhost:8000/api/admin/bookings?page=1&limit=10000');
+                const res = await fetch('/api/admin/bookings?page=1&limit=10000');
                 const data = await res.json();
 
                 // Create CSV content
@@ -496,7 +508,7 @@
         // Load events
         async function loadEvents() {
             try {
-                const res = await fetch('http://localhost:8000/api/events');
+                const res = await fetch('/api/events');
                 const data = await res.json();
 
                 const grid = document.getElementById('events-grid');
@@ -555,7 +567,7 @@
 
         async function editEvent(id) {
             try {
-                const res = await fetch(`http://localhost:8000/api/events/${id}`);
+                const res = await fetch(`/api/events/${id}`);
                 const event = await res.json();
 
                 document.getElementById('modal-title').textContent = 'Edit Event';
@@ -590,14 +602,14 @@
                 let res;
                 if (id) {
                     // Update existing event
-                    res = await fetch(`http://localhost:8000/api/admin/events/${id}`, {
+                    res = await fetch(`/api/admin/events/${id}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(eventData)
                     });
                 } else {
                     // Create new event
-                    res = await fetch('http://localhost:8000/api/admin/events', {
+                    res = await fetch('/api/admin/events', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(eventData)
@@ -623,7 +635,7 @@
             if (!confirm('Are you sure you want to delete this event?')) return;
 
             try {
-                const res = await fetch(`http://localhost:8000/api/admin/events/${id}`, {
+                const res = await fetch(`/api/admin/events/${id}`, {
                     method: 'DELETE'
                 });
 
@@ -662,19 +674,34 @@
             document.getElementById('section-bookings').classList.add('hidden');
             document.getElementById('section-events').classList.add('hidden');
 
-            // Remove active from all nav links
+            // Remove active from all desktop nav links
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.classList.remove('bg-purple-50', 'text-primary', 'font-semibold');
                 link.classList.add('text-gray-600');
             });
 
+            // Remove active from all mobile nav links
+            document.querySelectorAll('.mob-nav-link').forEach(link => {
+                link.classList.remove('text-primary');
+                link.classList.add('text-gray-500');
+            });
+
             // Show selected section
             document.getElementById('section-' + section).classList.remove('hidden');
 
-            // Add active to selected nav
+            // Add active to selected desktop nav
             const navLink = document.getElementById('nav-' + section);
-            navLink.classList.add('bg-purple-50', 'text-primary', 'font-semibold');
-            navLink.classList.remove('text-gray-600');
+            if (navLink) {
+                navLink.classList.add('bg-purple-50', 'text-primary', 'font-semibold');
+                navLink.classList.remove('text-gray-600');
+            }
+
+            // Add active to selected mobile nav
+            const mobNavLink = document.getElementById('mob-nav-' + section);
+            if (mobNavLink) {
+                mobNavLink.classList.add('text-primary');
+                mobNavLink.classList.remove('text-gray-500');
+            }
 
             // Load data for section
             if (section === 'bookings') loadBookings();
@@ -773,7 +800,7 @@
             // Load cinemas if not loaded
             if (allCinemas.length === 0) {
                 try {
-                    const res = await fetch('http://localhost:8000/api/cinemas');
+                    const res = await fetch('/api/cinemas');
                     allCinemas = await res.json();
                 } catch (err) {
                     console.error('Failed to load cinemas', err);
@@ -824,7 +851,7 @@
             };
 
             try {
-                const res = await fetch('http://localhost:8000/api/showtimes', {
+                const res = await fetch('/api/showtimes', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -848,6 +875,26 @@
             }
         }
     </script>
+    <!-- MOBILE BOTTOM NAV -->
+    <div
+        class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around p-2 z-[60] shadow-[0_-4px_20px_rgba(0,0,0,0.05)] pb-safe">
+        <a href="#dashboard" onclick="showSection('dashboard')" id="mob-nav-dashboard"
+            class="mob-nav-link flex flex-col items-center p-2 text-primary transition w-1/3">
+            <span class="material-icons-outlined">dashboard</span>
+            <span class="text-[10px] font-semibold mt-1">Dashboard</span>
+        </a>
+        <a href="#bookings" onclick="showSection('bookings')" id="mob-nav-bookings"
+            class="mob-nav-link flex flex-col items-center p-2 text-gray-500 transition w-1/3">
+            <span class="material-icons-outlined">confirmation_number</span>
+            <span class="text-[10px] font-semibold mt-1">Bookings</span>
+        </a>
+        <a href="#events" onclick="showSection('events')" id="mob-nav-events"
+            class="mob-nav-link flex flex-col items-center p-2 text-gray-500 transition w-1/3">
+            <span class="material-icons-outlined">event_note</span>
+            <span class="text-[10px] font-semibold mt-1">Events</span>
+        </a>
+    </div>
+
 </body>
 
 </html>
