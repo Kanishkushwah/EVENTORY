@@ -35,20 +35,25 @@ export const PaymentController = {
                 });
             }
 
-            // 3–5) Generate QR, PDF and send email but don't fail payment if they break
+            // 3–5) Generate QR, PDF and send email asynchronously
             try {
                 const qrDataUrl = await QRService.generateQR(reference);
                 const pdfBuffer = await PdfService.generateTicketPDF(
                     updatedBooking,
                     qrDataUrl
                 );
-                await EmailService.sendBookingEmail(
+
+                // Fire and forget email to avoid hanging the payment confirmation request
+                EmailService.sendBookingEmail(
                     updatedBooking.user_email,
                     updatedBooking,
                     pdfBuffer
-                );
-            } catch (emailOrPdfError) {
-                console.error("QR / PDF / Email error:", emailOrPdfError);
+                ).catch((emailErr) => {
+                    console.error("Background Email Error:", emailErr);
+                });
+
+            } catch (pdfOrQrError) {
+                console.error("QR / PDF generation error:", pdfOrQrError);
                 // continue; payment is already marked completed
             }
 

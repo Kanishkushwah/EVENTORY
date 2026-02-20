@@ -510,8 +510,8 @@
                 });
             }
 
-            // MUSIC/CONCERT LAYOUT - handles both "music" and singular forms
-            else if (eventCategory === "music" || eventCategory === "concert") {
+            // MUSIC/CONCERT LAYOUT - handles both "music", "concert", "concerts"
+            else if (eventCategory === "music" || eventCategory === "concert" || eventCategory === "concerts") {
                 layout.innerHTML = `
                     <div class="concert-venue-container bg-gradient-to-b from-gray-50 to-white p-6 rounded-2xl">
                         <h3 class="text-center text-lg font-bold text-gray-600 mb-6 tracking-wide">CONCERT VENUE SEATING</h3>
