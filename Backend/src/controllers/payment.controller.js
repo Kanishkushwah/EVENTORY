@@ -2,6 +2,9 @@ import { BookingService } from "../services/booking.service.js";
 import { EmailService } from "../services/email.service.js";
 import { PdfService } from "../services/pdf.service.js";
 import { QRService } from "../services/qr.service.js";
+import Stripe from "stripe";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_mock'); // Replace with user's actual key
 
 export const PaymentController = {
     async confirmPayment(req, res) {
@@ -68,6 +71,30 @@ export const PaymentController = {
                 message: "Internal server error",
                 error: error.message,
             });
+        }
+    },
+
+    async createPaymentIntent(req, res) {
+        try {
+            const { amount, reference } = req.body;
+
+            if (!amount || !reference) {
+                return res.status(400).json({ message: "Amount and reference are required" });
+            }
+
+            // Create a PaymentIntent with the order amount and currency
+            const paymentIntent = await stripe.paymentIntents.create({
+                amount: Math.round(amount * 100), // convert to paisa / cents
+                currency: "inr",
+                metadata: { booking_reference: reference }
+            });
+
+            res.send({
+                clientSecret: paymentIntent.client_secret,
+            });
+        } catch (error) {
+            console.error("Stripe Intent Error:", error);
+            res.status(500).json({ message: "Failed to initialize payment", error: error.message });
         }
     },
 };

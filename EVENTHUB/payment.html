@@ -11,6 +11,7 @@
         rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
     <script src="events-data.js"></script>
 
     <style>
@@ -99,44 +100,16 @@
                         </button>
                     </div>
 
-                    <!-- CARD PAYMENT -->
+                    <!-- CARD PAYMENT (STRIPE) -->
                     <div id="cardPayment" class="space-y-5">
-                        <form class="space-y-5" onsubmit="event.preventDefault(); processCardPayment();">
-                            <div>
-                                <label class="text-sm font-semibold mb-2 block text-gray-700">Card Number</label>
-                                <div class="relative">
-                                    <input id="cardNumber"
-                                        class="w-full rounded-lg border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 shadow-sm py-3 pl-12 text-lg"
-                                        placeholder="1234 5678 9012 3456" required maxlength="19" />
-                                    <span
-                                        class="material-icons-outlined absolute left-3 top-3 text-gray-400">credit_card</span>
-                                </div>
+                        <form class="space-y-5" id="payment-form" onsubmit="processCardPayment(event)">
+                            <div id="payment-element"
+                                class="min-h-[200px] border-2 border-gray-100 rounded-xl p-4 shadow-sm bg-gray-50 flex items-center justify-center">
+                                <span class="material-icons-outlined animate-spin text-primary">sync</span>
+                                <span class="ml-2 text-gray-500 font-medium">Loading secure payment...</span>
                             </div>
 
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                <div>
-                                    <label class="text-sm font-semibold mb-2 block text-gray-700">Name on Card</label>
-                                    <input id="cardName"
-                                        class="w-full rounded-lg border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 shadow-sm py-3"
-                                        placeholder="JOHN DOE" required />
-                                </div>
-
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="text-sm font-semibold mb-2 block text-gray-700">Expiry</label>
-                                        <input id="expiry"
-                                            class="w-full rounded-lg border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 shadow-sm py-3"
-                                            placeholder="MM/YY" required maxlength="5" />
-                                    </div>
-
-                                    <div>
-                                        <label class="text-sm font-semibold mb-2 block text-gray-700">CVV</label>
-                                        <input id="cvv"
-                                            class="w-full rounded-lg border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 shadow-sm py-3"
-                                            placeholder="123" required maxlength="3" type="password" />
-                                    </div>
-                                </div>
-                            </div>
+                            <div id="payment-message" class="hidden text-red-500 text-sm mt-2"></div>
 
                             <button id="btnPayCard" type="submit"
                                 class="w-full gradient-purple hover:opacity-90 text-white font-bold py-4 rounded-lg shadow-lg text-lg transition-all transform hover:scale-[1.02]">
@@ -385,6 +358,8 @@
 
     <script>
         let method = "card";
+        const stripe = Stripe("pk_test_TYooMQauvdEDq54NiTphI7jx"); // Generic Stripe test key, works for testing Elements 
+        let elements;
 
         function switchPaymentMethod(m) {
             method = m;
@@ -430,8 +405,65 @@
             });
         }
 
-        function processCardPayment() {
-            completePayment("CARD");
+        async function initializeStripe() {
+            const amount = localStorage.getItem("totalAmount") || "0";
+            const reference = localStorage.getItem("bookingReference");
+
+            if (!amount || !reference || amount === "0") return;
+
+            try {
+                // Fetch client secret from our backend intent
+                const response = await fetch("/api/payments/create-intent", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ amount: parseFloat(amount), reference }),
+                });
+
+                if (!response.ok) throw new Error("Could not initialize Stripe intent");
+                const { clientSecret } = await response.json();
+
+                const appearance = {
+                    theme: 'stripe',
+                    variables: { colorPrimary: '#6B46C1' },
+                };
+
+                elements = stripe.elements({ appearance, clientSecret });
+
+                const paymentElementOptions = { layout: "tabs" };
+                const paymentElement = elements.create("payment", paymentElementOptions);
+                // clear loading
+                document.getElementById('payment-element').innerHTML = '';
+                document.getElementById('payment-element').className = 'min-h-[200px] pb-4';
+                paymentElement.mount("#payment-element");
+
+            } catch (err) {
+                console.error("Stripe initialization error:", err);
+                document.getElementById('payment-element').innerHTML = `<p class="text-red-500 font-semibold p-4">Error loading secure payment gateway.</p>`;
+            }
+        }
+
+        async function processCardPayment(e) {
+            if (e) e.preventDefault();
+
+            const submitBtn = document.getElementById("btnPayCard");
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="material-icons-outlined animate-spin">sync</span> Processing securely...';
+
+            // Confirm the payment with Stripe Element
+            const { error, paymentIntent } = await stripe.confirmPayment({
+                elements,
+                redirect: 'if_required', // Prevents automatic redirect so we can handle success UI
+            });
+
+            if (error) {
+                // Show error to customer
+                alert(error.message);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `Pay <span id="cardPaymentAmount">₹${localStorage.getItem("totalAmount")}</span>`;
+            } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+                // Success - hit our system to update DB and send email
+                completePayment("CARD");
+            }
         }
 
         function processUPIPayment() {
@@ -580,11 +612,13 @@
                 document.getElementById("summarySubtotal").textContent = "₹" + subtotal;
                 document.getElementById("summaryFee").textContent = "₹" + fee;
                 document.getElementById("summaryTotal").textContent = "₹" + totalAmount;
-                // document.getElementById("payBtnAmount").textContent = totalAmount; // Removed invalid ID
 
                 // Payment Section UI
                 document.getElementById("cardPaymentAmount").textContent = "₹" + totalAmount;
                 document.getElementById("qrAmount").textContent = "Amount: ₹" + totalAmount;
+
+                // Initialize Stripe elements with real amount
+                initializeStripe();
 
                 // User Info
                 const userName = booking.user_email ? booking.user_email.split('@')[0] : "User";

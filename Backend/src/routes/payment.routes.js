@@ -6,4 +6,7 @@ const router = express.Router();
 // PAYMENT CONFIRMATION ENDPOINT
 router.post("/confirm", PaymentController.confirmPayment);
 
+// STRIPE PAYMENT INTENT ENDPOINT
+router.post("/create-intent", PaymentController.createPaymentIntent);
+
 export default router;
