@@ -233,7 +233,27 @@
             color: #DDD6FE !important;
         }
 
-        /* Movie Seat Selection Fix */
+        
+        /* DARK MODE SEAT SELECTION FIX */
+        .dark .bg-white.selected,
+        .dark .seat.selected,
+        .dark .seat-circle.selected,
+        .dark .cricket-block.selected-block {
+            background-color: #10b981 !important;
+            border-color: #059669 !important;
+            color: #ffffff !important;
+        }
+        .seat.selected {
+            background-color: #10b981 !important;
+            border-color: #059669 !important;
+            color: #ffffff !important;
+        }
+        
+        .seat-selected {
+            color: #10B981 !important;
+            filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.8)) !important;
+        }
+
         .seat-selected {
             color: #10B981 !important;
             filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.8)) !important;
@@ -333,6 +353,7 @@
         };
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
 </head>
 
 <body class="bg-gray-50 flex flex-col min-h-screen pb-20 md:pb-0 font-sans">
@@ -515,6 +536,25 @@
                         </div>
                     </div>
 
+                    
+                    <div class="border-t pt-4 mt-4 space-y-3">
+                        <h3 class="font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                            <span class="material-icons text-purple-600 text-[20px]">fastfood</span> Add Snacks
+                        </h3>
+                        <div class="flex items-center justify-between">
+                            <label class="text-sm dark:text-gray-300 font-medium">🍿 Large Popcorn (+₹250)</label>
+                            <input type="checkbox" id="addPopcorn" onchange="updateSummary()" class="rounded w-5 h-5 text-purple-600 focus:ring-purple-500 cursor-pointer">
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <label class="text-sm dark:text-gray-300 font-medium">🥤 Coca Cola (+₹150)</label>
+                            <input type="checkbox" id="addCoke" onchange="updateSummary()" class="rounded w-5 h-5 text-purple-600 focus:ring-purple-500 cursor-pointer">
+                        </div>
+                        <div class="flex justify-between text-sm pt-2 text-purple-600 dark:text-purple-400 font-semibold hidden" id="snacksDisplayRow">
+                            <span>Snacks Total</span>
+                            <span id="snacksDisplay">₹0</span>
+                        </div>
+                    </div>
+                    
                     <button onclick="proceedToPayment()"
                         class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg mt-6 transition">
                         Proceed to Payment
@@ -596,11 +636,37 @@
     <!-- JS LOGIC -->
     <script>
         let selectedSeats = [];
+        let socket;
+        try {
+            socket = io(window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:8000' : 'https://eventory-backend.onrender.com'); // Match your backend domain
+        } catch(e) { console.error("Socket IO failed to load"); }
+        
+        if (socket) {
+            socket.on("seatLocked", ({seatId, by}) => {
+                const btn = document.getElementById('seat-btn-' + seatId) || Array.from(document.querySelectorAll('.seat-icon')).find(svg => svg.parentElement.innerHTML.includes(seatId))?.parentElement;
+                if(btn && !selectedSeats.find(s => s.id === seatId)) {
+                    btn.classList.add('locked-by-other', 'bg-red-900', 'cursor-not-allowed', 'opacity-50');
+                    btn.disabled = true;
+                    btn.title = "This seat is currently being viewed/locked by someone else!";
+                }
+            });
+            socket.on("seatUnlocked", ({seatId}) => {
+                const btn = document.getElementById('seat-btn-' + seatId) || Array.from(document.querySelectorAll('.seat-icon')).find(svg => svg.parentElement.innerHTML.includes(seatId))?.parentElement;
+                if(btn) {
+                    btn.classList.remove('locked-by-other', 'bg-red-900', 'cursor-not-allowed', 'opacity-50');
+                    btn.disabled = false;
+                    btn.title = "";
+                }
+            });
+        }
+
         let selectedCinema = null;
         let selectedDate = null;
         let selectedShowtime = null;
+            if(socket && selectedShowtime) socket.emit("joinShowtime", selectedShowtime.id);
         let showtimes = [];
-        const maxSeats = 10;
+        // Dynamic max seats based on dropdown
+        Object.defineProperty(window, 'maxSeats', { get: () => parseInt(document.getElementById('autoSeatCount')?.value || 10) });
 
         // Get event from localStorage (set by index.html)
         const currentEvent = JSON.parse(localStorage.getItem('currentEventData'));
@@ -1539,9 +1605,13 @@
                                     icon.classList.remove('seat-selected', 'text-green-500');
                                     icon.classList.add('text-purple-200');
                                     selectedSeats = selectedSeats.filter(s => s.id !== seatId);
+                                    if(socket && selectedShowtime) socket.emit("unlockSeat", { showtimeId: selectedShowtime.id, seatId: seatId });
                                 } else {
                                     // Select
-                                    if (selectedSeats.length >= maxSeats) return alert("Max 10 seats!");
+                                    if (selectedSeats.length >= maxSeats) {
+        alert("You can only select " + maxSeats + " seat(s). Please unselect one first or change the dropdown limit.");
+        return;
+    }
                                     icon.classList.remove('text-purple-200', 'hover:text-purple-500');
                                     icon.classList.add('seat-selected', 'text-green-500');
 
@@ -1550,6 +1620,7 @@
                                     setTimeout(() => this.style.transform = "scale(1)", 200);
 
                                     selectedSeats.push({ id: seatId, price: premiumConfig.price });
+                                    if(socket && selectedShowtime) socket.emit("lockSeat", { showtimeId: selectedShowtime.id, seatId: seatId });
                                 }
                                 updateSummary();
                             };
@@ -1612,8 +1683,12 @@
                                     icon.classList.remove('seat-selected', 'text-green-500');
                                     icon.classList.add('text-teal-200');
                                     selectedSeats = selectedSeats.filter(s => s.id !== seatId);
+                                    if(socket && selectedShowtime) socket.emit("unlockSeat", { showtimeId: selectedShowtime.id, seatId: seatId });
                                 } else {
-                                    if (selectedSeats.length >= maxSeats) return alert("Max 10 seats!");
+                                    if (selectedSeats.length >= maxSeats) {
+        alert("You can only select " + maxSeats + " seat(s). Please unselect one first or change the dropdown limit.");
+        return;
+    }
                                     icon.classList.remove('text-teal-200', 'hover:text-teal-500');
                                     icon.classList.add('seat-selected', 'text-green-500');
 
@@ -1621,6 +1696,7 @@
                                     setTimeout(() => this.style.transform = "scale(1)", 200);
 
                                     selectedSeats.push({ id: seatId, price: standardConfig.price });
+                                    if(socket && selectedShowtime) socket.emit("lockSeat", { showtimeId: selectedShowtime.id, seatId: seatId });
                                 }
                                 updateSummary();
                             };
@@ -1658,7 +1734,7 @@
                 el.classList.remove("selected");
                 selectedSeats = selectedSeats.filter(s => s.id !== id);
             } else {
-                if (selectedSeats.length >= maxSeats) return alert("Maximum 10 seats allowed");
+                if (selectedSeats.length >= maxSeats) return alert("You can only select " + maxSeats + " seat(s). Please unselect one first or change the dropdown limit.");
                 el.classList.add("selected");
 
                 // Add pop animation
@@ -1672,7 +1748,13 @@
 
         // SMART SEAT RECOMMENDATIONS
         function autoSelectSeats() {
-            const count = parseInt(document.getElementById("autoSeatCount").value);
+            const count = parseInt(document.getElementById("autoSeatCount").addEventListener('change', function() {
+            // When user changes dropdown, if they've already selected MORE than the new limit, throw a warning
+            if (selectedSeats.length > parseInt(this.value)) {
+                alert("You've selected more seats than your new limit! Please unselect some seats.");
+            }
+        });
+        document.getElementById("autoSeatCount").value);
 
             // Clear existing
             selectedSeats.forEach(s => {
@@ -1727,10 +1809,32 @@
         function updateSummary() {
             const subtotal = selectedSeats.reduce((s, x) => s + x.price, 0);
             const fee = Math.round(subtotal * 0.10);
-            const total = subtotal + fee;
+            
+            // Calculate Snacks
+            let snacksTotal = 0;
+            const popcornCb = document.getElementById('addPopcorn');
+            const cokeCb = document.getElementById('addCoke');
+            if (popcornCb && popcornCb.checked) snacksTotal += 250;
+            if (cokeCb && cokeCb.checked) snacksTotal += 150;
+            
+            const snacksDisplayRow = document.getElementById('snacksDisplayRow');
+            if(snacksTotal > 0) {
+                snacksDisplayRow.classList.remove('hidden');
+                document.getElementById('snacksDisplay').textContent = `₹${snacksTotal}`;
+            } else {
+                if(snacksDisplayRow) snacksDisplayRow.classList.add('hidden');
+            }
+
+            const total = subtotal + fee + snacksTotal;
 
             document.getElementById("ticketCount").textContent = selectedSeats.length;
             document.getElementById("subtotalAmount").textContent = `₹${subtotal}`;
+            document.getElementById("subtotalDisplay").textContent = `₹${subtotal}`;
+            document.getElementById("bookingFee").textContent = `₹${fee}`;
+            document.getElementById("totalAmount").textContent = `₹${total}`;
+            document.getElementById("selectedSeatsText").textContent =
+                selectedSeats.length ? selectedSeats.map(s => s.id).join(", ") : "No seats selected";
+        }`;
             document.getElementById("subtotalDisplay").textContent = `₹${subtotal}`;
             document.getElementById("bookingFee").textContent = `₹${fee}`;
             document.getElementById("totalAmount").textContent = `₹${total}`;
@@ -1762,6 +1866,10 @@
                 seats: selectedSeats.map(s => s.id),
                 amount_paid: total,
                 event_type: currentEvent.category,
+                snacks: {
+                    popcorn: document.getElementById('addPopcorn') ? document.getElementById('addPopcorn').checked : false,
+                    coke: document.getElementById('addCoke') ? document.getElementById('addCoke').checked : false
+                },
                 poster_url: currentEvent.image_url || currentEvent.image
             };
 
