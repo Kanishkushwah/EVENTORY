@@ -299,10 +299,12 @@
     </nav>
 
     <!-- Mobile Menu Overlay -->
-    <div id="mobile-menu"
-        class="fixed inset-0 z-50 bg-white dark:bg-gray-900 transform translate-x-full transition-transform duration-300 md:hidden flex flex-col h-full shadow-2xl">
-        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-            <span class="text-xl font-bold text-purple-600">Menu</span>
+    <div id="mobile-menu" class="fixed inset-0 z-50 bg-white dark:bg-gray-900 transform translate-x-full transition-transform duration-300 md:hidden flex flex-col h-full shadow-2xl">
+        <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2">
+                <span class="material-icons text-purple-600 dark:text-purple-400 text-2xl">event</span>
+                <span class="font-bold text-xl text-purple-600 dark:text-purple-400">Eventory</span>
+            </a>
             <div class="flex items-center gap-4">
                 <button onclick="toggleTheme()"
                     class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-purple-600 transition-colors focus:outline-none">
@@ -316,15 +318,15 @@
         <div class="flex-1 overflow-y-auto py-6 px-6 space-y-6">
             <div class="space-y-4">
                 <a href="index.html"
-                    class="flex items-center gap-3 text-lg font-medium text-gray-700 hover:text-purple-600 transition-colors p-2 rounded-lg hover:bg-gray-50">
+                    class="flex items-center gap-3 text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-purple-600 dark:hover:text-purple-400 transition-colors p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
                     <span class="material-icons">home</span> Browse Events
                 </a>
                 <a href="user-dashboard.html"
-                    class="flex items-center gap-3 text-lg font-medium text-gray-700 hover:text-purple-600 transition-colors p-2 rounded-lg hover:bg-gray-50">
+                    class="flex items-center gap-3 text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-purple-600 dark:hover:text-purple-400 transition-colors p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
                     <span class="material-icons">confirmation_number</span> My Tickets
                 </a>
                 <a href="user-profile.html"
-                    class="flex items-center gap-3 text-lg font-medium text-gray-700 hover:text-purple-600 transition-colors p-2 rounded-lg hover:bg-gray-50">
+                    class="flex items-center gap-3 text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-purple-600 dark:hover:text-purple-400 transition-colors p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
                     <span class="material-icons">person</span> My Profile
                 </a>
             </div>
@@ -480,7 +482,7 @@
                     <span class="material-icons-outlined text-white text-5xl">check_circle</span>
                 </div>
 
-                <h1 class="text-4xl font-extrabold mb-3 text-gray-900">Payment Confirmed</h1>
+                <h1 class="text-4xl font-extrabold mb-3 text-gray-900 dark:text-white">Payment Confirmed</h1>
                 <p class="text-lg text-gray-600">
                     Your ticket is ready, <span id="userNameDisplay" class="font-semibold text-primary">Alex</span>!
                     Check your email or download it below for entry.
@@ -645,7 +647,7 @@
                 </div>
 
                 <div>
-                    <h4 class="font-bold text-gray-900 dark:text-white mb-6 uppercase text-sm tracking-wider">Explore</h4>
+                    <h4 class="font-bold text-gray-900 dark:text-white dark:text-white mb-6 uppercase text-sm tracking-wider">Explore</h4>
                     <ul class="space-y-4 text-sm text-gray-600 dark:text-gray-400">
                         <li><a href="index.html" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Browse Events</a></li>
                         <li><a href="#" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Concerts</a></li>
@@ -655,7 +657,7 @@
                 </div>
 
                 <div>
-                    <h4 class="font-bold text-gray-900 dark:text-white mb-6 uppercase text-sm tracking-wider">Help & Support</h4>
+                    <h4 class="font-bold text-gray-900 dark:text-white dark:text-white mb-6 uppercase text-sm tracking-wider">Help & Support</h4>
                     <ul class="space-y-4 text-sm text-gray-600 dark:text-gray-400">
                         <li><a href="#" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">FAQ</a></li>
                         <li><a href="#" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Terms of Service</a></li>
@@ -665,7 +667,7 @@
                 </div>
 
                 <div>
-                    <h4 class="font-bold text-gray-900 dark:text-white mb-6 uppercase text-sm tracking-wider">Newsletter</h4>
+                    <h4 class="font-bold text-gray-900 dark:text-white dark:text-white mb-6 uppercase text-sm tracking-wider">Newsletter</h4>
                     <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Subscribe for the latest event updates and exclusive offers.</p>
                     <div class="flex">
                         <input type="email" placeholder="Your email address" class="bg-gray-50 dark:bg-gray-800 border-none rounded-l-lg px-4 py-2 w-full text-sm focus:ring-2 focus:ring-purple-600 outline-none text-gray-800 dark:text-gray-200">
