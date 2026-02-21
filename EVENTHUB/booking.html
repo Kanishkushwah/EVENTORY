@@ -262,6 +262,12 @@
             background-color: rgba(139, 92, 246, 0.2) !important;
             color: #DDD6FE !important;
         }
+
+        /* Movie Seat Selection Fix */
+        .seat-selected {
+            color: #10B981 !important;
+            filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.8)) !important;
+        }
     </style>
     <script>
         tailwind.config = { darkMode: 'class' };
@@ -1418,18 +1424,18 @@
                             seatBtn.onclick = function () {
                                 // Toggle Selection Visuals
                                 const icon = this.querySelector('svg');
-                                const isSelected = icon.classList.contains('text-green-500');
+                                const isSelected = icon.classList.contains('seat-selected');
 
                                 if (isSelected) {
                                     // Deselect
-                                    icon.classList.remove('text-green-500');
+                                    icon.classList.remove('seat-selected', 'text-green-500');
                                     icon.classList.add('text-purple-200');
                                     selectedSeats = selectedSeats.filter(s => s.id !== seatId);
                                 } else {
                                     // Select
                                     if (selectedSeats.length >= maxSeats) return alert("Max 10 seats!");
                                     icon.classList.remove('text-purple-200', 'hover:text-purple-500');
-                                    icon.classList.add('text-green-500');
+                                    icon.classList.add('seat-selected', 'text-green-500');
 
                                     // Bouncing animation
                                     this.style.transform = "scale(1.2)";
@@ -1492,16 +1498,16 @@
                         } else {
                             seatBtn.onclick = function () {
                                 const icon = this.querySelector('svg');
-                                const isSelected = icon.classList.contains('text-green-500');
+                                const isSelected = icon.classList.contains('seat-selected');
 
                                 if (isSelected) {
-                                    icon.classList.remove('text-green-500');
+                                    icon.classList.remove('seat-selected', 'text-green-500');
                                     icon.classList.add('text-teal-200');
                                     selectedSeats = selectedSeats.filter(s => s.id !== seatId);
                                 } else {
                                     if (selectedSeats.length >= maxSeats) return alert("Max 10 seats!");
                                     icon.classList.remove('text-teal-200', 'hover:text-teal-500');
-                                    icon.classList.add('text-green-500');
+                                    icon.classList.add('seat-selected', 'text-green-500');
 
                                     this.style.transform = "scale(1.2)";
                                     setTimeout(() => this.style.transform = "scale(1)", 200);
