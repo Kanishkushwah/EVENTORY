@@ -249,6 +249,18 @@
             box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
         }
 
+        /* Hide scrollbars for specific containers */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
         /* ======================================================= */
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -316,6 +328,12 @@
                 </a>
             </div>
             <div id="nav-auth-container" class="hidden md:flex items-center space-x-4 text-sm font-medium">
+                <!-- Notifications Bell -->
+                <button onclick="subscribeNewsletter()"
+                    class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary transition-colors focus:outline-none"
+                    title="Notifications">
+                    <span class="material-icons theme-icon">notifications</span>
+                </button>
                 <button onclick="toggleTheme()"
                     class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary transition-colors focus:outline-none"
                     title="Toggle Dark Mode">
@@ -527,14 +545,16 @@
             </div>
         </div>
 
-        <div class="flex items-center justify-between mb-8 px-2">
+        <div class="flex items-center justify-between mb-8 px-2 mt-4">
             <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Trending Events</h2>
-            <a class="text-primary hover:text-secondary font-medium text-sm flex items-center gap-1" href="#all-events">
-                View all <span class="material-icons text-sm">arrow_forward</span>
-            </a>
+            <button id="viewAllBtn" onclick="toggleViewAll()"
+                class="text-primary hover:text-secondary font-medium text-sm flex items-center gap-1 transition-all">
+                View All <span class="material-icons text-sm transition-transform duration-300">grid_view</span>
+            </button>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="eventGrid">
+        <div class="flex flex-row overflow-x-auto snap-x snap-mandatory hide-scrollbar md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 pb-8 transition-all duration-500 ease-in-out"
+            id="eventGrid">
             <!-- MOVIE Card 1 - Pushpa 2 -->
             <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700"
                 data-category="movie">
@@ -972,7 +992,7 @@
     <script>
         let allEvents = [];
 
-        // Load events from API
+        // Load API
         async function loadEvents() {
             try {
                 // Add timestamp to prevent caching
@@ -1039,7 +1059,7 @@
                 // Check if it's the special summary card
                 if (event.isSummary) {
                     return `
-                    <div class="relative rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 md:col-span-2 group cursor-pointer border border-blue-700 bg-gray-900"
+                    <div class="relative rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 md:col-span-2 group min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto md:shrink-1 border border-blue-700 bg-gray-900 cursor-pointer"
                          onclick="filterCategory('sports')">
                         <!-- Background Image -->
                         <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" 
@@ -1071,7 +1091,7 @@
                 const isSaved = savedEvents.some(e => e.id === event.id);
 
                 return `
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700 animate-fade-in" 
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700 animate-fade-in min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto md:shrink-1" 
                      data-id="${event.id}"
                      data-category="${normCat}"
                      data-title="${event.title.toLowerCase()}">
@@ -1287,12 +1307,45 @@
             window.location.href = 'booking.html?id=' + eventId;
         }
 
-        // Newsletter subscription
+        // Newsletter/Notifications subscription
         function subscribeNewsletter() {
-            const email = document.getElementById('newsletterEmail').value;
+            const email = document.getElementById('newsletterEmail') ? document.getElementById('newsletterEmail').value : null;
             if (email) {
-                alert('Thank you for subscribing! We\'ll keep you updated.');
+                alert('Thank you! You will be notified of new events at ' + email);
                 document.getElementById('newsletterEmail').value = '';
+            } else {
+                alert('Notification Subscription Enabled! We will notify your registered email about new upcoming events immediately.');
+            }
+        }
+
+        // Toggle Event Grid between Horizontal Scroll and Vertical Stack
+        function toggleViewAll() {
+            const grid = document.getElementById('eventGrid');
+            const btn = document.getElementById('viewAllBtn');
+            const isHorizontal = grid.classList.contains('flex');
+
+            if (isHorizontal) {
+                // Switch to Vertical List on Mobile
+                grid.classList.remove('flex', 'flex-row', 'overflow-x-auto', 'snap-x', 'snap-mandatory', 'hide-scrollbar');
+                grid.classList.add('grid', 'grid-cols-1');
+                btn.innerHTML = 'Collapse <span class="material-icons text-sm">view_carousel</span>';
+
+                // Remove snap points from all cards and allow them to take full width
+                Array.from(grid.children).forEach(child => {
+                    child.classList.remove('min-w-[85vw]', 'snap-center', 'shrink-0', 'md:min-w-0', 'md:w-auto', 'md:shrink-1');
+                    child.classList.add('w-full');
+                });
+            } else {
+                // Revert to Horizontal Scroll
+                grid.classList.add('flex', 'flex-row', 'overflow-x-auto', 'snap-x', 'snap-mandatory', 'hide-scrollbar');
+                grid.classList.remove('grid', 'grid-cols-1');
+                btn.innerHTML = 'View All <span class="material-icons text-sm">grid_view</span>';
+
+                // Add back snap points
+                Array.from(grid.children).forEach(child => {
+                    child.classList.add('min-w-[85vw]', 'snap-center', 'shrink-0');
+                    child.classList.remove('w-full');
+                });
             }
         }
 
@@ -1418,7 +1471,7 @@
                 }
             }, (error) => {
                 console.error("Geolocation error:", error);
-                alert("Permission denied or location unavailable.");
+                alert("Permission denied onavailable.");
                 btn.innerHTML = originalText;
             }, {
                 timeout: 10000
@@ -1429,7 +1482,7 @@
         document.addEventListener('click', function (event) {
             const citySelectBtn = document.getElementById('citySelectBtn');
             const cityDropdown = document.getElementById('cityDropdown');
-            if (citySelectBtn && cityDropdown) {
+            if (citectBityDropdown) {
                 if (!citySelectBtn.contains(event.target) && !cityDropdown.contains(event.target)) {
                     cityDropdown.classList.add('hidden');
                 }
