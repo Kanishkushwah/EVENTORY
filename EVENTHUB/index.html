@@ -359,7 +359,7 @@
 
     <!-- Mobile Menu Overlay -->
     <div id="mobile-menu"
-        class="fixed inset-0 z-50 bg-white dark:bg-gray-900 transform translate-x-full transition-transform duration-300 md:hidden flex flex-col h-full shadow-2xl">
+        class="fixed inset-0 z-50 bg-white dark:bg-gray-900 transform translate-x-full transition-transform duration-300 md:hidden flex flex-col self-stretch shadow-2xl">
         <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
             <span class="text-xl font-bold text-primary">Menu</span>
             <div class="flex items-center gap-4">
@@ -407,7 +407,7 @@
 
     <header
         class="hero-gradient text-white py-20 md:py-32 relative overflow-hidden transition-all duration-700 w-full rounded-b-[2rem] shadow-2xl mb-12">
-        <div class="absolute top-0 left-0 w-full h-full opacity-30 pointer-events-none">
+        <div class="absolute top-0 left-0 w-full self-stretch opacity-30 pointer-events-none">
             <div class="absolute -top-10 -left-10 w-64 h-64 rounded-full bg-white blur-[100px] animate-pulse"></div>
             <div class="absolute bottom-10 right-10 w-80 h-80 rounded-full bg-cyan-400 blur-[100px] animate-pulse"
                 style="animation-delay: 2s;"></div>
@@ -486,7 +486,7 @@
             <!-- Background Image -->
             <div class="absolute inset-0 bg-black">
                 <img src="https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&q=80&w=2000"
-                    class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000 ease-out">
+                    class="w-full self-stretch object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000 ease-out">
                 <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent"></div>
             </div>
 
@@ -554,13 +554,13 @@
         </div>
 
         <div class="flex flex-row overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-4 pb-8 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-8 transition-all duration-500 ease-in-out"
-            id="eventGrid">
+            id="eventGrid" style="align-items: stretch;">
             <!-- MOVIE Card 1 - Pushpa 2 -->
-            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700 min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto md:shrink-1"
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col self-stretch border border-gray-100 dark:border-gray-700 min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto md:shrink-1"
                 data-category="movie">
                 <div class="relative h-72 overflow-hidden">
                     <img alt="Pushpa 2"
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        class="w-full self-stretch object-cover group-hover:scale-105 transition-transform duration-500"
                         src="https://assets-in.bmscdn.com/discovery-catalog/events/tr:w-400,h-600,bg-CCCCCC:w-400.0,h-660.0,cm-pad_resize,bg-000000,fo-top:l-image,i-discovery-catalog@@icons@@star-icon-202203010609.png,lx-24,ly-615,w-29,l-end:l-text,ie-OC42LzEwICAzNjlLIFZvdGVz,fs-29,co-FFFFFF,ly-612,lx-70,pa-8_0_0_0,l-end/et00356724-jruwpnhzdg-portrait.jpg" />
                     <div
                         class="absolute top-3 right-3 bg-red-600 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm">
@@ -596,11 +596,11 @@
             </div>
 
             <!-- MOVIE Card 2 - Dunki -->
-            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700 min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto md:shrink-1"
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col self-stretch border border-gray-100 dark:border-gray-700 min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto md:shrink-1"
                 data-category="movie">
                 <div class="relative h-72 overflow-hidden">
                     <img alt="Dunki"
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        class="w-full self-stretch object-cover group-hover:scale-105 transition-transform duration-500"
                         src="https://assets-in.bmscdn.com/discovery-catalog/events/tr:w-400,h-600,bg-CCCCCC:w-400.0,h-660.0,cm-pad_resize,bg-000000,fo-top:l-image,i-discovery-catalog@@icons@@star-icon-202203010609.png,lx-24,ly-615,w-29,l-end:l-text,ie-OS44LzEwICAyMDBLIFZvdGVz,fs-29,co-FFFFFF,ly-612,lx-70,pa-8_0_0_0,l-end/et00304730-fwbwbqkjka-portrait.jpg" />
                     <div
                         class="absolute top-3 right-3 bg-red-600 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm">
@@ -635,11 +635,11 @@
             </div>
 
             <!-- MOVIE Card 3 - Salaar -->
-            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700 min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto md:shrink-1"
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col self-stretch border border-gray-100 dark:border-gray-700 min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto md:shrink-1"
                 data-category="movie">
                 <div class="relative h-72 overflow-hidden">
                     <img alt="Salaar"
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        class="w-full self-stretch object-cover group-hover:scale-105 transition-transform duration-500"
                         src="https://assets-in.bmscdn.com/discovery-catalog/events/tr:w-400,h-600,bg-CCCCCC:w-400.0,h-660.0,cm-pad_resize,bg-000000,fo-top:l-image,i-discovery-catalog@@icons@@star-icon-202203010609.png,lx-24,ly-615,w-29,l-end:l-text,ie-OS4xLzEwICAzMTZLIFZvdGVz,fs-29,co-FFFFFF,ly-612,lx-70,pa-8_0_0_0,l-end/et00073677-yajymybpzu-portrait.jpg" />
                     <div
                         class="absolute top-3 right-3 bg-red-600 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm">
@@ -675,11 +675,11 @@
             </div>
 
             <!-- Event Card 1 -->
-            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700 min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto md:shrink-1"
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col self-stretch border border-gray-100 dark:border-gray-700 min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto md:shrink-1"
                 data-category="business">
                 <div class="relative h-48 overflow-hidden">
                     <img alt="Concert crowd with stage lights"
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        class="w-full self-stretch object-cover group-hover:scale-105 transition-transform duration-500"
                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuBC6_SyhJOY8aUXrJ_VaXB_vT_iDTBUmeTEukkGCqMhDv_G88XVjQPUjI6lwXPq96UlyU1thwDxcu4NsfwLtH2I0GxesLvt2B6txbDHiW7bZqhCVzZMPRODG3d1kMwjTp7QPVqcqt91FUKXMe-shTBvTdqHY3tvmzz-0nhglwrACOIQeep3RxlQBPJCwzjWV6xAvvHNYKw5cT-ljJiY7_EECAPRNsusBidYQXTpD493V77cdIdUi6PXzJTASOh94hMCNMUuOd4wUgs" />
                     <div
                         class="absolute top-3 right-3 bg-white/90 dark:bg-black/70 backdrop-blur-sm px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide text-primary shadow-sm">
@@ -710,11 +710,11 @@
             </div>
 
             <!-- Event Card 2 -->
-            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700 min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto md:shrink-1"
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col self-stretch border border-gray-100 dark:border-gray-700 min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto md:shrink-1"
                 data-category="music">
                 <div class="relative h-48 overflow-hidden">
                     <img alt="Music festival lights and fireworks"
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        class="w-full self-stretch object-cover group-hover:scale-105 transition-transform duration-500"
                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-5rHDZ8M5GGVzvclyI4laXZPhS4nAfnTsmdmu5FE6gwLC6-rXBTyrlHbywyCjJRfk-sNgPoH_2PMsqVSH0ODBpSiuXuwOCp5rnfiaCxNA6NI_hLTxYRhOFeU1EyJEbLpLZNdo5Jhr-g1NHL10lgRgA-FnhtU_edUXup1CGq3luKsJX3HwC9R-lfq-GR63BzRMqjhCbzlV3AH7T5nnAVuVh36F2KHALadRMkVauwmeQ1x1gDCv5KGwX53UACgYZwWkKrhFWRxxoJ4" />
                     <div
                         class="absolute top-3 right-3 bg-white/90 dark:bg-black/70 backdrop-blur-sm px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide text-primary shadow-sm">
@@ -745,11 +745,11 @@
             </div>
 
             <!-- Event Card 3 -->
-            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700 min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto md:shrink-1"
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col self-stretch border border-gray-100 dark:border-gray-700 min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto md:shrink-1"
                 data-category="sports">
                 <div class="relative h-48 overflow-hidden">
                     <img alt="Cricket stadium match"
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        class="w-full self-stretch object-cover group-hover:scale-105 transition-transform duration-500"
                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJvRDTKzGrb8wZeUy2yo5-8UDx_CESTXq1iuJuYL166Q5pI35R8r1edhTmHt8JpddwrumyRlZKXIS1RANPvlf9P0bG0raONWeomtzAll_FZt_pC7zMQl57ZdjwcAnycmnSiwOIICRJZtWT_LBVrRff7Y9sMXE3PT87x5BUPG4OASpClyhKBHq-RfDApySOH072QG1i33ZHp9w0uA3_fWNOWsOwN3LRcWAdGrV_tLib7tEsBTp-C60EZZYYFRJAW8tu5cYAcz1NPFY" />
                     <div
                         class="absolute top-3 right-3 bg-white/90 dark:bg-black/70 backdrop-blur-sm px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide text-primary shadow-sm">
@@ -780,11 +780,11 @@
             </div>
 
             <!-- Event Card 4 -->
-            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700 min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto md:shrink-1"
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col self-stretch border border-gray-100 dark:border-gray-700 min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto md:shrink-1"
                 data-category="arts">
                 <div class="relative h-48 overflow-hidden">
                     <img alt="Standup comedy microphone"
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        class="w-full self-stretch object-cover group-hover:scale-105 transition-transform duration-500"
                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8F37f_ZCtKxu76yDk45jqJ7zLIVovQIHH9OhXhJkvB6iKYhX1F1-H6rv_fOafUhRtrhKPMshRXFKWFbQFpB8s7apBFGmNPc6L68_OO9fRraklGP4F7plLJv9v8trTujyLqh1A1WjQUyAKMsIrsOCdbyBR1URJe-58BnvAlRRyZRZZPrdyCqlfCx1PQAvExmFwHXVcgtws9m08hOgmFFdke0k1hWpfp8JvOKPlWhog1IoqLXWkZD2cbjpCHy3gMlNhDE7_G5XTncs" />
                     <div
                         class="absolute top-3 right-3 bg-white/90 dark:bg-black/70 backdrop-blur-sm px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide text-primary shadow-sm">
@@ -814,11 +814,11 @@
             </div>
 
             <!-- Event Card 5 -->
-            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700 min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto md:shrink-1"
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col self-stretch border border-gray-100 dark:border-gray-700 min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto md:shrink-1"
                 data-category="arts">
                 <div class="relative h-48 overflow-hidden">
                     <img alt="Workshop setting with people"
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        class="w-full self-stretch object-cover group-hover:scale-105 transition-transform duration-500"
                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRLVa45R5oojqnHubsA7XDhOs8vANFip92o0Yhg4EhwwYCsTNKkf1jGhwnBwZ3AWMplmoNl4Jx6JW7qzOK5qiVJWe83ZzDDorkw9AuJDoV-RV9fhpIe7P2sWXTr-9dH0yBTKxphY1hj-aqEGV9ycOQisFLgWpCKZlKL0d5IANemo4KdxB7doDEOURbG2pWJCMWYeKYfcUaJqEZiD2YRaB2HnC1lCcSqITfr7qhUaAq3SW8r7-8DqdNbiRiCg1edYS4EpojAQbRUQ0" />
                     <div
                         class="absolute top-3 right-3 bg-white/90 dark:bg-black/70 backdrop-blur-sm px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide text-primary shadow-sm">
@@ -849,11 +849,11 @@
             </div>
 
             <!-- Event Card 6 -->
-            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700 min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto md:shrink-1"
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col self-stretch border border-gray-100 dark:border-gray-700 min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto md:shrink-1"
                 data-category="business">
                 <div class="relative h-48 overflow-hidden">
                     <img alt="Business conference speaker"
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        class="w-full self-stretch object-cover group-hover:scale-105 transition-transform duration-500"
                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsUeWu13WEVN7Szd6mkpBOCpwIgaRV06zAV5G1ZFMiS73PXtsQh6QfnxO-mU8ECFc8d70qzhdZRhFDnyDQlwbosRnHv2174vjH2Uq4aG1ZUGvNv2Cz_Ea0ptlyFOViwNqmyPkBxR0eYvOFjpXN8eSrGmBdoIh8yz7xg55QKyiJdZtZ-KJxR49S7G4p-IJUTHz_5iG6MjW8XGuHLqh-liNfwtduq3ZBDIjoBhvNoRVfcazUn_JXnqmuH7DTX7Pf9QXUT6KG_x2BdcY" />
                     <div
                         class="absolute top-3 right-3 bg-white/90 dark:bg-black/70 backdrop-blur-sm px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide text-primary shadow-sm">
@@ -1071,7 +1071,7 @@
                         <div class="absolute top-4 right-4 animate-pulse z-10">
                             <span class="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded shadow">LIVE TOURNAMENT</span>
                         </div>
-                        <div class="p-8 flex flex-col h-full justify-center relative z-10">
+                        <div class="p-8 flex flex-col self-stretch justify-center relative z-10">
                             <h3 class="text-3xl font-extrabold text-white mb-2 drop-shadow-md">🏏 ICC World Cup 2026</h3>
                             <p class="text-blue-100 mb-6 max-w-md font-medium drop-shadow-sm">Catch the biggest cricket showdown! 50+ Matches, 10 Teams. Book your tickets now.</p>
                             <button class="bg-white text-blue-900 hover:bg-blue-50 font-bold py-3 px-6 rounded-lg self-start transition-transform hover:scale-105 flex items-center gap-2 shadow-lg">
@@ -1091,12 +1091,12 @@
                 const isSaved = savedEvents.some(e => e.id === event.id);
 
                 return `
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700 animate-fade-in w-[85vw] max-w-[340px] flex-none snap-center md:max-w-none md:w-auto" 
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col self-stretch border border-gray-100 dark:border-gray-700 animate-fade-in w-[85vw] max-w-[340px] flex-none snap-center md:max-w-none md:w-auto" 
                      data-id="${event.id}"
                      data-category="${normCat}"
                      data-title="${event.title.toLowerCase()}">
                     <div class="relative h-72 overflow-hidden">
-                        <img alt="${event.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="${event.image_url}" onerror="this.src='https://via.placeholder.com/400x600'"/>
+                        <img alt="${event.title}" class="w-full self-stretch object-cover group-hover:scale-105 transition-transform duration-500" src="${event.image_url}" onerror="this.src='https://via.placeholder.com/400x600'"/>
                         
                         <!-- Category Badge -->
                         <div class="absolute top-3 right-3 bg-red-600 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm z-10">
@@ -1391,22 +1391,22 @@
         class="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] border-t border-gray-100 dark:border-gray-800 z-50">
         <div class="flex justify-around items-center h-16">
             <a href="index.html"
-                class="flex flex-col items-center justify-center w-full h-full text-primary dark:text-primary-light">
+                class="flex flex-col items-center justify-center w-full self-stretch text-primary dark:text-primary-light">
                 <span class="material-icons">home</span>
                 <span class="text-[10px] font-medium mt-1">Home</span>
             </a>
             <a href="booking.html"
-                class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors">
+                class="flex flex-col items-center justify-center w-full self-stretch text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors">
                 <span class="material-icons">confirmation_number</span>
                 <span class="text-[10px] font-medium mt-1">Bookings</span>
             </a>
             <a href="#search" onclick="document.getElementById('searchInput').focus()"
-                class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors">
+                class="flex flex-col items-center justify-center w-full self-stretch text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors">
                 <span class="material-icons">search</span>
                 <span class="text-[10px] font-medium mt-1">Search</span>
             </a>
             <a href="user-profile.html"
-                class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors">
+                class="flex flex-col items-center justify-center w-full self-stretch text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors">
                 <span class="material-icons">person</span>
                 <span class="text-[10px] font-medium mt-1">Profile</span>
             </a>
