@@ -914,7 +914,19 @@
         }
 
         /** MOVIE / MUSIC / SPORTS LAYOUTS **/
-        function generateSeats() {
+        async function generateSeats() {
+            // Fetch live occupied seats
+            let liveOccupied = [];
+            try {
+                let url = '/api/bookings/occupied-seats?event_id=' + currentEvent.id;
+                if (selectedShowtime) url += '&showtime_id=' + selectedShowtime.id;
+                const res = await fetch(url);
+                const data = await res.json();
+                liveOccupied = data.occupied || [];
+            } catch(e) {
+                console.error("Failed to fetch occupied seats", e);
+            }
+
             const layout = document.getElementById("seatLayout");
 
             // DEBUG: Log the category
@@ -1000,7 +1012,7 @@
                         seat.className = "seat border-2 bg-white border-gray-300";
                         const id = `${r.name}${i}`;
 
-                        if (r.occupied.includes(i)) seat.classList.add("occupied");
+                        if (r.occupied.includes(i) || liveOccupied.includes(id)) seat.classList.add("occupied");
                         else seat.onclick = () => toggleSeat(id, seat, r.price);
 
                         document.getElementById(`row-${r.name}`).appendChild(seat);
@@ -1150,7 +1162,8 @@
 
                     const availableSeats = [];
                     for (let i = 1; i <= section.capacity; i++) {
-                        if (!section.occupied.includes(i)) availableSeats.push(i);
+                        const sId = `${sectionKey.toUpperCase()}-${i}`;
+                        if (!section.occupied.includes(i) && !liveOccupied.includes(sId)) availableSeats.push(i);
                     }
 
                     const buttonsContainer = document.getElementById('concert-seat-buttons');
@@ -1432,7 +1445,8 @@
 
                     const availableSeats = [];
                     for (let i = 1; i <= block.capacity; i++) {
-                        if (!block.occupied.includes(i)) availableSeats.push(i);
+                        const sId = `${blockKey}-SEAT${i}`;
+                        if (!block.occupied.includes(i) && !liveOccupied.includes(sId)) availableSeats.push(i);
                     }
 
                     const buttonsContainer = document.getElementById('cricket-seat-buttons');
@@ -1638,7 +1652,7 @@
                         seatBtn.className = 'w-8 h-8 flex items-center justify-center transition-all duration-300 relative group';
 
                         // Seat Icon (SVG)
-                        const isOccupied = premiumConfig.occupied.includes(globalId);
+                        const isOccupied = premiumConfig.occupied.includes(globalId) || liveOccupied.includes(seatId);
 
                         seatBtn.innerHTML = `
                             <svg viewBox="0 0 24 24" class="w-full h-full drop-shadow-sm transition-colors duration-300 ${isOccupied ? 'text-gray-300 cursor-not-allowed' : 'text-purple-200 hover:text-purple-500 cursor-pointer seat-icon'}">
@@ -1715,7 +1729,7 @@
                     for (let seat = 0; seat < seatsInRow; seat++) {
                         const seatNum = seat + 1;
                         const seatId = `${rowLabel}${seatNum}`;
-                        const isOccupied = standardConfig.occupied.includes(seat * (row + 1)); // distinct pattern
+                        const isOccupied = standardConfig.occupied.includes(seat * (row + 1)) || liveOccupied.includes(seatId);
 
                         const seatBtn = document.createElement('button');
                         seatBtn.className = 'w-7 h-7 flex items-center justify-center transition-all duration-300 relative group';
