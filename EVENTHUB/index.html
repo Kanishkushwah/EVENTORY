@@ -1314,8 +1314,11 @@
             if (searchBtn) searchBtn.innerHTML = '<span class="material-icons animate-spin text-sm">refresh</span> Thinking...';
             if (mobSearchBtn) mobSearchBtn.innerHTML = '<span class="material-icons animate-spin text-sm">refresh</span>';
 
-            // Scroll down
-            document.getElementById('events-section').scrollIntoView({ behavior: 'smooth' });
+            // Scroll down securely
+            const gridSection = document.getElementById('eventGrid');
+            if (gridSection) {
+                gridSection.scrollIntoView({ behavior: 'smooth' });
+            }
 
             try {
                 const response = await fetch(`/api/events/smart-search?q=${encodeURIComponent(query)}`);

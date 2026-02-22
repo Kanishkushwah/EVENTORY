@@ -159,12 +159,19 @@
                     body: JSON.stringify({ reference })
                 });
 
-                const data = await res.json();
+                let data;
+                try {
+                    data = await res.json();
+                } catch (e) {
+                    showOverlay({ valid: false, message: `Server error or timeout (${res.status}). Please try again.` });
+                    return;
+                }
+
                 showOverlay(data);
 
             } catch (err) {
                 console.error("Verification Error:", err);
-                showOverlay({ valid: false, message: "Network error communicating with server." });
+                showOverlay({ valid: false, message: "Network error communicating with server. Retrying might fix it." });
             }
         }
 
