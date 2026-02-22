@@ -21,6 +21,8 @@ export const BookingService = {
             poster_url: bookingData.poster_url || null,
             payment_status: "pending",
             payment_method: null,
+            cinema_id: bookingData.cinema_id || null,
+            showtime_id: bookingData.showtime_id || null,
             created_at: timestamp,
             updated_at: timestamp,
         };
@@ -60,4 +62,23 @@ export const BookingService = {
 
         return data;
     },
+
+    async getOccupiedSeats(eventId, showtimeId = null) {
+        const { data, error } = await BookingModel.getOccupiedSeats(eventId, showtimeId);
+
+        if (error) {
+            console.error("Get Occupied Seats Error:", error);
+            return { error };
+        }
+
+        // Flatten the array of seat arrays
+        const occupied = [];
+        data.forEach(booking => {
+            if (booking.seats && Array.isArray(booking.seats)) {
+                occupied.push(...booking.seats);
+            }
+        });
+
+        return { occupied };
+    }
 };

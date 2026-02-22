@@ -28,7 +28,22 @@ export const BookingModel = {
             .select("*")
             .eq("reference", reference)
             .single();
+        return { data, error };
+    },
 
+    async getOccupiedSeats(eventId, showtimeId = null) {
+        let query = supabase
+            .from("bookings")
+            .select("seats")
+            .eq("event_id", eventId)
+            // Ideally only payment_status === "completed" but we can include pending to prevent racing
+            .in("payment_status", ["completed", "pending"]);
+
+        if (showtimeId) {
+            query = query.eq("showtime_id", showtimeId);
+        }
+
+        const { data, error } = await query;
         return { data, error };
     }
 };
