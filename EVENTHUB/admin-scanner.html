@@ -137,10 +137,11 @@
         let html5QrcodeScanner;
         let isScanning = true;
 
-        // Check if admin is logged in (Demo check)
-        if (!localStorage.getItem("adminAuth")) {
+        // Check if admin is logged in
+        const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+        if (!loggedInUser || loggedInUser.role !== 'admin') {
             alert("Admin Access Required");
-            window.location.href = "admin-login.html";
+            window.location.href = "login.html";
         }
 
         async function onScanSuccess(decodedText, decodedResult) {
