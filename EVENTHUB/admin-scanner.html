@@ -223,10 +223,13 @@
         }
 
         function initScanner() {
+            // Dynamic QR box size for smaller mobile screens
+            let qrboxSize = window.innerWidth < 400 ? window.innerWidth * 0.65 : 250;
+
             // Start HTML5 QR Code Scanner
             html5QrcodeScanner = new Html5QrcodeScanner(
                 "reader",
-                { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0 },
+                { fps: 15, qrbox: { width: qrboxSize, height: qrboxSize }, aspectRatio: 1.0 },
                 /* verbose= */ false
             );
             html5QrcodeScanner.render(onScanSuccess, onScanFailure);
