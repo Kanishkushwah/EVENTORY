@@ -233,7 +233,7 @@
             color: #DDD6FE !important;
         }
 
-        
+
         /* DARK MODE SEAT SELECTION FIX */
         .dark .bg-white.selected,
         .dark .seat.selected,
@@ -243,84 +243,101 @@
             border-color: #059669 !important;
             color: #ffffff !important;
         }
+
         .seat.selected {
             background-color: #10b981 !important;
             border-color: #059669 !important;
             color: #ffffff !important;
         }
-        
-        .seat-selected {
-            color: #10B981 !important;
-            filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.8)) !important;
-        }
 
         .seat-selected {
             color: #10B981 !important;
             filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.8)) !important;
         }
-    
-    /* =============== ULTRA PREMIUM AESTHETICS =============== */
-    /* Custom Modern Scrollbar */
-    ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-    }
-    ::-webkit-scrollbar-track {
-        background: transparent;
-    }
-    ::-webkit-scrollbar-thumb {
-        background: rgba(139, 92, 246, 0.3);
-        border-radius: 10px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-        background: rgba(139, 92, 246, 0.6);
-    }
-    .dark ::-webkit-scrollbar-thumb {
-        background: rgba(167, 139, 250, 0.3);
-    }
-    .dark ::-webkit-scrollbar-thumb:hover {
-        background: rgba(167, 139, 250, 0.6);
-    }
 
-    /* Floating Image Animation for Hero/Feature elements */
-    @keyframes float {
-        0% { transform: translateY(0px); }
-        50% { transform: translateY(-10px); }
-        100% { transform: translateY(0px); }
-    }
-    .animate-float {
-        animation: float 6s ease-in-out infinite;
-    }
+        .seat-selected {
+            color: #10B981 !important;
+            filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.8)) !important;
+        }
 
-    /* Scroll Reveal Animation */
-    .reveal {
-        opacity: 0;
-        transform: translateY(30px);
-        transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
-    }
-    .reveal.active {
-        opacity: 1;
-        transform: translateY(0);
-    }
+        /* =============== ULTRA PREMIUM AESTHETICS =============== */
+        /* Custom Modern Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
 
-    /* Glass Panels */
-    .glass-panel {
-        background: rgba(255, 255, 255, 0.7);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.18);
-    }
-    .dark .glass-panel {
-        background: rgba(17, 24, 39, 0.7);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    
-    /* Glowing badge */
-    .glow-badge {
-        box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
-    }
-    /* ======================================================= */
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
 
+        ::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.3);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 92, 246, 0.6);
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: rgba(167, 139, 250, 0.3);
+        }
+
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: rgba(167, 139, 250, 0.6);
+        }
+
+        /* Floating Image Animation for Hero/Feature elements */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Scroll Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Glass Panels */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .dark .glass-panel {
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Glowing badge */
+        .glow-badge {
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+        }
+
+        /* ======================================================= */
     </style>
     <script>
         tailwind.config = { darkMode: 'class' };
@@ -395,7 +412,8 @@
     </nav>
 
     <!-- Mobile Menu Overlay -->
-    <div id="mobile-menu" class="fixed inset-0 z-50 bg-white dark:bg-gray-900 transform translate-x-full transition-transform duration-300 md:hidden flex flex-col h-full shadow-2xl">
+    <div id="mobile-menu"
+        class="fixed inset-0 z-50 bg-white dark:bg-gray-900 transform translate-x-full transition-transform duration-300 md:hidden flex flex-col h-full shadow-2xl">
         <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
             <a href="index.html" class="flex items-center gap-2">
                 <span class="material-icons text-purple-600 dark:text-purple-400 text-2xl">event</span>
@@ -538,25 +556,28 @@
                         </div>
                     </div>
 
-                    
+
                     <div class="border-t pt-4 mt-4 space-y-3">
                         <h3 class="font-bold text-gray-900 dark:text-white dark:text-white flex items-center gap-2">
                             <span class="material-icons text-purple-600 text-[20px]">fastfood</span> Add Snacks
                         </h3>
                         <div class="flex items-center justify-between">
                             <label class="text-sm dark:text-gray-300 font-medium">🍿 Large Popcorn (+₹250)</label>
-                            <input type="checkbox" id="addPopcorn" onchange="updateSummary()" class="rounded w-5 h-5 text-purple-600 focus:ring-purple-500 cursor-pointer">
+                            <input type="checkbox" id="addPopcorn" onchange="updateSummary()"
+                                class="rounded w-5 h-5 text-purple-600 focus:ring-purple-500 cursor-pointer">
                         </div>
                         <div class="flex items-center justify-between">
                             <label class="text-sm dark:text-gray-300 font-medium">🥤 Coca Cola (+₹150)</label>
-                            <input type="checkbox" id="addCoke" onchange="updateSummary()" class="rounded w-5 h-5 text-purple-600 focus:ring-purple-500 cursor-pointer">
+                            <input type="checkbox" id="addCoke" onchange="updateSummary()"
+                                class="rounded w-5 h-5 text-purple-600 focus:ring-purple-500 cursor-pointer">
                         </div>
-                        <div class="flex justify-between text-sm pt-2 text-purple-600 dark:text-purple-400 font-semibold hidden" id="snacksDisplayRow">
+                        <div class="flex justify-between text-sm pt-2 text-purple-600 dark:text-purple-400 font-semibold hidden"
+                            id="snacksDisplayRow">
                             <span>Snacks Total</span>
                             <span id="snacksDisplay">₹0</span>
                         </div>
                     </div>
-                    
+
                     <button onclick="proceedToPayment()"
                         class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg mt-6 transition">
                         Proceed to Payment
@@ -567,7 +588,8 @@
     </main>
 
     <!-- ULTRA PREMIUM FOOTER -->
-    <footer class="bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 pt-16 pb-24 md:pb-8 mt-20 transition-colors duration-200">
+    <footer
+        class="bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 pt-16 pb-24 md:pb-8 mt-20 transition-colors duration-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                 <div class="col-span-1 md:col-span-1">
@@ -576,58 +598,88 @@
                         <span class="font-bold text-2xl text-purple-600 tracking-tight">Eventory</span>
                     </a>
                     <p class="text-sm text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
-                        The ultimate platform for discovering, booking, and managing events. Built with modern aesthetics and seamless user experience in mind.
+                        The ultimate platform for discovering, booking, and managing events. Built with modern
+                        aesthetics and seamless user experience in mind.
                     </p>
                     <div class="flex space-x-4">
-                        <a href="#" class="w-10 h-10 rounded-full bg-purple-50 dark:bg-gray-800 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all transform hover:scale-110">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-purple-50 dark:bg-gray-800 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all transform hover:scale-110">
                             <i class="fab fa-twitter"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-purple-50 dark:bg-gray-800 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all transform hover:scale-110">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-purple-50 dark:bg-gray-800 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all transform hover:scale-110">
                             <i class="fab fa-instagram"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-purple-50 dark:bg-gray-800 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all transform hover:scale-110">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-purple-50 dark:bg-gray-800 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all transform hover:scale-110">
                             <i class="fab fa-linkedin-in"></i>
                         </a>
                     </div>
                 </div>
 
                 <div>
-                    <h4 class="font-bold text-gray-900 dark:text-white dark:text-white mb-6 uppercase text-sm tracking-wider">Explore</h4>
+                    <h4
+                        class="font-bold text-gray-900 dark:text-white dark:text-white mb-6 uppercase text-sm tracking-wider">
+                        Explore</h4>
                     <ul class="space-y-4 text-sm text-gray-600 dark:text-gray-400">
-                        <li><a href="index.html" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Browse Events</a></li>
-                        <li><a href="#" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Concerts</a></li>
-                        <li><a href="#" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Sports</a></li>
-                        <li><a href="#" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Workshops</a></li>
+                        <li><a href="index.html"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Browse
+                                Events</a></li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Concerts</a>
+                        </li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Sports</a>
+                        </li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Workshops</a>
+                        </li>
                     </ul>
                 </div>
 
                 <div>
-                    <h4 class="font-bold text-gray-900 dark:text-white dark:text-white mb-6 uppercase text-sm tracking-wider">Help & Support</h4>
+                    <h4
+                        class="font-bold text-gray-900 dark:text-white dark:text-white mb-6 uppercase text-sm tracking-wider">
+                        Help & Support</h4>
                     <ul class="space-y-4 text-sm text-gray-600 dark:text-gray-400">
-                        <li><a href="#" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">FAQ</a></li>
-                        <li><a href="#" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Terms of Service</a></li>
-                        <li><a href="#" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Privacy Policy</a></li>
-                        <li><a href="#" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Contact Us</a></li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">FAQ</a></li>
+                        <li><a href="#" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Terms
+                                of Service</a></li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Privacy
+                                Policy</a></li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Contact
+                                Us</a></li>
                     </ul>
                 </div>
 
                 <div>
-                    <h4 class="font-bold text-gray-900 dark:text-white dark:text-white mb-6 uppercase text-sm tracking-wider">Newsletter</h4>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Subscribe for the latest event updates and exclusive offers.</p>
+                    <h4
+                        class="font-bold text-gray-900 dark:text-white dark:text-white mb-6 uppercase text-sm tracking-wider">
+                        Newsletter</h4>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Subscribe for the latest event updates and
+                        exclusive offers.</p>
                     <div class="flex">
-                        <input type="email" placeholder="Your email address" class="bg-gray-50 dark:bg-gray-800 border-none rounded-l-lg px-4 py-2 w-full text-sm focus:ring-2 focus:ring-purple-600 outline-none text-gray-800 dark:text-gray-200">
-                        <button class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-r-lg transition-colors flex items-center justify-center">
+                        <input type="email" placeholder="Your email address"
+                            class="bg-gray-50 dark:bg-gray-800 border-none rounded-l-lg px-4 py-2 w-full text-sm focus:ring-2 focus:ring-purple-600 outline-none text-gray-800 dark:text-gray-200">
+                        <button
+                            class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-r-lg transition-colors flex items-center justify-center">
                             <span class="material-icons text-sm">send</span>
                         </button>
                     </div>
                 </div>
             </div>
-            
-            <div class="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+
+            <div
+                class="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between text-sm text-gray-500 dark:text-gray-400">
                 <p>&copy; 2026 Eventory. All rights reserved.</p>
                 <div class="flex gap-4 mt-4 md:mt-0">
-                    <span class="flex items-center gap-1"><span class="material-icons text-[14px] text-green-500">public</span> English (Global)</span>
-                    <span class="flex items-center gap-1"><span class="material-icons text-[14px] text-yellow-500">payments</span> INR (₹)</span>
+                    <span class="flex items-center gap-1"><span
+                            class="material-icons text-[14px] text-green-500">public</span> English (Global)</span>
+                    <span class="flex items-center gap-1"><span
+                            class="material-icons text-[14px] text-yellow-500">payments</span> INR (₹)</span>
                 </div>
             </div>
         </div>
@@ -641,20 +693,20 @@
         let socket;
         try {
             socket = io(window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:8000' : 'https://eventory-backend.onrender.com'); // Match your backend domain
-        } catch(e) { console.error("Socket IO failed to load"); }
-        
+        } catch (e) { console.error("Socket IO failed to load"); }
+
         if (socket) {
-            socket.on("seatLocked", ({seatId, by}) => {
+            socket.on("seatLocked", ({ seatId, by }) => {
                 const btn = document.getElementById('seat-btn-' + seatId) || Array.from(document.querySelectorAll('.seat-icon')).find(svg => svg.parentElement.innerHTML.includes(seatId))?.parentElement;
-                if(btn && !selectedSeats.find(s => s.id === seatId)) {
+                if (btn && !selectedSeats.find(s => s.id === seatId)) {
                     btn.classList.add('locked-by-other', 'bg-red-900', 'cursor-not-allowed', 'opacity-50');
                     btn.disabled = true;
                     btn.title = "This seat is currently being viewed/locked by someone else!";
                 }
             });
-            socket.on("seatUnlocked", ({seatId}) => {
+            socket.on("seatUnlocked", ({ seatId }) => {
                 const btn = document.getElementById('seat-btn-' + seatId) || Array.from(document.querySelectorAll('.seat-icon')).find(svg => svg.parentElement.innerHTML.includes(seatId))?.parentElement;
-                if(btn) {
+                if (btn) {
                     btn.classList.remove('locked-by-other', 'bg-red-900', 'cursor-not-allowed', 'opacity-50');
                     btn.disabled = false;
                     btn.title = "";
@@ -665,7 +717,7 @@
         let selectedCinema = null;
         let selectedDate = null;
         let selectedShowtime = null;
-            if(socket && selectedShowtime) socket.emit("joinShowtime", selectedShowtime.id);
+        if (socket && selectedShowtime) socket.emit("joinShowtime", selectedShowtime.id);
         let showtimes = [];
         // Dynamic max seats based on dropdown
         Object.defineProperty(window, 'maxSeats', { get: () => parseInt(document.getElementById('autoSeatCount')?.value || 10) });
@@ -840,6 +892,7 @@
         // Select showtime
         function selectShowtime(showtimeData) {
             selectedShowtime = showtimeData;
+            if (socket && selectedShowtime) socket.emit("joinShowtime", selectedShowtime.id);
 
             // Highlight selected
             document.querySelectorAll('.showtime-btn').forEach(btn => {
@@ -1607,13 +1660,13 @@
                                     icon.classList.remove('seat-selected', 'text-green-500');
                                     icon.classList.add('text-purple-200');
                                     selectedSeats = selectedSeats.filter(s => s.id !== seatId);
-                                    if(socket && selectedShowtime) socket.emit("unlockSeat", { showtimeId: selectedShowtime.id, seatId: seatId });
+                                    if (socket && selectedShowtime) socket.emit("unlockSeat", { showtimeId: selectedShowtime.id, seatId: seatId });
                                 } else {
                                     // Select
                                     if (selectedSeats.length >= maxSeats) {
-        alert("You can only select " + maxSeats + " seat(s). Please unselect one first or change the dropdown limit.");
-        return;
-    }
+                                        alert("You can only select " + maxSeats + " seat(s). Please unselect one first or change the dropdown limit.");
+                                        return;
+                                    }
                                     icon.classList.remove('text-purple-200', 'hover:text-purple-500');
                                     icon.classList.add('seat-selected', 'text-green-500');
 
@@ -1622,7 +1675,7 @@
                                     setTimeout(() => this.style.transform = "scale(1)", 200);
 
                                     selectedSeats.push({ id: seatId, price: premiumConfig.price });
-                                    if(socket && selectedShowtime) socket.emit("lockSeat", { showtimeId: selectedShowtime.id, seatId: seatId });
+                                    if (socket && selectedShowtime) socket.emit("lockSeat", { showtimeId: selectedShowtime.id, seatId: seatId });
                                 }
                                 updateSummary();
                             };
@@ -1685,12 +1738,12 @@
                                     icon.classList.remove('seat-selected', 'text-green-500');
                                     icon.classList.add('text-teal-200');
                                     selectedSeats = selectedSeats.filter(s => s.id !== seatId);
-                                    if(socket && selectedShowtime) socket.emit("unlockSeat", { showtimeId: selectedShowtime.id, seatId: seatId });
+                                    if (socket && selectedShowtime) socket.emit("unlockSeat", { showtimeId: selectedShowtime.id, seatId: seatId });
                                 } else {
                                     if (selectedSeats.length >= maxSeats) {
-        alert("You can only select " + maxSeats + " seat(s). Please unselect one first or change the dropdown limit.");
-        return;
-    }
+                                        alert("You can only select " + maxSeats + " seat(s). Please unselect one first or change the dropdown limit.");
+                                        return;
+                                    }
                                     icon.classList.remove('text-teal-200', 'hover:text-teal-500');
                                     icon.classList.add('seat-selected', 'text-green-500');
 
@@ -1698,7 +1751,7 @@
                                     setTimeout(() => this.style.transform = "scale(1)", 200);
 
                                     selectedSeats.push({ id: seatId, price: standardConfig.price });
-                                    if(socket && selectedShowtime) socket.emit("lockSeat", { showtimeId: selectedShowtime.id, seatId: seatId });
+                                    if (socket && selectedShowtime) socket.emit("lockSeat", { showtimeId: selectedShowtime.id, seatId: seatId });
                                 }
                                 updateSummary();
                             };
@@ -1750,13 +1803,7 @@
 
         // SMART SEAT RECOMMENDATIONS
         function autoSelectSeats() {
-            const count = parseInt(document.getElementById("autoSeatCount").addEventListener('change', function() {
-            // When user changes dropdown, if they've already selected MORE than the new limit, throw a warning
-            if (selectedSeats.length > parseInt(this.value)) {
-                alert("You've selected more seats than your new limit! Please unselect some seats.");
-            }
-        });
-        document.getElementById("autoSeatCount").value);
+            const count = parseInt(document.getElementById("autoSeatCount").value);
 
             // Clear existing
             selectedSeats.forEach(s => {
@@ -1807,36 +1854,29 @@
                 alert("Could not find " + count + " seats together. Please select manually.");
             }
         }
-
         function updateSummary() {
             const subtotal = selectedSeats.reduce((s, x) => s + x.price, 0);
             const fee = Math.round(subtotal * 0.10);
-            
+
             // Calculate Snacks
             let snacksTotal = 0;
             const popcornCb = document.getElementById('addPopcorn');
             const cokeCb = document.getElementById('addCoke');
             if (popcornCb && popcornCb.checked) snacksTotal += 250;
             if (cokeCb && cokeCb.checked) snacksTotal += 150;
-            
+
             const snacksDisplayRow = document.getElementById('snacksDisplayRow');
-            if(snacksTotal > 0) {
+            if (snacksTotal > 0) {
                 snacksDisplayRow.classList.remove('hidden');
                 document.getElementById('snacksDisplay').textContent = `₹${snacksTotal}`;
             } else {
-                if(snacksDisplayRow) snacksDisplayRow.classList.add('hidden');
+                if (snacksDisplayRow) snacksDisplayRow.classList.add('hidden');
             }
 
             const total = subtotal + fee + snacksTotal;
 
             document.getElementById("ticketCount").textContent = selectedSeats.length;
             document.getElementById("subtotalAmount").textContent = `₹${subtotal}`;
-            document.getElementById("subtotalDisplay").textContent = `₹${subtotal}`;
-            document.getElementById("bookingFee").textContent = `₹${fee}`;
-            document.getElementById("totalAmount").textContent = `₹${total}`;
-            document.getElementById("selectedSeatsText").textContent =
-                selectedSeats.length ? selectedSeats.map(s => s.id).join(", ") : "No seats selected";
-        }`;
             document.getElementById("subtotalDisplay").textContent = `₹${subtotal}`;
             document.getElementById("bookingFee").textContent = `₹${fee}`;
             document.getElementById("totalAmount").textContent = `₹${total}`;
@@ -1910,6 +1950,16 @@
             }
         }
 
+        // Ensure autoSeatCount validates dynamically
+        const seatCountDropdown = document.getElementById("autoSeatCount");
+        if (seatCountDropdown) {
+            seatCountDropdown.addEventListener('change', function () {
+                if (selectedSeats.length > parseInt(this.value)) {
+                    alert("You've selected more seats than your new limit! Please unselect some seats before proceeding.");
+                }
+            });
+        }
+
         // Initialize on page load
         initializeBooking();
     </script>
@@ -1945,7 +1995,7 @@
             // Apply reveal class to all major container elements dynamically if not present
             const revealElements = document.querySelectorAll('.card, .cinema-card, h1, h2, h3, .glass-panel');
             revealElements.forEach(el => {
-                if(!el.classList.contains('reveal') && !el.closest('nav') && !el.closest('#mobile-menu')) {
+                if (!el.classList.contains('reveal') && !el.closest('nav') && !el.closest('#mobile-menu')) {
                     el.classList.add('reveal');
                 }
             });
@@ -1968,12 +2018,12 @@
             document.querySelectorAll('.reveal').forEach(el => {
                 observer.observe(el);
             });
-            
+
             // Trigger immediately for elements in viewport on load
-            setTimeout(()=> {
+            setTimeout(() => {
                 document.querySelectorAll('.reveal').forEach(el => {
                     const rect = el.getBoundingClientRect();
-                    if(rect.top < window.innerHeight) {
+                    if (rect.top < window.innerHeight) {
                         el.classList.add('active');
                     }
                 });
@@ -1984,47 +2034,47 @@
 
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const tiltOptions = {
-            max: 5,
-            speed: 400,
-            glare: true,
-            "max-glare": 0.15,
-            scale: 1.02
-        };
-        
-        VanillaTilt.init(document.querySelectorAll(".glass-panel, .cinema-card"), tiltOptions);
-        
-        // Function to initialize tilt on cards
-        const initTilt = () => {
-            const cards = document.querySelectorAll('#eventGrid > div, #cinema-grid > div');
-            cards.forEach(card => {
-                if (!card.vanillaTilt) {
-                    card.classList.add('tilt-card');
-                    VanillaTilt.init(card, tiltOptions);
-                }
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const tiltOptions = {
+                max: 5,
+                speed: 400,
+                glare: true,
+                "max-glare": 0.15,
+                scale: 1.02
+            };
+
+            VanillaTilt.init(document.querySelectorAll(".glass-panel, .cinema-card"), tiltOptions);
+
+            // Function to initialize tilt on cards
+            const initTilt = () => {
+                const cards = document.querySelectorAll('#eventGrid > div, #cinema-grid > div');
+                cards.forEach(card => {
+                    if (!card.vanillaTilt) {
+                        card.classList.add('tilt-card');
+                        VanillaTilt.init(card, tiltOptions);
+                    }
+                });
+            };
+
+            initTilt();
+
+            // Add tilt-card to dynamically generated events
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.addedNodes.length) {
+                        initTilt();
+                    }
+                });
             });
-        };
-        
-        initTilt();
-        
-        // Add tilt-card to dynamically generated events
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.addedNodes.length) {
-                    initTilt();
-                }
-            });
+
+            const eventGrid = document.getElementById('eventGrid');
+            const cinemaGrid = document.getElementById('cinema-grid');
+            if (eventGrid) observer.observe(eventGrid, { childList: true });
+            if (cinemaGrid) observer.observe(cinemaGrid, { childList: true });
         });
-        
-        const eventGrid = document.getElementById('eventGrid');
-        const cinemaGrid = document.getElementById('cinema-grid');
-        if (eventGrid) observer.observe(eventGrid, { childList: true });
-        if (cinemaGrid) observer.observe(cinemaGrid, { childList: true });
-    });
-</script>
+    </script>
 
 </body>
 
