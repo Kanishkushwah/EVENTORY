@@ -153,7 +153,7 @@
             console.log("Scanned:", reference);
 
             try {
-                const res = await fetch(`${DOMAIN}/api/admin/verify-ticket`, {
+                const res = await fetch(`/api/admin/verify-ticket`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ reference })
