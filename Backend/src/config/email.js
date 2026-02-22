@@ -10,7 +10,8 @@ export const transporter = nodemailer.createTransport({
     },
 });
 
-// Verify connection on startup
+// Remove verify connection on startup since it causes connection timeout on Render Free tier
+/*
 transporter.verify((error) => {
     if (error) {
         console.error("❌ Email configuration error:", error);
@@ -18,3 +19,4 @@ transporter.verify((error) => {
         console.log("✅ Email service is ready to send messages");
     }
 });
+*/
