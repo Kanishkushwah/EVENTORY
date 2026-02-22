@@ -167,69 +167,85 @@
             background-color: #374151 !important;
             border-color: #4B5563 !important;
         }
-    
-    /* =============== ULTRA PREMIUM AESTHETICS =============== */
-    /* Custom Modern Scrollbar */
-    ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-    }
-    ::-webkit-scrollbar-track {
-        background: transparent;
-    }
-    ::-webkit-scrollbar-thumb {
-        background: rgba(139, 92, 246, 0.3);
-        border-radius: 10px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-        background: rgba(139, 92, 246, 0.6);
-    }
-    .dark ::-webkit-scrollbar-thumb {
-        background: rgba(167, 139, 250, 0.3);
-    }
-    .dark ::-webkit-scrollbar-thumb:hover {
-        background: rgba(167, 139, 250, 0.6);
-    }
 
-    /* Floating Image Animation for Hero/Feature elements */
-    @keyframes float {
-        0% { transform: translateY(0px); }
-        50% { transform: translateY(-10px); }
-        100% { transform: translateY(0px); }
-    }
-    .animate-float {
-        animation: float 6s ease-in-out infinite;
-    }
+        /* =============== ULTRA PREMIUM AESTHETICS =============== */
+        /* Custom Modern Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
 
-    /* Scroll Reveal Animation */
-    .reveal {
-        opacity: 0;
-        transform: translateY(30px);
-        transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
-    }
-    .reveal.active {
-        opacity: 1;
-        transform: translateY(0);
-    }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
 
-    /* Glass Panels */
-    .glass-panel {
-        background: rgba(255, 255, 255, 0.7);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.18);
-    }
-    .dark .glass-panel {
-        background: rgba(17, 24, 39, 0.7);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    
-    /* Glowing badge */
-    .glow-badge {
-        box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
-    }
-    /* ======================================================= */
+        ::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.3);
+            border-radius: 10px;
+        }
 
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 92, 246, 0.6);
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: rgba(167, 139, 250, 0.3);
+        }
+
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: rgba(167, 139, 250, 0.6);
+        }
+
+        /* Floating Image Animation for Hero/Feature elements */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Scroll Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Glass Panels */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .dark .glass-panel {
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Glowing badge */
+        .glow-badge {
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+        }
+
+        /* ======================================================= */
     </style>
     <script>
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -285,9 +301,10 @@
                 <a href="#" class="text-gray-600 hover:text-primary text-sm font-medium">Support</a>
 
                 <button class="material-icons-outlined text-gray-600 hover:text-primary">notifications</button>
-                <button class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
+                <a href="user-profile.html"
+                    class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center hover:bg-purple-200 transition-colors">
                     <span class="material-icons-outlined text-primary text-lg">person</span>
-                </button>
+                </a>
             </div>
 
             <!-- Mobile Menu Button -->
@@ -299,7 +316,8 @@
     </nav>
 
     <!-- Mobile Menu Overlay -->
-    <div id="mobile-menu" class="fixed inset-0 z-50 bg-white dark:bg-gray-900 transform translate-x-full transition-transform duration-300 md:hidden flex flex-col h-full shadow-2xl">
+    <div id="mobile-menu"
+        class="fixed inset-0 z-50 bg-white dark:bg-gray-900 transform translate-x-full transition-transform duration-300 md:hidden flex flex-col h-full shadow-2xl">
         <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
             <a href="index.html" class="flex items-center gap-2">
                 <span class="material-icons text-purple-600 dark:text-purple-400 text-2xl">event</span>
@@ -622,7 +640,8 @@
     </main>
 
     <!-- ULTRA PREMIUM FOOTER -->
-    <footer class="bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 pt-16 pb-24 md:pb-8 mt-20 transition-colors duration-200">
+    <footer
+        class="bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 pt-16 pb-24 md:pb-8 mt-20 transition-colors duration-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                 <div class="col-span-1 md:col-span-1">
@@ -631,58 +650,88 @@
                         <span class="font-bold text-2xl text-purple-600 tracking-tight">Eventory</span>
                     </a>
                     <p class="text-sm text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
-                        The ultimate platform for discovering, booking, and managing events. Built with modern aesthetics and seamless user experience in mind.
+                        The ultimate platform for discovering, booking, and managing events. Built with modern
+                        aesthetics and seamless user experience in mind.
                     </p>
                     <div class="flex space-x-4">
-                        <a href="#" class="w-10 h-10 rounded-full bg-purple-50 dark:bg-gray-800 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all transform hover:scale-110">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-purple-50 dark:bg-gray-800 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all transform hover:scale-110">
                             <i class="fab fa-twitter"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-purple-50 dark:bg-gray-800 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all transform hover:scale-110">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-purple-50 dark:bg-gray-800 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all transform hover:scale-110">
                             <i class="fab fa-instagram"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-purple-50 dark:bg-gray-800 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all transform hover:scale-110">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-purple-50 dark:bg-gray-800 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all transform hover:scale-110">
                             <i class="fab fa-linkedin-in"></i>
                         </a>
                     </div>
                 </div>
 
                 <div>
-                    <h4 class="font-bold text-gray-900 dark:text-white dark:text-white mb-6 uppercase text-sm tracking-wider">Explore</h4>
+                    <h4
+                        class="font-bold text-gray-900 dark:text-white dark:text-white mb-6 uppercase text-sm tracking-wider">
+                        Explore</h4>
                     <ul class="space-y-4 text-sm text-gray-600 dark:text-gray-400">
-                        <li><a href="index.html" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Browse Events</a></li>
-                        <li><a href="#" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Concerts</a></li>
-                        <li><a href="#" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Sports</a></li>
-                        <li><a href="#" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Workshops</a></li>
+                        <li><a href="index.html"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Browse
+                                Events</a></li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Concerts</a>
+                        </li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Sports</a>
+                        </li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Workshops</a>
+                        </li>
                     </ul>
                 </div>
 
                 <div>
-                    <h4 class="font-bold text-gray-900 dark:text-white dark:text-white mb-6 uppercase text-sm tracking-wider">Help & Support</h4>
+                    <h4
+                        class="font-bold text-gray-900 dark:text-white dark:text-white mb-6 uppercase text-sm tracking-wider">
+                        Help & Support</h4>
                     <ul class="space-y-4 text-sm text-gray-600 dark:text-gray-400">
-                        <li><a href="#" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">FAQ</a></li>
-                        <li><a href="#" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Terms of Service</a></li>
-                        <li><a href="#" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Privacy Policy</a></li>
-                        <li><a href="#" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Contact Us</a></li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">FAQ</a></li>
+                        <li><a href="#" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Terms
+                                of Service</a></li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Privacy
+                                Policy</a></li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Contact
+                                Us</a></li>
                     </ul>
                 </div>
 
                 <div>
-                    <h4 class="font-bold text-gray-900 dark:text-white dark:text-white mb-6 uppercase text-sm tracking-wider">Newsletter</h4>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Subscribe for the latest event updates and exclusive offers.</p>
+                    <h4
+                        class="font-bold text-gray-900 dark:text-white dark:text-white mb-6 uppercase text-sm tracking-wider">
+                        Newsletter</h4>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Subscribe for the latest event updates and
+                        exclusive offers.</p>
                     <div class="flex">
-                        <input type="email" placeholder="Your email address" class="bg-gray-50 dark:bg-gray-800 border-none rounded-l-lg px-4 py-2 w-full text-sm focus:ring-2 focus:ring-purple-600 outline-none text-gray-800 dark:text-gray-200">
-                        <button class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-r-lg transition-colors flex items-center justify-center">
+                        <input type="email" placeholder="Your email address"
+                            class="bg-gray-50 dark:bg-gray-800 border-none rounded-l-lg px-4 py-2 w-full text-sm focus:ring-2 focus:ring-purple-600 outline-none text-gray-800 dark:text-gray-200">
+                        <button
+                            class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-r-lg transition-colors flex items-center justify-center">
                             <span class="material-icons text-sm">send</span>
                         </button>
                     </div>
                 </div>
             </div>
-            
-            <div class="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+
+            <div
+                class="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between text-sm text-gray-500 dark:text-gray-400">
                 <p>&copy; 2026 Eventory. All rights reserved.</p>
                 <div class="flex gap-4 mt-4 md:mt-0">
-                    <span class="flex items-center gap-1"><span class="material-icons text-[14px] text-green-500">public</span> English (Global)</span>
-                    <span class="flex items-center gap-1"><span class="material-icons text-[14px] text-yellow-500">payments</span> INR (₹)</span>
+                    <span class="flex items-center gap-1"><span
+                            class="material-icons text-[14px] text-green-500">public</span> English (Global)</span>
+                    <span class="flex items-center gap-1"><span
+                            class="material-icons text-[14px] text-yellow-500">payments</span> INR (₹)</span>
                 </div>
             </div>
         </div>
@@ -1110,7 +1159,7 @@
             // Apply reveal class to all major container elements dynamically if not present
             const revealElements = document.querySelectorAll('.card, .cinema-card, h1, h2, h3, .glass-panel');
             revealElements.forEach(el => {
-                if(!el.classList.contains('reveal') && !el.closest('nav') && !el.closest('#mobile-menu')) {
+                if (!el.classList.contains('reveal') && !el.closest('nav') && !el.closest('#mobile-menu')) {
                     el.classList.add('reveal');
                 }
             });
@@ -1133,12 +1182,12 @@
             document.querySelectorAll('.reveal').forEach(el => {
                 observer.observe(el);
             });
-            
+
             // Trigger immediately for elements in viewport on load
-            setTimeout(()=> {
+            setTimeout(() => {
                 document.querySelectorAll('.reveal').forEach(el => {
                     const rect = el.getBoundingClientRect();
-                    if(rect.top < window.innerHeight) {
+                    if (rect.top < window.innerHeight) {
                         el.classList.add('active');
                     }
                 });
@@ -1149,47 +1198,47 @@
 
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const tiltOptions = {
-            max: 5,
-            speed: 400,
-            glare: true,
-            "max-glare": 0.15,
-            scale: 1.02
-        };
-        
-        VanillaTilt.init(document.querySelectorAll(".glass-panel, .cinema-card"), tiltOptions);
-        
-        // Function to initialize tilt on cards
-        const initTilt = () => {
-            const cards = document.querySelectorAll('#eventGrid > div, #cinema-grid > div');
-            cards.forEach(card => {
-                if (!card.vanillaTilt) {
-                    card.classList.add('tilt-card');
-                    VanillaTilt.init(card, tiltOptions);
-                }
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const tiltOptions = {
+                max: 5,
+                speed: 400,
+                glare: true,
+                "max-glare": 0.15,
+                scale: 1.02
+            };
+
+            VanillaTilt.init(document.querySelectorAll(".glass-panel, .cinema-card"), tiltOptions);
+
+            // Function to initialize tilt on cards
+            const initTilt = () => {
+                const cards = document.querySelectorAll('#eventGrid > div, #cinema-grid > div');
+                cards.forEach(card => {
+                    if (!card.vanillaTilt) {
+                        card.classList.add('tilt-card');
+                        VanillaTilt.init(card, tiltOptions);
+                    }
+                });
+            };
+
+            initTilt();
+
+            // Add tilt-card to dynamically generated events
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.addedNodes.length) {
+                        initTilt();
+                    }
+                });
             });
-        };
-        
-        initTilt();
-        
-        // Add tilt-card to dynamically generated events
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.addedNodes.length) {
-                    initTilt();
-                }
-            });
+
+            const eventGrid = document.getElementById('eventGrid');
+            const cinemaGrid = document.getElementById('cinema-grid');
+            if (eventGrid) observer.observe(eventGrid, { childList: true });
+            if (cinemaGrid) observer.observe(cinemaGrid, { childList: true });
         });
-        
-        const eventGrid = document.getElementById('eventGrid');
-        const cinemaGrid = document.getElementById('cinema-grid');
-        if (eventGrid) observer.observe(eventGrid, { childList: true });
-        if (cinemaGrid) observer.observe(cinemaGrid, { childList: true });
-    });
-</script>
+    </script>
 
 </body>
 
