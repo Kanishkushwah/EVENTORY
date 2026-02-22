@@ -247,5 +247,39 @@ export const AdminService = {
             console.error("Delete Event Error:", error);
             return { error };
         }
+    },
+
+    // Verify Ticket Scanner
+    async verifyTicket(reference) {
+        try {
+            const { data: booking, error } = await supabase.from('bookings').select('*').eq('reference', reference).single();
+            if (error || !booking) return { error: "Invalid QR Code: Ticket not found!" };
+
+            if (booking.payment_status !== 'completed') {
+                return { error: `Ticket Payment Not Completed (${booking.payment_status})` };
+            }
+
+            // Simple robust local file system state to prevent double scans without DB migrations
+            const fs = await import('fs');
+            const path = await import('path');
+            const scanLog = path.resolve('scanned_tickets.json');
+
+            let scanned = [];
+            if (fs.existsSync(scanLog)) {
+                scanned = JSON.parse(fs.readFileSync(scanLog, 'utf8'));
+            }
+
+            if (scanned.includes(reference)) {
+                return { error: "WARNING: Ticket has ALREADY been scanned!" };
+            }
+
+            scanned.push(reference);
+            fs.writeFileSync(scanLog, JSON.stringify(scanned));
+
+            return { message: "Ticket Verified - Access Granted!", booking };
+        } catch (error) {
+            console.error("Verify Ticket Logic Error:", error);
+            return { error: error.message };
+        }
     }
 };

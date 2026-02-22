@@ -129,5 +129,29 @@ export const AdminController = {
             console.error("Seed Error:", err);
             return res.status(500).json({ message: "Seeding failed", error: err.message });
         }
+    },
+
+    // Verify Ticket via QR
+    async verifyTicket(req, res) {
+        try {
+            const { reference } = req.body;
+            if (!reference) return res.status(400).json({ message: "Reference is required" });
+
+            const result = await AdminService.verifyTicket(reference);
+
+            if (result.error) {
+                return res.status(400).json({ valid: false, message: result.error });
+            }
+
+            return res.json({
+                valid: true,
+                message: result.message,
+                booking: result.booking
+            });
+
+        } catch (err) {
+            console.error("Verify Ticket Error:", err);
+            return res.status(500).json({ valid: false, message: "Internal Server Error" });
+        }
     }
 };

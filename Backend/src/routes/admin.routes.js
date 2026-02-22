@@ -12,6 +12,9 @@ router.get("/stats", AdminController.getDashboardStats);
 // Manual Seeding
 router.get("/seed", AdminController.seedDatabase);
 
+// QR Code Ticket Verification
+router.post("/verify-ticket", AdminController.verifyTicket);
+
 // Bookings management
 router.get("/bookings", AdminController.getAllBookings);
 
