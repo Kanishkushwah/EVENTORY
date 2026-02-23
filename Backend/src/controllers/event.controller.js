@@ -51,37 +51,63 @@ export const EventController = {
                 const title = (event.title || "").toLowerCase();
                 const desc = (event.description || "").toLowerCase();
                 const cat = (event.category || "").toLowerCase();
+                const venue = (event.venue || "").toLowerCase();
 
-                // Budget check
+                // 1. Budget Processing
                 if (budget) {
-                    if (event.price <= budget) score += 3;
-                    else score -= 5; // Penalty for being over budget
+                    if (event.price <= budget) score += 20; // Budget match is important
+                    else score -= 100; // Strict budget exclusion penalty
                 } else if (query.includes("free") && event.price === 0) {
-                    score += 5;
+                    score += 30;
                 }
 
-                // Intent matching
-                if (isRomantic && (desc.includes("romantic") || cat === "music" || cat === "movies")) score += 2;
-                if (isFunny && (cat === "comedy" || cat === "standup" || desc.includes("laugh"))) score += 3;
-                if (isMusic && (cat === "music" || cat === "concert")) score += 3;
-                if (isSport && (cat === "sports" || cat === "sport" || cat === "cricket")) score += 3;
-                if (isMovie && (cat === "movies" || cat === "movie")) score += 3;
+                // 2. Intent Processing (Soft Matches & Fallbacks)
+                if (isRomantic) {
+                    if (title.includes("romantic") || title.includes("love") || title.includes("valentine") || desc.includes("romantic")) score += 40;
+                    else if (cat === "music" || cat === "movies") score += 5;
+                }
+                if (isFunny) {
+                    if (title.includes("comedy") || title.includes("standup") || title.includes("laugh") || cat === "comedy" || desc.includes("laugh")) score += 40;
+                    else if (cat === "movies" || cat === "theater") score += 5;
+                }
+                if (isMusic && (cat === "music" || cat === "concert" || title.includes("music") || title.includes("concert"))) score += 15;
+                if (isSport && (cat === "sports" || cat === "sport" || title.includes("cricket") || title.includes("match"))) score += 15;
+                if (isMovie && (cat === "movies" || cat === "movie" || title.includes("movie") || title.includes("film"))) score += 10;
 
-                // Keyword matching
-                const words = query.split(/\s+/).filter(w => w.length > 3);
+                // 3. Keyword Extraction & Matching (Hard Matches)
+                // Filter out generic intent words so fallback logic works perfectly for broad categories
+                const ignoreWords = ["the", "and", "for", "with", "under", "below", "max", "cheap", "budget", "rs", "inr", "free", "movie", "movies", "show", "event", "events", "concert", "sport", "sports", "romantic", "date", "couple", "funny", "laugh", "comedy", "standup", "music", "sing", "dj", "cricket", "match", "film", "cinema"];
+                const words = query.replace(/[^\w\s-]/g, "").split(/\s+/).filter(w => w.length > 2 && !ignoreWords.includes(w) && isNaN(w));
+
+                let wordMatchCount = 0;
                 words.forEach(word => {
-                    if (title.includes(word)) score += 2;
-                    if (desc.includes(word)) score += 1;
-                    if (event.venue && event.venue.toLowerCase().includes(word)) score += 2;
+                    let matched = false;
+                    if (title.includes(word)) { score += 30; matched = true; }
+                    else if (desc.includes(word)) { score += 15; matched = true; }
+                    else if (venue.includes(word)) { score += 10; matched = true; }
+                    else if (cat.includes(word)) { score += 5; matched = true; }
+
+                    if (matched) wordMatchCount++;
                 });
+
+                // Strict Keyword Penalty
+                // If user typed specific searchable keywords (like "sci-fi" or "diljit") and they completely failed to match, tank the score.
+                if (words.length > 0 && wordMatchCount === 0) {
+                    score -= 50;
+                }
+
+                // 4. Exact Phrase Bonus
+                if (query.length > 3 && (title.includes(query) || desc.includes(query))) {
+                    score += 50;
+                }
 
                 return { ...event, _matchScore: score };
             });
 
-            // Filter out totally irrelevant things (score < 1 unless nothing matched)
+            // Filter out poorly matched events (score <= 0)
             let results = scoredEvents.filter(e => e._matchScore > 0);
 
-            // Sort by highest score
+            // Sort descending by highest score
             results.sort((a, b) => b._matchScore - a._matchScore);
 
             res.json(results.slice(0, 6)); // Return Top 6 matches
