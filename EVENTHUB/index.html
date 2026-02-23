@@ -1393,10 +1393,12 @@
         // Helper function to store event for booking
         function setCurrentEvent(eventId) {
             localStorage.setItem('currentEventId', eventId);
-            // Find event in loaded events
-            const event = allEvents.find(e => e.id === eventId);
+            // Find event in loaded events (loose equality handles string vs number ID mismatch)
+            const event = allEvents.find(e => e.id == eventId);
             if (event) {
                 localStorage.setItem('currentEventData', JSON.stringify(event));
+            } else {
+                console.error("Critical: Could not find event data for ID " + eventId);
             }
         }
 
