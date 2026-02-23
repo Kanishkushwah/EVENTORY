@@ -65,8 +65,8 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Health check
-app.get("/", (req, res) => {
+// Health check (Fast endpoint for UptimeRobot)
+app.get(["/", "/api/health"], (req, res) => {
     res.json({
         status: "OK",
         message: "Eventory Backend Running Successfully 🎉",
