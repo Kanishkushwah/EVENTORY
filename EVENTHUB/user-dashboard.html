@@ -607,9 +607,13 @@
 
                 allBookings = data.all || [];
 
-                // Update stats
-                document.getElementById('stat-total').textContent = data.total || 0;
-                document.getElementById('stat-upcoming').textContent = data.upcoming?.length || 0;
+                // Update stats (only count confirmed/completed ones)
+                const confirmedCount = allBookings.filter(b => b.payment_status === 'completed' || b.payment_status === 'confirmed').length;
+                document.getElementById('stat-total').textContent = confirmedCount;
+
+                // For upcoming, also filter
+                const upcomingCount = data.upcoming?.filter(b => b.payment_status === 'completed' || b.payment_status === 'confirmed').length || 0;
+                document.getElementById('stat-upcoming').textContent = upcomingCount;
 
                 // Load total spent
                 const statsRes = await fetch(`/api/users/stats/${user.email}`);

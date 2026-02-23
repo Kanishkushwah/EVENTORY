@@ -478,33 +478,51 @@
                             placeholder="e.g., December 28, 2025">
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Time</label>
-                        <input type="text" id="event-time" required class="w-full px-4 py-2 border rounded-lg"
-                            placeholder="e.g., 7:00 PM">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Time</label>
+                            <input type="text" id="event-time" required class="w-full px-4 py-2 border rounded-lg"
+                                placeholder="e.g., 7:00 PM">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Price (₹)</label>
+                            <input type="number" id="event-price" value="0" required
+                                class="w-full px-4 py-2 border rounded-lg" placeholder="e.g., 500">
+                        </div>
                     </div>
-                </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Venue</label>
-                    <input type="text" id="event-venue" required class="w-full px-4 py-2 border rounded-lg">
-                </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Venue</label>
+                        <input type="text" id="event-venue" required class="w-full px-4 py-2 border rounded-lg">
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Image URL</label>
-                    <input type="url" id="event-image" required class="w-full px-4 py-2 border rounded-lg">
-                </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Image (URL or Upload)</label>
+                        <div class="flex gap-2 mb-2">
+                            <button type="button"
+                                onclick="document.getElementById('event-image-url').classList.remove('hidden'); document.getElementById('event-image-file').classList.add('hidden');"
+                                class="text-xs bg-gray-200 px-3 py-1 rounded hover:bg-gray-300">Use URL</button>
+                            <button type="button"
+                                onclick="document.getElementById('event-image-file').classList.remove('hidden'); document.getElementById('event-image-url').classList.add('hidden');"
+                                class="text-xs bg-gray-200 px-3 py-1 rounded hover:bg-gray-300">Upload File</button>
+                        </div>
+                        <input type="url" id="event-image-url" class="w-full px-4 py-2 border rounded-lg"
+                            placeholder="https://...">
+                        <input type="file" id="event-image-file" accept="image/*"
+                            class="w-full px-4 py-2 border rounded-lg hidden">
+                    </div>
 
-                <div class="flex gap-3 pt-4">
-                    <button type="submit"
-                        class="flex-1 bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-lg font-semibold">
-                        Save Event
-                    </button>
-                    <button type="button" onclick="closeEventModal()"
-                        class="px-6 py-3 border rounded-lg hover:bg-gray-50">
-                        Cancel
-                    </button>
-                </div>
+                    <div class="flex gap-3 pt-4">
+                        <button type="submit"
+                            class="flex-1 bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-lg font-semibold">
+                            Save Event
+                        </button>
+                        <button type="button" onclick="closeEventModal()"
+                            class="px-6 py-3 border rounded-lg hover:bg-gray-50">
+                            Cancel
+                        </button>
+                    </div>
             </form>
         </div>
     </div>
@@ -727,8 +745,10 @@
             document.getElementById('event-category').value = 'movie';
             document.getElementById('event-date').value = '';
             document.getElementById('event-time').value = '';
+            document.getElementById('event-price').value = '0';
             document.getElementById('event-venue').value = '';
-            document.getElementById('event-image').value = '';
+            document.getElementById('event-image-url').value = '';
+            document.getElementById('event-image-file').value = '';
             document.getElementById('event-modal').classList.add('active');
         }
 
@@ -743,8 +763,10 @@
                 document.getElementById('event-category').value = event.category;
                 document.getElementById('event-date').value = event.date;
                 document.getElementById('event-time').value = event.time;
+                document.getElementById('event-price').value = event.price || 0;
                 document.getElementById('event-venue').value = event.venue;
-                document.getElementById('event-image').value = event.image;
+                document.getElementById('event-image-url').value = event.image_url || event.image || '';
+                document.getElementById('event-image-file').value = '';
                 document.getElementById('event-modal').classList.add('active');
 
             } catch (err) {
@@ -756,26 +778,43 @@
             e.preventDefault();
 
             const id = document.getElementById('event-id').value;
+            let finalImageUrl = document.getElementById('event-image-url').value;
+            const fileInput = document.getElementById('event-image-file');
+
+            // Handle base64 image upload if file is selected
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                reader.onloadend = async function () {
+                    finalImageUrl = reader.result;
+                    await submitEventData(id, finalImageUrl);
+                }
+                reader.readAsDataURL(file);
+            } else {
+                await submitEventData(id, finalImageUrl);
+            }
+        }
+
+        async function submitEventData(id, imageUrl) {
             const eventData = {
                 title: document.getElementById('event-title').value,
                 category: document.getElementById('event-category').value,
                 date: document.getElementById('event-date').value,
                 time: document.getElementById('event-time').value,
+                price: parseInt(document.getElementById('event-price').value || 0),
                 venue: document.getElementById('event-venue').value,
-                image_url: document.getElementById('event-image').value
+                image_url: imageUrl
             };
 
             try {
                 let res;
                 if (id) {
-                    // Update existing event
                     res = await fetch(`/api/admin/events/${id}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(eventData)
                     });
                 } else {
-                    // Create new event
                     res = await fetch('/api/admin/events', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
