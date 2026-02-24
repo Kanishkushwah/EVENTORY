@@ -96,6 +96,10 @@ export const BookingService = {
             seats: [seat],
             amount_paid: 0,
             payment_status: "locked",
+            event_title: "LOCKED_SEAT",
+            event_date: new Date().toISOString().split("T")[0],
+            event_time: "00:00",
+            venue: "LOCKED",
         };
 
         const res = await BookingModel.create(lockRecord);

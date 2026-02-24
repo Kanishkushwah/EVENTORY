@@ -85,7 +85,7 @@ export const BookingController = {
             if (!event_id || !seat || !user_id) return res.status(400).json({ message: "Missing required fields" });
 
             const result = await BookingService.lockSeat(event_id, showtime_id, seat, user_id);
-            if (result.error) return res.status(400).json({ message: result.error });
+            if (result.error) return res.status(400).json({ message: result.error.message || result.error || "Failed to lock seat" });
             return res.json({ success: true, message: "Seat locked" });
         } catch (err) {
             return res.status(500).json({ message: "Internal Server Error" });
