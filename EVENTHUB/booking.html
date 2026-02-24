@@ -775,17 +775,21 @@
                 const showtimeRes = await fetch(`/api/showtimes/movie/${currentEvent.id}`);
                 const movieShowtimes = await showtimeRes.json();
 
-                // 2. Get the list of cinemas that have showtimes
-                const validCinemaIds = movieShowtimes.map(group => group.cinema.id);
+                // 2. Filter cinemas by user's selected city
+                const userCity = localStorage.getItem('userCity') || '';
+                let validShowtimes = movieShowtimes;
+                if (userCity && userCity !== 'Location' && userCity !== 'All Cities') {
+                    validShowtimes = movieShowtimes.filter(group => (group.cinema.city || '').toLowerCase() === userCity.toLowerCase());
+                }
 
-                if (validCinemaIds.length === 0) {
-                    document.getElementById('cinemaList').innerHTML = '<p class="text-red-500">No showtimes available for this movie yet.</p>';
+                if (validShowtimes.length === 0) {
+                    document.getElementById('cinemaList').innerHTML = '<p class="text-red-500">No showtimes available for this movie in ' + (userCity || 'this location') + ' yet.</p>';
                     return;
                 }
 
                 // 3. Render only valid cinemas
                 const cinemaList = document.getElementById('cinemaList');
-                cinemaList.innerHTML = movieShowtimes.map(group => `
+                cinemaList.innerHTML = validShowtimes.map(group => `
                     <div class="cinema-card border-2 rounded-lg p-4 cursor-pointer hover:border-purple-500 transition hover:bg-purple-50"
                          onclick="selectCinema(${group.cinema.id}, '${group.cinema.name}')"
                          data-cinema-id="${group.cinema.id}">
@@ -923,7 +927,7 @@
                 const res = await fetch(url);
                 const data = await res.json();
                 liveOccupied = data.occupied || [];
-            } catch(e) {
+            } catch (e) {
                 console.error("Failed to fetch occupied seats", e);
             }
 

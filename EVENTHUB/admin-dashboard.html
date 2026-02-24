@@ -1015,10 +1015,21 @@
                 }
             }
 
-            // Populate cinema dropdown
+            // Populate cinema dropdown based on selected city (if any)
+            const userCity = localStorage.getItem('userCity') || '';
+            let filteredCinemas = allCinemas;
+
+            if (userCity && userCity !== 'Location' && userCity !== 'All Cities') {
+                filteredCinemas = allCinemas.filter(c => (c.city || '').toLowerCase() === userCity.toLowerCase());
+            }
+
             const cinemaSelect = document.getElementById('showtime-cinema');
             cinemaSelect.innerHTML = '<option value="">Select Cinema</option>' +
-                allCinemas.map(c => `<option value="${c.id}">${c.name} (${c.location})</option>`).join('');
+                filteredCinemas.map(c => `<option value="${c.id}">${c.name} (${c.location})</option>`).join('');
+
+            if (filteredCinemas.length === 0) {
+                cinemaSelect.innerHTML = `<option value="">No cinemas found in ${userCity || 'this location'}</option>`;
+            }
 
             document.getElementById('showtime-modal').classList.remove('hidden');
             document.getElementById('showtime-modal').classList.add('flex');
