@@ -776,7 +776,12 @@
                 const movieShowtimes = await showtimeRes.json();
 
                 // 2. Filter cinemas by user's selected city
-                const userCity = localStorage.getItem('userCity') || '';
+                let userCity = localStorage.getItem('userCity') || '';
+
+                // Map local script/translations to database English names
+                const cityMap = { 'सूरत': 'Surat', 'સુરત': 'Surat', 'દિલ્હી': 'Delhi', 'दिल्ली': 'Delhi', 'મુંબઈ': 'Mumbai', 'मुंबई': 'Mumbai' };
+                if (cityMap[userCity]) userCity = cityMap[userCity];
+
                 let validShowtimes = movieShowtimes;
                 if (userCity && userCity !== 'Location' && userCity !== 'All Cities') {
                     validShowtimes = movieShowtimes.filter(group => (group.cinema.city || '').toLowerCase() === userCity.toLowerCase());

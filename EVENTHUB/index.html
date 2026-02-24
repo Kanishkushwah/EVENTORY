@@ -305,10 +305,12 @@
                                 class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">Delhi</button>
                             <button onclick="setCity('Bangalore')"
                                 class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">Bangalore</button>
-                            <button onclick="setCity('Hyderabad')"
-                                class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">Hyderabad</button>
                             <button onclick="setCity('Pune')"
                                 class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">Pune</button>
+                            <button onclick="setCity('Kolkata')"
+                                class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">Kolkata</button>
+                            <button onclick="setCity('Surat')"
+                                class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">Surat</button>
                         </div>
                     </div>
                 </div>
@@ -1553,8 +1555,8 @@
                 const lon = position.coords.longitude;
 
                 try {
-                    // Use OpenStreetMap Nominatim for free reverse geocoding
-                    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+                    // Use OpenStreetMap Nominatim for free reverse geocoding (Forcing English names)
+                    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&accept-language=en`);
                     const data = await response.json();
 
                     // Extract city name from response

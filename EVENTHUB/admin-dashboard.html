@@ -1076,7 +1076,10 @@
             }
 
             // Populate cinema dropdown based on selected city (if any)
-            const userCity = localStorage.getItem('userCity') || '';
+            let userCity = localStorage.getItem('userCity') || '';
+            const cityMap = { 'सूरत': 'Surat', 'સુરત': 'Surat', 'દિલ્હી': 'Delhi', 'दिल्ली': 'Delhi', 'મુંબઈ': 'Mumbai', 'मुंबई': 'Mumbai', 'કોલકાતા': 'Kolkata', 'कोलकाता': 'Kolkata' };
+            if (cityMap[userCity]) userCity = cityMap[userCity];
+
             let filteredCinemas = allCinemas;
 
             if (userCity && userCity !== 'Location' && userCity !== 'All Cities') {
