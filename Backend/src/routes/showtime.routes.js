@@ -27,9 +27,44 @@ router.get('/movie/:eventId', async (req, res) => {
             query = query.eq('show_date', date);
         }
 
-        const { data, error } = await query;
+        let { data, error } = await query;
 
         if (error) throw error;
+
+        // Auto-Generate Showtimes if none exist
+        if (data.length === 0 && !date) {
+            console.log(`Auto-generating showtimes for movie ${req.params.eventId}`);
+            const { data: cinemas } = await supabase.from('cinemas').select('id, name, location, address, city');
+            const { data: eventData } = await supabase.from('events').select('id, title, image_url, price').eq('id', req.params.eventId).single();
+
+            if (cinemas && cinemas.length > 0 && eventData) {
+                const newShowtimes = [];
+                const basePrice = eventData.price || 200;
+
+                for (let i = 0; i < 5; i++) {
+                    const d = new Date();
+                    d.setDate(d.getDate() + i);
+                    const ds = d.toISOString().split('T')[0];
+
+                    for (const c of cinemas) {
+                        newShowtimes.push({ event_id: req.params.eventId, cinema_id: c.id, show_date: ds, show_time: '10:00 AM', screen_number: 1, available_seats: 100, price: basePrice });
+                        newShowtimes.push({ event_id: req.params.eventId, cinema_id: c.id, show_date: ds, show_time: '02:30 PM', screen_number: 2, available_seats: 100, price: basePrice + 50 });
+                        newShowtimes.push({ event_id: req.params.eventId, cinema_id: c.id, show_date: ds, show_time: '07:00 PM', screen_number: 1, available_seats: 100, price: basePrice + 100 });
+                    }
+                }
+
+                await supabase.from('movie_showtimes').insert(newShowtimes);
+
+                // Re-fetch to guarantee standard populated structure
+                const { data: refetchData } = await supabase
+                    .from('movie_showtimes')
+                    .select(`*, cinema:cinemas(id, name, location, address, city), event:events(id, title, image_url)`)
+                    .eq('event_id', req.params.eventId)
+                    .order('show_date')
+                    .order('show_time');
+                if (refetchData) data = refetchData;
+            }
+        }
 
         // Group by cinema
         const groupedByCinema = data.reduce((acc, showtime) => {
