@@ -32,18 +32,44 @@ export const BookingModel = {
     },
 
     async getOccupiedSeats(eventId, showtimeId = null) {
+        // Calculate the timestamp for 5 minutes ago to ignore abandoned/expired locks
+        const fiveMinsAgo = new Date(Date.now() - 5 * 60000).toISOString();
+
+        // We use .or to get either completed OR (pending/locked AND newer than 5 mins)
         let query = supabase
             .from("bookings")
-            .select("seats")
+            .select("seats, payment_status, user_email")
             .eq("event_id", eventId)
-            // Ideally only payment_status === "completed" but we can include pending to prevent racing
-            .in("payment_status", ["completed", "pending"]);
+            .or(`payment_status.eq.completed,and(payment_status.in.(pending,locked),created_at.gte.${fiveMinsAgo})`);
 
         if (showtimeId) {
             query = query.eq("showtime_id", showtimeId);
         }
 
         const { data, error } = await query;
-        return { data, error };
+        if (error) return { data: null, error };
+
+        let occupied = [];
+        let locked = [];
+        let lockedBy = {};
+
+        data.forEach(booking => {
+            if (booking.payment_status === "completed") {
+                occupied.push(...booking.seats);
+            } else {
+                locked.push(...booking.seats);
+                booking.seats.forEach(s => { lockedBy[s] = booking.user_email; });
+            }
+        });
+
+        return { data: { occupied, locked, lockedBy }, error: null };
+    },
+
+    async deleteLockedSeat(reference) {
+        return await supabase
+            .from("bookings")
+            .delete()
+            .eq("reference", reference)
+            .eq("payment_status", "locked");
     }
 };

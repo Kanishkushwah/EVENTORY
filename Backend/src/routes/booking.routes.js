@@ -12,4 +12,8 @@ router.get("/occupied-seats", BookingController.getOccupiedSeats);
 // Fetch booking by reference (used on payment confirmation page)
 router.get("/:reference", BookingController.getBookingByReference);
 
+// Lock / Unlock seats live
+router.post("/lock-seat", BookingController.lockSeat);
+router.post("/unlock-seat", BookingController.unlockSeat);
+
 export default router;

@@ -15,8 +15,12 @@ import showtimeRoutes from "./routes/showtime.routes.js";
 import cancellationRoutes from "./routes/cancellation.routes.js";
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { ReminderService } from './services/reminder.service.js';
 
 const app = express();
+
+// Initialize CRON jobs
+ReminderService.init();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

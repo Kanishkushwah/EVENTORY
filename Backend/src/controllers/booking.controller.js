@@ -66,10 +66,41 @@ export const BookingController = {
                 return res.status(500).json({ message: "Failed to fetch occupied seats" });
             }
 
-            return res.json({ occupied: result.occupied });
+            return res.json({
+                occupied: result.occupied || [],
+                locked: result.locked || [],
+                lockedBy: result.lockedBy || {}
+            });
 
         } catch (err) {
             console.error("Fetch Occupied Seats Error:", err);
+            return res.status(500).json({ message: "Internal Server Error" });
+        }
+    },
+
+    // 4️⃣ LOCK SEAT
+    async lockSeat(req, res) {
+        try {
+            const { event_id, showtime_id, seat, user_id } = req.body;
+            if (!event_id || !seat || !user_id) return res.status(400).json({ message: "Missing required fields" });
+
+            const result = await BookingService.lockSeat(event_id, showtime_id, seat, user_id);
+            if (result.error) return res.status(400).json({ message: result.error });
+            return res.json({ success: true, message: "Seat locked" });
+        } catch (err) {
+            return res.status(500).json({ message: "Internal Server Error" });
+        }
+    },
+
+    // 5️⃣ UNLOCK SEAT
+    async unlockSeat(req, res) {
+        try {
+            const { event_id, showtime_id, seat, user_id } = req.body;
+            if (!event_id || !seat || !user_id) return res.status(400).json({ message: "Missing required fields" });
+
+            await BookingService.unlockSeat(event_id, showtime_id, seat, user_id);
+            return res.json({ success: true, message: "Seat unlocked" });
+        } catch (err) {
             return res.status(500).json({ message: "Internal Server Error" });
         }
     }

@@ -71,14 +71,40 @@ export const BookingService = {
             return { error };
         }
 
-        // Flatten the array of seat arrays
-        const occupied = [];
-        data.forEach(booking => {
-            if (booking.seats && Array.isArray(booking.seats)) {
-                occupied.push(...booking.seats);
-            }
-        });
+        return data; // returns { occupied, locked, lockedBy }
+    },
 
-        return { occupied };
+    async lockSeat(eventId, showtimeId, seat, userId) {
+        // Find if this seat is already occupied or locked by someone else
+        const { data, error } = await BookingModel.getOccupiedSeats(eventId, showtimeId);
+        if (error) return { error: "Failed to check seat availability" };
+
+        if (data.occupied.includes(seat)) return { error: "Seat is already sold out" };
+        if (data.locked.includes(seat) && data.lockedBy[seat] !== userId) return { error: "Seat is currently locked by another user" };
+
+        // Insert a temporary lock record into bookings table
+        const lockRef = `LOCK_${userId}_${seat}`;
+
+        // Remove existing lock for this user+seat if any
+        await BookingModel.deleteLockedSeat(lockRef);
+
+        const lockRecord = {
+            reference: lockRef,
+            event_id: eventId,
+            showtime_id: showtimeId || null,
+            user_email: userId, // storing the lock UUID here
+            seats: [seat],
+            amount_paid: 0,
+            payment_status: "locked",
+        };
+
+        const res = await BookingModel.create(lockRecord);
+        return res;
+    },
+
+    async unlockSeat(eventId, showtimeId, seat, userId) {
+        const lockRef = `LOCK_${userId}_${seat}`;
+        await BookingModel.deleteLockedSeat(lockRef);
+        return { success: true };
     }
 };
