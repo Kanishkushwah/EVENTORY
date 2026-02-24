@@ -37,9 +37,9 @@
     <!-- NAVBAR -->
     <nav class="bg-surface-light dark:bg-surface-dark shadow-sm py-4 sticky top-0 z-50">
         <div class="container mx-auto px-4 md:px-8 flex items-center justify-between">
-            <a class="text-2xl font-bold text-primary" href="Index.html">Eventory</a>
+            <a class="text-2xl font-bold text-primary" href="index.html">Eventory</a>
             <div class="hidden md:flex items-center space-x-6 text-sm font-medium">
-                <a class="hover:text-primary transition-colors" href="Index.html">
+                <a class="hover:text-primary transition-colors" href="index.html">
                     <span class="material-icons text-lg align-middle">home</span> Browse Events
                 </a>
                 <a class="hover:text-primary transition-colors" href="booking.html">
@@ -133,7 +133,7 @@
         const eventData = getEventById(eventId);
 
         if (!eventData) {
-            window.location.href = 'Index.html';
+            window.location.href = 'index.html';
         }
 
         // Set page title
@@ -304,7 +304,7 @@
             localStorage.removeItem('isLoggedIn');
             localStorage.removeItem('userEmail');
             alert('Logged out successfully');
-            window.location.href = 'Index.html';
+            window.location.href = 'index.html';
         }
 
         function proceedToBooking() {
