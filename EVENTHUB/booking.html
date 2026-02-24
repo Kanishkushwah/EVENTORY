@@ -792,32 +792,64 @@
                     return;
                 }
 
-                // 3. Render only valid cinemas
+                // 3. Render city filter if no userCity was strictly found, to avoid a mess of 10+ theaters
+                let filterHtml = '';
+                if (!userCity || userCity === 'Location' || userCity === 'All Cities' || userCity === 'Select City') {
+                    const uniqueCities = [...new Set(validShowtimes.map(g => g.cinema.city))];
+                    if (uniqueCities.length > 1) {
+                        filterHtml = `
+                            <div class="mb-4">
+                                <label class="text-xs font-semibold text-gray-500 uppercase">Filter by City</label>
+                                <select id="inlineCityFilter" onchange="filterCinemasByCity(this.value)" class="w-full mt-1 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block p-2.5">
+                                    <option value="All">All Cities</option>
+                                    ${uniqueCities.map(c => `<option value="${c}">${c}</option>`).join('')}
+                                </select>
+                            </div>
+                        `;
+                    }
+                }
+
+                // 4. Render only valid cinemas
                 const cinemaList = document.getElementById('cinemaList');
-                cinemaList.innerHTML = validShowtimes.map(group => `
-                    <div class="cinema-card border-2 rounded-lg p-4 cursor-pointer hover:border-purple-500 transition hover:bg-purple-50"
-                         onclick="selectCinema(${group.cinema.id}, '${group.cinema.name}')"
-                         data-cinema-id="${group.cinema.id}">
-                        <h4 class="font-bold text-lg text-gray-800">${group.cinema.name}</h4>
-                        <div class="flex items-center justify-between">
-                            <p class="text-sm text-gray-600">${group.cinema.location}</p>
-                            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(group.cinema.name + ' ' + group.cinema.location)}" target="_blank" onclick="event.stopPropagation()" class="text-purple-600 hover:text-purple-800 flex items-center gap-1 text-xs bg-purple-50 px-2 py-1 rounded-full transition-colors font-medium cursor-pointer relative z-10 dark:bg-gray-800 dark:text-purple-400">
-                                <span class="material-icons text-[14px]">map</span> Map
-                            </a>
-                        </div>
-                        <div class="flex gap-2 mt-2">
-                            ${group.showtimes.slice(0, 3).map(t =>
-                    `<span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">${formatTime12h(t.show_time)}</span>`
-                ).join('')}
-                            ${group.showtimes.length > 3 ? `<span class="text-xs text-gray-500">+${group.showtimes.length - 3} more</span>` : ''}
-                        </div>
-                    </div>
-                `).join('');
+                cinemaList.innerHTML = filterHtml + '<div id="filteredCinemaCards">' + renderCinemaCardsChunk(validShowtimes) + '</div>';
 
             } catch (err) {
                 console.error('Error loading cinemas:', err);
                 document.getElementById('cinemaList').innerHTML = '<p class="text-red-500">Failed to load cinemas.</p>';
             }
+        }
+
+        function renderCinemaCardsChunk(showtimes) {
+            return showtimes.map(group => `
+                <div class="cinema-card border-2 rounded-lg p-4 mb-3 border-gray-200 cursor-pointer hover:border-purple-500 transition hover:bg-purple-50"
+                     onclick="selectCinema(${group.cinema.id}, '${group.cinema.name}')"
+                     data-cinema-id="${group.cinema.id}" data-city="${group.cinema.city}">
+                    <h4 class="font-bold text-lg text-gray-800">${group.cinema.name}</h4>
+                    <div class="flex items-center justify-between mb-2 mt-1">
+                        <p class="text-sm text-gray-600">${group.cinema.location}, <span class="font-semibold text-purple-600">${group.cinema.city}</span></p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(group.cinema.name + ' ' + group.cinema.location + ' ' + group.cinema.city)}" target="_blank" onclick="event.stopPropagation()" class="text-purple-600 hover:text-purple-800 flex items-center gap-1 text-xs bg-purple-50 px-2 py-1 rounded-full transition-colors font-medium cursor-pointer relative z-10 dark:bg-gray-800 dark:text-purple-400">
+                            <span class="material-icons text-[14px]">map</span> Map
+                        </a>
+                    </div>
+                    <div class="flex gap-2 flex-wrap">
+                        ${group.showtimes.slice(0, 3).map(t =>
+                `<span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded border">${formatTime12h(t.show_time)}</span>`
+            ).join('')}
+                        ${group.showtimes.length > 3 ? `<span class="text-xs text-gray-500">+${group.showtimes.length - 3} more</span>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.filterCinemasByCity = function (selectedCity) {
+            const cards = document.querySelectorAll('.cinema-card');
+            cards.forEach(c => {
+                if (selectedCity === 'All' || c.getAttribute('data-city') === selectedCity) {
+                    c.style.display = 'block';
+                } else {
+                    c.style.display = 'none';
+                }
+            });
         }
 
         // Select cinema
