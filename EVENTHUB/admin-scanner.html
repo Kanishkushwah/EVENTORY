@@ -90,15 +90,16 @@
 
             <!-- Result Overlay -->
             <div id="resultOverlay"
-                class="hidden absolute inset-0 z-50 flex flex-col items-center justify-center text-center p-6 bg-gray-900/95 backdrop-blur-md">
+                class="hidden absolute inset-0 z-50 flex flex-col items-center justify-center text-center p-4 bg-gray-900/95 backdrop-blur-md overflow-y-auto">
 
-                <div id="resultIcon" class="material-icons text-7xl mb-4">check_circle</div>
-                <h2 id="resultTitle" class="text-3xl font-extrabold mb-2 text-white">Verified!</h2>
+                <div id="resultIcon" class="material-icons text-6xl mb-2 mt-2 shrink-0">check_circle</div>
+                <h2 id="resultTitle" class="text-2xl font-extrabold mb-1 text-white shrink-0">Verified!</h2>
                 <p id="resultMessage"
-                    class="text-gray-300 text-lg mb-6 leading-relaxed bg-gray-800 px-4 py-2 rounded-lg border"></p>
+                    class="text-gray-300 text-base mb-3 leading-relaxed bg-gray-800 px-3 py-2 rounded-lg border shrink-0">
+                </p>
 
                 <div id="ticketDetails"
-                    class="hidden w-full space-y-3 text-left bg-gray-800 p-4 rounded-xl border border-gray-700 shadow-lg mb-6">
+                    class="hidden w-full space-y-2 text-left bg-gray-800 p-3 rounded-xl border border-gray-700 shadow-lg mb-4 shrink-0">
                     <div class="flex justify-between border-b border-gray-700 pb-2">
                         <span class="text-gray-400 text-sm">Event</span>
                         <span id="scanEvent" class="font-bold text-white text-sm"></span>
@@ -114,7 +115,7 @@
                 </div>
 
                 <button onclick="resetScanner()"
-                    class="bg-white text-gray-900 font-bold px-8 py-3 rounded-full hover:bg-gray-200 transition-colors shadow-xl w-full text-lg flex items-center justify-center gap-2">
+                    class="bg-white text-gray-900 font-bold px-6 py-3 rounded-full hover:bg-gray-200 transition-colors shadow-xl w-full text-base flex items-center justify-center gap-2 shrink-0 mb-2">
                     <span class="material-icons text-[20px]">refresh</span> Scan Next Ticket
                 </button>
             </div>
