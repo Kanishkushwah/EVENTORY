@@ -62,21 +62,29 @@ export const EventController = {
                 }
 
                 // 2. Intent Processing (Soft Matches & Fallbacks)
+                let intentRequirementMet = true;
+
                 if (isRomantic) {
-                    if (title.includes("romantic") || title.includes("love") || title.includes("valentine") || desc.includes("romantic")) score += 40;
-                    else if (cat === "music" || cat === "movies") score += 5;
+                    if (title.includes("romantic") || title.includes("love") || title.includes("valentine") || desc.includes("romantic") || desc.includes("romance")) { score += 40; }
+                    else { intentRequirementMet = false; }
                 }
                 if (isFunny) {
-                    if (title.includes("comedy") || title.includes("standup") || title.includes("laugh") || cat === "comedy" || desc.includes("laugh")) score += 40;
-                    else if (cat === "movies" || cat === "theater") score += 5;
+                    if (title.includes("comedy") || title.includes("standup") || title.includes("laugh") || cat === "comedy" || desc.includes("laugh") || desc.includes("comedy")) { score += 40; }
+                    else { intentRequirementMet = false; }
                 }
-                if (isMusic && (cat === "music" || cat === "concert" || title.includes("music") || title.includes("concert"))) score += 15;
-                if (isSport && (cat === "sports" || cat === "sport" || title.includes("cricket") || title.includes("match"))) score += 15;
-                if (isMovie && (cat === "movies" || cat === "movie" || title.includes("movie") || title.includes("film"))) score += 10;
+                if (isMusic) {
+                    if (cat === "music" || cat === "concert" || title.includes("music") || title.includes("concert") || desc.includes("music")) score += 15;
+                }
+                if (isSport) {
+                    if (cat === "sports" || cat === "sport" || title.includes("cricket") || title.includes("match")) score += 15;
+                }
+                if (isMovie) {
+                    if (cat === "movies" || cat === "movie" || title.includes("movie") || title.includes("film")) score += 10;
+                }
 
                 // 3. Keyword Extraction & Matching (Hard Matches)
                 // Filter out generic intent words so fallback logic works perfectly for broad categories
-                const ignoreWords = ["the", "and", "for", "with", "under", "below", "max", "cheap", "budget", "rs", "inr", "free", "movie", "movies", "show", "event", "events", "concert", "sport", "sports", "romantic", "date", "couple", "funny", "laugh", "comedy", "standup", "music", "sing", "dj", "cricket", "match", "film", "cinema"];
+                const ignoreWords = ["the", "and", "for", "with", "under", "below", "max", "cheap", "budget", "rs", "inr", "free", "movie", "movies", "show", "event", "events", "concert", "sport", "sports", "romantic", "romance", "date", "couple", "funny", "laugh", "comedy", "standup", "music", "sing", "dj", "cricket", "match", "film", "cinema"];
                 const words = query.replace(/[^\w\s-]/g, "").split(/\s+/).filter(w => w.length > 2 && !ignoreWords.includes(w) && isNaN(w));
 
                 let wordMatchCount = 0;
@@ -94,6 +102,11 @@ export const EventController = {
                 // If user typed specific searchable keywords (like "sci-fi" or "diljit") and they completely failed to match, tank the score.
                 if (words.length > 0 && wordMatchCount === 0) {
                     score -= 50;
+                }
+
+                // If the user clearly wanted a romantic or comedy movie, penalize non-matching events extremely hard
+                if ((isRomantic || isFunny) && !intentRequirementMet) {
+                    score -= 100;
                 }
 
                 // 4. Exact Phrase Bonus

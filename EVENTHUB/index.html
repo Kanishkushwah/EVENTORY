@@ -1338,6 +1338,14 @@
                 const response = await fetch(`/api/events/smart-search?q=${encodeURIComponent(query)}`);
                 const matches = await response.json();
 
+                // Structural CSS switch for mobile responsiveness
+                eventGrid.classList.remove('flex', 'flex-row', 'overflow-x-auto', 'snap-x', 'snap-mandatory', 'hide-scrollbar');
+                eventGrid.classList.add('grid', 'grid-cols-1', 'md:grid-cols-2', 'lg:grid-cols-3', 'gap-6');
+
+                // Hide View All button since we are in search mode
+                const btn = document.getElementById('viewAllBtn');
+                if (btn) btn.style.display = 'none';
+
                 // Clear grid and show AI Header
                 eventGrid.innerHTML = `<div class="col-span-full mb-6 py-4 px-6 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-200 dark:border-purple-800 rounded-xl flex items-center gap-3">
                     <span class="material-icons text-pink-500 text-3xl">auto_awesome</span>
@@ -1356,7 +1364,7 @@
                 } else {
                     matches.forEach(event => {
                         const card = document.createElement('div');
-                        card.className = "bg-white dark:bg-surface-dark border dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col h-full transform hover:-translate-y-1 relative";
+                        card.className = "bg-white dark:bg-surface-dark border dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col h-full transform hover:-translate-y-1 relative w-full";
 
                         let priceDisplay = event.price === 0 ? "Free Entry" : "Rs." + event.price;
                         let catBadge = `<span class="absolute top-4 left-4 bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1 rounded-full shadow-md backdrop-blur-sm z-10 flex items-center gap-1"><span class="material-icons text-[12px]">auto_awesome</span> Best Match</span>`;
