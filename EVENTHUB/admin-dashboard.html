@@ -212,13 +212,64 @@
 
     <!-- MOBILE TOP HEADER -->
     <div class="md:hidden bg-white border-b shadow-sm sticky top-0 z-50 px-4 py-3 flex justify-between items-center">
-        <div class="flex items-center gap-2">
-            <span class="material-icons-outlined text-primary text-2xl">event</span>
-            <span class="font-bold text-xl text-primary">Eventory</span>
+        <div class="flex items-center gap-3">
+            <button onclick="toggleMobileMenu()"
+                class="text-gray-600 hover:text-primary transition focus:outline-none flex items-center">
+                <span class="material-icons text-3xl">menu</span>
+            </button>
+            <div class="flex items-center gap-2">
+                <span class="material-icons-outlined text-primary text-2xl">event</span>
+                <span class="font-bold text-xl text-primary">Eventory</span>
+            </div>
         </div>
         <button onclick="logout()" class="p-2 text-red-600 bg-red-50 rounded-lg flex items-center">
             <span class="material-icons-outlined">logout</span>
         </button>
+    </div>
+
+    <!-- MOBILE MENU OVERLAY -->
+    <div id="mobile-menu"
+        class="fixed inset-0 z-[100] bg-white transform -translate-x-full transition-transform duration-300 md:hidden flex flex-col h-full shadow-2xl">
+        <div class="p-4 border-b flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <span class="material-icons-outlined text-primary text-2xl">event</span>
+                <span class="font-bold text-xl text-primary">Eventory</span>
+            </div>
+            <button onclick="toggleMobileMenu()" class="text-gray-500 hover:text-red-500 focus:outline-none">
+                <span class="material-icons text-3xl">close</span>
+            </button>
+        </div>
+        <div class="p-4 flex-1 overflow-y-auto">
+            <nav class="space-y-2">
+                <a href="#dashboard" onclick="showSection('dashboard'); toggleMobileMenu()" id="mob-nav-dashboard"
+                    class="mob-nav-link flex items-center gap-3 px-4 py-3 rounded-lg text-primary bg-purple-50 font-semibold transition">
+                    <span class="material-icons-outlined">dashboard</span>
+                    Dashboard
+                </a>
+                <a href="#bookings" onclick="showSection('bookings'); toggleMobileMenu()" id="mob-nav-bookings"
+                    class="mob-nav-link flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition">
+                    <span class="material-icons-outlined">confirmation_number</span>
+                    Bookings
+                </a>
+                <a href="#events" onclick="showSection('events'); toggleMobileMenu()" id="mob-nav-events"
+                    class="mob-nav-link flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition">
+                    <span class="material-icons-outlined">event_note</span>
+                    Events
+                </a>
+                <a href="admin-scanner.html" target="_blank" onclick="toggleMobileMenu()"
+                    class="mob-nav-link flex items-center gap-3 px-4 py-3 rounded-lg text-purple-600 hover:bg-purple-50 transition font-bold mt-2 border-t pt-4">
+                    <span class="material-icons-outlined">qr_code_scanner</span>
+                    Launch Scanner
+                </a>
+            </nav>
+        </div>
+        <div class="p-4 border-t mt-auto">
+            <button onclick="logout()"
+                class="flex items-center justify-center gap-3 px-4 py-3 rounded-lg text-red-600 bg-red-50 w-full transition font-semibold">
+                <span class="material-icons-outlined">logout</span>
+                Logout
+            </button>
+        </div>
     </div>
 
     <!-- MAIN WRAPPER -->
@@ -919,6 +970,15 @@
             window.location.href = 'admin-login.html';
         }
 
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            if (menu.classList.contains('-translate-x-full')) {
+                menu.classList.remove('-translate-x-full');
+            } else {
+                menu.classList.add('-translate-x-full');
+            }
+        }
+
         // Initialize
         loadDashboardStats();
     </script>
@@ -1092,31 +1152,6 @@
             }
         }
     </script>
-    <!-- MOBILE BOTTOM NAV -->
-    <div
-        class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around p-2 z-[9999] shadow-[0_-4px_20px_rgba(0,0,0,0.05)] pb-safe">
-        <a href="#dashboard" onclick="showSection('dashboard')" id="mob-nav-dashboard"
-            class="mob-nav-link flex flex-col items-center p-2 text-primary transition w-1/4">
-            <span class="material-icons-outlined">dashboard</span>
-            <span class="text-[10px] font-semibold mt-1">Dashboard</span>
-        </a>
-        <a href="#bookings" onclick="showSection('bookings')" id="mob-nav-bookings"
-            class="mob-nav-link flex flex-col items-center p-2 text-gray-500 transition w-1/4">
-            <span class="material-icons-outlined">confirmation_number</span>
-            <span class="text-[10px] font-semibold mt-1">Bookings</span>
-        </a>
-        <a href="#events" onclick="showSection('events')" id="mob-nav-events"
-            class="mob-nav-link flex flex-col items-center p-2 text-gray-500 transition w-1/4">
-            <span class="material-icons-outlined">event_note</span>
-            <span class="text-[10px] font-semibold mt-1">Events</span>
-        </a>
-        <a href="admin-scanner.html" target="_blank" id="mob-nav-scanner"
-            class="mob-nav-link flex flex-col items-center p-2 text-purple-500 transition w-1/4">
-            <span class="material-icons-outlined">qr_code_scanner</span>
-            <span class="text-[10px] font-semibold mt-1">Scanner</span>
-        </a>
-    </div>
-
 
     <!-- Scroll Reveal Logic -->
     <script>
