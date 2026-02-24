@@ -1372,7 +1372,7 @@
                         card.innerHTML = `
                             ${catBadge}
                             <div class="relative overflow-hidden h-48 md:h-56">
-                                <img src="${event.poster_url || 'https://images.unsplash.com/photo-1540039155732-6761b54cbaca?w=800&q=80'}" alt="${event.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                <img src="${event.image_url || event.image || 'https://images.unsplash.com/photo-1540039155732-6761b54cbaca?w=800&q=80'}" alt="${event.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                                 <div class="absolute bottom-4 left-4 right-4 flex justify-between items-end">
                                     <div class="text-white">
