@@ -10,7 +10,7 @@ export const EmailService = {
             const htmlContent = getEmailTemplate(booking);
 
             const mailOptions = {
-                from: `"Eventory Tickets" <${process.env.SMTP_EMAIL}>`,
+                from: `"Eventory Tickets" <${process.env.SMTP_EMAIL || "eventorytickets@gmail.com"}>`,
                 to: userEmail,
                 subject: `🎟️ Booking Confirmed: ${booking.event_title}`,
                 html: htmlContent,
@@ -25,10 +25,10 @@ export const EmailService = {
 
             const info = await transporter.sendMail(mailOptions);
             console.log("✅ Email sent successfully:", info.messageId);
-            
-            return { 
-                success: true, 
-                messageId: info.messageId 
+
+            return {
+                success: true,
+                messageId: info.messageId
             };
 
         } catch (error) {
