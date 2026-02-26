@@ -872,7 +872,6 @@
                 const response = await fetch(`/api/showtimes/movie/${currentEvent.id}`);
                 const data = await response.json();
 
-                // Find showtimes for selected cinema - CORRECTED PROPERTY ACCESS
                 const cinemaShowtimes = data.find(c => c.cinema.id === selectedCinema.id);
                 if (!cinemaShowtimes) {
                     alert('No showtimes available at this cinema');
@@ -880,34 +879,61 @@
                 }
 
                 showtimes = cinemaShowtimes.showtimes;
-                const uniqueDates = [...new Set(showtimes.map(st => st.show_date))];
+
+                // Generate next 5 days dynamically
+                const next5Days = [];
+                const today = new Date();
+
+                for (let i = 0; i < 5; i++) {
+                    const tempDate = new Date(today);
+                    tempDate.setDate(today.getDate() + i);
+
+                    const yyyy = tempDate.getFullYear();
+                    const mm = String(tempDate.getMonth() + 1).padStart(2, '0');
+                    const dd = String(tempDate.getDate()).padStart(2, '0');
+                    const dateStr = `${yyyy}-${mm}-${dd}`;
+
+                    next5Days.push({
+                        dateStr: dateStr,
+                        dateObj: tempDate
+                    });
+                }
 
                 document.getElementById('dateSelection').classList.remove('hidden');
                 const dateList = document.getElementById('dateList');
-                dateList.innerHTML = uniqueDates.map(date => {
-                    const d = new Date(date);
-                    return `
-                        <button class="date-btn px-4 py-2 border-2 rounded-lg hover:border-purple-500 whitespace-nowrap"
-                                onclick="selectDate('${date}')">
-                            <div class="font-bold">${d.getDate()}</div>
-                            <div class="text-xs">${d.toLocaleDateString('en-US', { month: 'short' })}</div>
-                        </button>
-                    `;
-                }).join('');
+
+                dateList.innerHTML = next5Days.map(dayInfo => `
+                    <button class="date-btn px-4 py-2 border-2 rounded-lg hover:border-purple-500 whitespace-nowrap date-box flex flex-col items-center justify-center transition-colors shadow-sm bg-white dark:bg-gray-800"
+                            onclick="selectDate('${dayInfo.dateStr}', this)">
+                        <span class="day-number text-xl font-bold">${dayInfo.dateObj.getDate()}</span>
+                        <span class="month text-xs text-gray-500 font-semibold uppercase">${dayInfo.dateObj.toLocaleDateString('en-US', { month: 'short' })}</span>
+                    </button>
+                `).join('');
+
+                // Automatically click today's date after brief timeout rendering
+                setTimeout(() => {
+                    const todayBtn = dateList.querySelector('.date-btn');
+                    if (todayBtn) todayBtn.click();
+                }, 10);
+
             } catch (err) {
                 console.error('Error loading dates:', err);
             }
         }
 
         // Select date
-        function selectDate(date) {
+        function selectDate(date, element) {
             selectedDate = date;
 
             // Highlight selected
             document.querySelectorAll('.date-btn').forEach(btn => {
                 btn.classList.remove('border-purple-500', 'bg-purple-50');
             });
-            event.target.closest('.date-btn').classList.add('border-purple-500', 'bg-purple-50');
+            if (element) {
+                element.classList.add('border-purple-500', 'bg-purple-50');
+            } else if (event && event.target) {
+                event.target.closest('.date-btn').classList.add('border-purple-500', 'bg-purple-50');
+            }
 
             loadShowtimes(date);
         }
@@ -920,18 +946,60 @@
 
             document.getElementById('showtimeSelection').classList.remove('hidden');
             const showtimeGrid = document.getElementById('showtimeGrid');
-            showtimeGrid.innerHTML = dateShowtimes.map(st => `
-                <button class="showtime-btn border-2 rounded-lg p-3 hover:border-purple-500 transition"
-                        onclick='selectShowtime(${JSON.stringify(st).replace(/'/g, "&apos;")})'>
-                    <div class="font-bold">${formatTime12h(st.show_time)}</div>
-                    <div class="text-xs text-gray-600">₹${st.price}</div>
-                    <div class="text-xs text-green-600">${st.available_seats} seats</div>
-                </button>
-            `).join('');
+
+            if (dateShowtimes.length === 0) {
+                showtimeGrid.innerHTML = '<div class="text-gray-500 w-full col-span-full py-4 text-center">No active showtimes available for this date.</div>';
+                return;
+            }
+
+            const now = new Date();
+
+            showtimeGrid.innerHTML = dateShowtimes.map(st => {
+                let isPast = false;
+                try {
+                    // Try parsing showtime into a comparable date object (e.g. 14:00 or 10:00 AM)
+                    let timeParts = st.show_time.match(/(\d+):(\d+)\s*(AM|PM)?/i);
+                    if (timeParts) {
+                        let hours = parseInt(timeParts[1]);
+                        let minutes = parseInt(timeParts[2]);
+                        let ampm = timeParts[3] ? timeParts[3].toUpperCase() : null;
+
+                        if (ampm === 'PM' && hours < 12) hours += 12;
+                        if (ampm === 'AM' && hours === 12) hours = 0;
+
+                        let showDateTime = new Date(`${st.show_date}T00:00:00`);
+                        showDateTime.setHours(hours, minutes, 0, 0);
+
+                        if (showDateTime < now) {
+                            isPast = true;
+                        }
+                    }
+                } catch (e) {
+                    console.error("Error parsing date", e);
+                }
+
+                if (isPast) {
+                    return `
+                        <button class="showtime-btn border-2 rounded-lg p-3 opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-800 transition" disabled>
+                            <div class="font-bold text-gray-400 line-through">${formatTime12h(st.show_time)}</div>
+                            <div class="text-xs text-red-500 font-semibold mt-1">Booking Closed</div>
+                        </button>
+                    `;
+                }
+
+                return `
+                    <button class="showtime-btn border-2 rounded-lg p-3 hover:border-purple-500 transition"
+                            onclick='selectShowtime(${JSON.stringify(st).replace(/'/g, "&apos;")}, this)'>
+                        <div class="font-bold">${formatTime12h(st.show_time)}</div>
+                        <div class="text-xs text-gray-600">₹${st.price}</div>
+                        <div class="text-xs text-green-600">${st.available_seats} seats</div>
+                    </button>
+                `;
+            }).join('');
         }
 
         // Select showtime
-        function selectShowtime(showtimeData) {
+        function selectShowtime(showtimeData, element) {
             selectedShowtime = showtimeData;
             if (socket && selectedShowtime) socket.emit("joinShowtime", selectedShowtime.id);
 
@@ -939,7 +1007,11 @@
             document.querySelectorAll('.showtime-btn').forEach(btn => {
                 btn.classList.remove('border-purple-500', 'bg-purple-50');
             });
-            event.target.closest('.showtime-btn').classList.add('border-purple-500', 'bg-purple-50');
+            if (element) {
+                element.classList.add('border-purple-500', 'bg-purple-50');
+            } else if (event && event.target) {
+                event.target.closest('.showtime-btn').classList.add('border-purple-500', 'bg-purple-50');
+            }
 
             // Update summary
             document.getElementById('selectionSummary').classList.remove('hidden');
