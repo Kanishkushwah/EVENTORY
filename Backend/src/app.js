@@ -109,6 +109,21 @@ app.use((err, req, res, next) => {
     });
 });
 
+app.get('/api/test-email', async (req, res) => {
+    try {
+        const { EmailService } = await import('./services/email.service.js');
+        const booking = {
+            reference: 'TEST-123', event_title: 'Test', event_date: 'Today', event_time: 'Now',
+            venue: 'Here', seats: ['A1'], amount_paid: 0
+        };
+        const pdf = Buffer.from('test');
+        await EmailService.sendBookingEmail(process.env.ADMIN_EMAIL || 'test@test.com', booking, pdf);
+        res.json({ success: true, envEmail: !!process.env.SMTP_EMAIL, envPass: !!process.env.SMTP_APP_PASSWORD });
+    } catch (e) {
+        res.status(500).json({ error: String(e), stack: e.stack, envEmail: !!process.env.SMTP_EMAIL, envPass: !!process.env.SMTP_APP_PASSWORD });
+    }
+});
+
 app.get('/api/health', (req, res) => {
     res.status(200).json({ status: 'ok', message: 'Server is running 🚀' });
 });
