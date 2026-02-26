@@ -88,8 +88,8 @@ export const AutomationService = {
                     await this.generateShowtimesForMovie(data);
                 }
             } else {
-                // Update existing with better data
-                await supabase.from('events').update(movieEvent).eq('id', existing.id);
+                // Intentionally skip updating so we do not overwrite Admin's custom poster or details
+                // console.log(`Skipping existing movie: ${movieEvent.title}`);
             }
         }
         console.log(`✅ Synced ${addedCount} New Movies.`);
@@ -150,14 +150,7 @@ export const AutomationService = {
     async syncWorldCupEvents() {
         console.log("🏆 Syncing ICC T20 World Cup 2026 Matches...");
 
-        // First, let's clear old matches to force a refresh with new images
-        // In production you wouldn't do this, but for dev cleanup it's perfect
-        const { error: delError } = await supabase
-            .from('events')
-            .delete()
-            .ilike('title', '%World Cup 2026%');
-
-        if (!delError) console.log("🧹 Cleared old World Cup matches for fresh sync.");
+        // Note: Destructive delete/refresh logic removed so Admin edits are not erased.
 
         const matches = [
             // INDIA MATCHES
@@ -269,10 +262,18 @@ export const AutomationService = {
 
         let addedCount = 0;
         for (const match of matches) {
-            // Check if exists logic removed because we force cleaned
-            const { error } = await supabase.from('events').insert([match]);
-            if (!error) addedCount++;
-            else console.error(`Failed to add match: ${match.title}`, error);
+            // Check if exists first before inserting so we don't accidentally duplicate
+            const { data: existing } = await supabase
+                .from('events')
+                .select('id')
+                .eq('title', match.title)
+                .single();
+
+            if (!existing) {
+                const { error } = await supabase.from('events').insert([match]);
+                if (!error) addedCount++;
+                else console.error(`Failed to add match: ${match.title}`, error);
+            }
         }
         console.log(`✅ Synced ${addedCount} T20 World Cup Matches.`);
     },
