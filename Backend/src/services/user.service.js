@@ -66,35 +66,38 @@ export const UserService = {
         }
     },
 
-    // Register a new user
+    // Register a new user using raw Supabase Auth API
     async registerUser(userData) {
         try {
-            // Check if user exists
-            const { data: existingUser } = await supabase
-                .from('users')
-                .select('*')
-                .eq('email', userData.email)
-                .single();
+            // 1. Create User in Supabase Auth
+            const { data: authData, error: authError } = await supabase.auth.signUp({
+                email: userData.email,
+                password: userData.password,
+                options: {
+                    data: {
+                        name: userData.name
+                    }
+                }
+            });
 
-            if (existingUser) {
-                return { error: { message: "User already exists with this email" } };
+            if (authError) {
+                return { error: authError };
             }
 
-            const newUser = {
-                name: userData.name,
-                email: userData.email,
-                password: userData.password, // In production, hash this!
-                created_at: new Date().toISOString()
-            };
+            // 2. Ensure user is also mirrored in the public 'users' table
+            if (authData?.user) {
+                const newUser = {
+                    email: userData.email,
+                    name: userData.name,
+                    password: userData.password, // Stored purely for legacy backward compatibility
+                    created_at: new Date().toISOString()
+                };
 
-            const { data, error } = await supabase
-                .from('users')
-                .insert([newUser])
-                .select()
-                .single();
+                // Because of Supabase Auth triggers or restrictions, we try catch this part.
+                await supabase.from('users').upsert([newUser], { onConflict: 'email' }).catch(e => console.log('Mirror Sync Alert:', e));
+            }
 
-            if (error) throw error;
-            return data;
+            return authData.user || { email: userData.email, name: userData.name };
 
         } catch (error) {
             console.error("Register Error:", error);
@@ -102,21 +105,38 @@ export const UserService = {
         }
     },
 
-    // Verify user credentials (Login)
+    // Verify user credentials using Supabase Auth
     async verifyUser(email, password) {
         try {
-            const { data, error } = await supabase
+            // 1. Attempt login with native Supabase Auth
+            const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+                email,
+                password
+            });
+
+            if (!authError && authData?.user) {
+                // Return success via Supabase Auth
+                return {
+                    id: authData.user.id,
+                    email: authData.user.email,
+                    name: authData.user.user_metadata?.name || email.split('@')[0],
+                    session_token: authData.session?.access_token
+                };
+            }
+
+            // fallback for older users who registered before Supabase Auth module was enabled
+            const { data: legacyData, error: legacyError } = await supabase
                 .from('users')
                 .select('*')
                 .eq('email', email)
-                .eq('password', password) // Basic check
+                .eq('password', password) // Legacy basic check
                 .single();
 
-            if (error || !data) {
-                return { error: { message: "Invalid email or password" } };
+            if (legacyError || !legacyData) {
+                return { error: { message: authError?.message || "Invalid email or password" } };
             }
 
-            return data;
+            return legacyData;
 
         } catch (error) {
             console.error("Login Verify Error:", error);
