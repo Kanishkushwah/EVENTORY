@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scanner | Eventory Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
+    <!-- HTML5-QRCode Scanner Library -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <style>
+        .neon-glow {
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.7);
+        }
+
+        .success-flash {
+            animation: flashGreen 0.7s ease-out;
+        }
+
+        .error-flash {
+            animation: flashRed 0.7s ease-out;
+        }
+
+        @keyframes flashGreen {
+            0% {
+                background-color: #10B981;
+            }
+
+            100% {
+                background-color: transparent;
+            }
+        }
+
+        @keyframes flashRed {
+            0% {
+                background-color: #EF4444;
+            }
+
+            100% {
+                background-color: transparent;
+            }
+        }
+
+        #reader {
+            border: none !important;
+        }
+
+        #reader__dashboard_section_csr button {
+            background-color: #9333ea !important;
+            color: white !important;
+            padding: 8px 16px !important;
+            border-radius: 6px !important;
+            border: none !important;
+            margin-top: 10px !important;
+        }
+
+        /* Hide excessive elements from the scanner UI */
+        #reader__dashboard_section_swaplink {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-900 text-white min-h-screen flex flex-col font-sans">
+
+    <!-- Navbar -->
+    <nav class="bg-gray-800 shadow-md border-b border-gray-700 h-16 flex items-center justify-between px-6">
+        <a href="admin-dashboard.html" class="flex items-center gap-2 text-purple-400 hover:text-purple-300 transition">
+            <span class="material-icons">arrow_back</span>
+            <span class="font-semibold text-lg">Dashboard</span>
+        </a>
+        <div class="flex items-center gap-2">
+            <span class="material-icons text-purple-400">qr_code_scanner</span>
+            <span class="font-bold text-xl tracking-tight text-white neon-glow">Live Scanner</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col items-center justify-center p-4 w-full max-w-lg mx-auto" id="mainContainer">
+
+        <div class="w-full bg-gray-800 rounded-2xl shadow-2xl border border-gray-700 overflow-hidden relative">
+
+            <!-- Scanner Viewport -->
+            <div class="p-6 bg-black relative" id="readerContainer">
+                <div id="reader"
+                    class="w-full aspect-square bg-gray-900 rounded-lg overflow-hidden border-2 border-purple-500 shadow-[0_0_20px_rgba(168,85,247,0.4)]">
+                </div>
+            </div>
+
+            <!-- Result Overlay -->
+            <div id="resultOverlay"
+                class="hidden absolute inset-0 z-50 flex flex-col items-center justify-center text-center p-4 bg-gray-900/95 backdrop-blur-md overflow-y-auto">
+
+                <div id="resultIcon" class="material-icons text-6xl mb-2 mt-2 shrink-0">check_circle</div>
+                <h2 id="resultTitle" class="text-2xl font-extrabold mb-1 text-white shrink-0">Verified!</h2>
+                <p id="resultMessage"
+                    class="text-gray-300 text-base mb-3 leading-relaxed bg-gray-800 px-3 py-2 rounded-lg border shrink-0">
+                </p>
+
+                <div id="ticketDetails"
+                    class="hidden w-full space-y-2 text-left bg-gray-800 p-3 rounded-xl border border-gray-700 shadow-lg mb-4 shrink-0">
+                    <div class="flex justify-between border-b border-gray-700 pb-2">
+                        <span class="text-gray-400 text-sm">Event</span>
+                        <span id="scanEvent" class="font-bold text-white text-sm"></span>
+                    </div>
+                    <div class="flex justify-between border-b border-gray-700 pb-2">
+                        <span class="text-gray-400 text-sm">Seats</span>
+                        <span id="scanSeats" class="font-bold text-purple-400 text-sm"></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400 text-sm">Booked By</span>
+                        <span id="scanUser" class="font-bold text-white text-sm truncate ml-4"></span>
+                    </div>
+                </div>
+
+                <button onclick="resetScanner()"
+                    class="bg-white text-gray-900 font-bold px-6 py-3 rounded-full hover:bg-gray-200 transition-colors shadow-xl w-full text-base flex items-center justify-center gap-2 shrink-0 mb-2">
+                    <span class="material-icons text-[20px]">refresh</span> Scan Next Ticket
+                </button>
+            </div>
+
+        </div>
+
+        <p class="text-center text-gray-500 mt-6 text-sm">Position the Eventory PDF Ticket QR code within the frame to
+            automatically verify entry.</p>
+    </main>
+
+    <!-- Audio Effects -->
+    <audio id="successSound" src="https://actions.google.com/sounds/v1/cartoon/bell_ding.ogg" preload="auto"></audio>
+    <audio id="errorSound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+
+    <script>
+        const DOMAIN = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:8000'
+            : 'https://eventory-backend.onrender.com';
+
+        let html5QrcodeScanner;
+        let isScanning = true;
+
+        // Check if admin is logged in
+        const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+        if (!loggedInUser || loggedInUser.role !== 'admin') {
+            alert("Admin Access Required");
+            window.location.href = "login.html";
+        }
+
+        async function onScanSuccess(decodedText, decodedResult) {
+            if (!isScanning) return;
+            isScanning = false; // Freeze scanner
+
+            // Expected format is the exact booking reference: EVT-XXXXXXXXX
+            const reference = decodedText.trim();
+            console.log("Scanned:", reference);
+
+            try {
+                const res = await fetch(`/api/admin/verify-ticket`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ reference })
+                });
+
+                let data;
+                try {
+                    data = await res.json();
+                } catch (e) {
+                    showOverlay({ valid: false, message: `Server error or timeout (${res.status}). Please try again.` });
+                    return;
+                }
+
+                showOverlay(data);
+
+            } catch (err) {
+                console.error("Verification Error:", err);
+                showOverlay({ valid: false, message: "Network error communicating with server. Retrying might fix it." });
+            }
+        }
+
+        function onScanFailure(error) {
+            // Background scanning continues
+        }
+
+        function showOverlay(data) {
+            const overlay = document.getElementById('resultOverlay');
+            const icon = document.getElementById('resultIcon');
+            const title = document.getElementById('resultTitle');
+            const message = document.getElementById('resultMessage');
+            const mainBox = document.getElementById('mainContainer');
+            const ticketDetails = document.getElementById('ticketDetails');
+
+            overlay.classList.remove('hidden');
+
+            if (data.valid) {
+                // SUCCESS
+                document.getElementById('successSound').play().catch(e => { });
+                mainBox.classList.add('success-flash');
+                setTimeout(() => mainBox.classList.remove('success-flash'), 700);
+
+                icon.textContent = 'check_circle';
+                icon.className = 'material-icons text-7xl mb-4 text-green-500';
+                title.textContent = 'Access Granted!';
+                title.className = 'text-3xl font-extrabold mb-2 text-green-500';
+                message.textContent = data.message;
+                message.className = 'text-green-200 text-lg mb-6 leading-relaxed bg-green-900/40 px-4 py-2 rounded-lg border border-green-700';
+
+                // Show Details
+                if (data.booking) {
+                    ticketDetails.classList.remove('hidden');
+                    document.getElementById('scanEvent').textContent = data.booking.event_title;
+                    document.getElementById('scanSeats').textContent = data.booking.seats ? data.booking.seats.join(', ') : 'General Admission';
+                    document.getElementById('scanUser').textContent = data.booking.user_email;
+                }
+            } else {
+                // FAILED
+                document.getElementById('errorSound').play().catch(e => { });
+                mainBox.classList.add('error-flash');
+                setTimeout(() => mainBox.classList.remove('error-flash'), 700);
+
+                icon.textContent = 'cancel';
+                icon.className = 'material-icons text-7xl mb-4 text-red-500';
+                title.textContent = 'Invalid Ticket';
+                title.className = 'text-3xl font-extrabold mb-2 text-red-500';
+                message.textContent = data.message;
+                message.className = 'text-red-200 text-lg mb-6 leading-relaxed bg-red-900/40 px-4 py-2 rounded-lg border border-red-700';
+                ticketDetails.classList.add('hidden');
+            }
+        }
+
+        function resetScanner() {
+            document.getElementById('resultOverlay').classList.add('hidden');
+            isScanning = true;
+        }
+
+        function initScanner() {
+            // Dynamic QR box size for smaller mobile screens
+            let qrboxSize = window.innerWidth < 400 ? window.innerWidth * 0.65 : 250;
+
+            // Start HTML5 QR Code Scanner
+            html5QrcodeScanner = new Html5QrcodeScanner(
+                "reader",
+                { fps: 15, qrbox: { width: qrboxSize, height: qrboxSize }, aspectRatio: 1.0 },
+                /* verbose= */ false
+            );
+            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        }
+
+        // Initialize on load
+        window.onload = initScanner;
+    </script>
+</body>
+
+</html>

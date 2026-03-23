@@ -6,9 +6,9 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Eventory - Login</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet" />
     <script>
         tailwind.config = {
             darkMode: "class",
@@ -26,8 +26,8 @@
                         "text-dark": "#F9FAFB",
                     },
                     fontFamily: {
-                        display: ["Inter", "sans-serif"],
-                        body: ["Inter", "sans-serif"],
+                        display: ["Plus Jakarta Sans", "sans-serif"],
+                        body: ["Plus Jakarta Sans", "sans-serif"],
                     },
                     borderRadius: {
                         DEFAULT: "0.5rem",
@@ -38,13 +38,200 @@
     </script>
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         .hero-gradient {
             background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
         }
+
+        /* =============== PREMIUM AESTHETICS =============== */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: -0.01em;
+        }
+
+        ::selection {
+            background: rgba(139, 92, 246, 0.3);
+            color: inherit;
+        }
+
+        /* Glassmorphism Navbar */
+        nav {
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            background-color: rgba(255, 255, 255, 0.75) !important;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+        }
+
+        .dark nav {
+            background-color: rgba(17, 24, 39, 0.75) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+        }
+
+        /* Smooth Interactive Elements */
+        button,
+        a,
+        .card,
+        .cinema-card,
+        .date-btn,
+        .showtime-btn,
+        input,
+        select {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Bouncy Button Hover */
+        button:hover,
+        a.nav-link:hover,
+        .hover\:-translate-y-1:hover {
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        /* Input Focus Glow */
+        input:focus,
+        select:focus,
+        textarea:focus {
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15) !important;
+            border-color: #8B5CF6 !important;
+        }
+
+        /* Soft Card Shadows */
+        .shadow-sm,
+        .shadow,
+        .shadow-md,
+        .shadow-lg,
+        .shadow-xl {
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08) !important;
+        }
+
+        .dark .shadow-sm,
+        .dark .shadow,
+        .dark .shadow-md,
+        .dark .shadow-lg,
+        .dark .shadow-xl {
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        /* ================================================= */
+
+
+        /* =============== ULTRA PREMIUM AESTHETICS =============== */
+        /* Custom Modern Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.3);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 92, 246, 0.6);
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: rgba(167, 139, 250, 0.3);
+        }
+
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: rgba(167, 139, 250, 0.6);
+        }
+
+        /* Floating Image Animation for Hero/Feature elements */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Scroll Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Glass Panels */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .dark .glass-panel {
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Glowing badge */
+        .glow-badge {
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+        }
+
+        /* ======================================================= */
     </style>
+    <script>
+        // Check local storage for theme early to prevent FOUC
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+                updateThemeIcons('dark_mode');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+                updateThemeIcons('light_mode');
+            }
+        }
+
+        function updateThemeIcons(icon) {
+            document.querySelectorAll('.theme-icon').forEach(el => el.textContent = icon);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateThemeIcons(document.documentElement.classList.contains('dark') ? 'light_mode' : 'dark_mode');
+        });
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body
@@ -54,7 +241,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
                 <div class="flex items-center">
-                    <a class="flex-shrink-0 flex items-center gap-2" href="Index.html">
+                    <a class="flex-shrink-0 flex items-center gap-2" href="index.html">
                         <span class="material-icons text-primary dark:text-primary-light text-3xl">event_seat</span>
                         <span class="text-2xl font-bold text-primary dark:text-primary-light">Eventory</span>
                     </a>
@@ -62,8 +249,13 @@
 
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center space-x-6 text-sm font-medium">
+                    <button onclick="toggleTheme()"
+                        class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light transition-colors focus:outline-none"
+                        title="Toggle Dark Mode">
+                        <span class="material-icons theme-icon text-lg">dark_mode</span>
+                    </button>
                     <a class="text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light flex items-center gap-1 transition-colors"
-                        href="Index.html">
+                        href="index.html">
                         <span class="material-icons text-base">home</span> Browse Events
                     </a>
                     <a class="text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light flex items-center gap-1 transition-colors"
@@ -97,7 +289,7 @@
         </div>
         <div class="flex-1 overflow-y-auto py-6 px-6 space-y-6">
             <div class="space-y-4">
-                <a href="Index.html"
+                <a href="index.html"
                     class="flex items-center gap-3 text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-primary dark:hover:text-primary-light transition-colors p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
                     <span class="material-icons">home</span> Browse Events
                 </a>
@@ -133,7 +325,7 @@
         <div
             class="max-w-md w-full space-y-8 relative z-10 bg-card-light dark:bg-card-dark p-8 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700">
             <div>
-                <h2 class="mt-2 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
+                <h2 class="mt-2 text-center text-3xl font-extrabold text-gray-900 dark:text-white dark:text-white">
                     Welcome Back
                 </h2>
                 <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
@@ -337,7 +529,9 @@
                     return;
                 }
             } catch (e) {
-                console.log("Backend login failed, using offline mode.");
+                console.error("Backend login failed:", e);
+                alert("Login Server currently offline or unreachable.");
+                return;
             }
 
             alert("Invalid email or password.\n\nTry Demo:\nEmail: tanishkushwah6644@gmail.com\nPassword: TANISH6644");
@@ -347,7 +541,7 @@
         const user = JSON.parse(localStorage.getItem("loggedInUser"));
         if (user) {
             if (confirm("You are already logged in. Go to events page?")) {
-                window.location.href = "Index.html";
+                window.location.href = "index.html";
             }
         }
 
@@ -387,6 +581,194 @@
             </a>
         </div>
     </nav>
+
+    <!-- ULTRA PREMIUM FOOTER -->
+    <footer
+        class="bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 pt-16 pb-24 md:pb-8 mt-20 transition-colors duration-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-1">
+                    <a href="index.html" class="flex items-center gap-2 mb-4">
+                        <span class="material-icons text-purple-600 text-3xl">event_seat</span>
+                        <span class="font-bold text-2xl text-purple-600 tracking-tight">Eventory</span>
+                    </a>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
+                        The ultimate platform for discovering, booking, and managing events. Built with modern
+                        aesthetics and seamless user experience in mind.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-purple-50 dark:bg-gray-800 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all transform hover:scale-110">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-purple-50 dark:bg-gray-800 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all transform hover:scale-110">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-purple-50 dark:bg-gray-800 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all transform hover:scale-110">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4
+                        class="font-bold text-gray-900 dark:text-white dark:text-white mb-6 uppercase text-sm tracking-wider">
+                        Explore</h4>
+                    <ul class="space-y-4 text-sm text-gray-600 dark:text-gray-400">
+                        <li><a href="index.html"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Browse
+                                Events</a></li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Concerts</a>
+                        </li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Sports</a>
+                        </li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Workshops</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4
+                        class="font-bold text-gray-900 dark:text-white dark:text-white mb-6 uppercase text-sm tracking-wider">
+                        Help & Support</h4>
+                    <ul class="space-y-4 text-sm text-gray-600 dark:text-gray-400">
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">FAQ</a></li>
+                        <li><a href="#" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Terms
+                                of Service</a></li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Privacy
+                                Policy</a></li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Contact
+                                Us</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4
+                        class="font-bold text-gray-900 dark:text-white dark:text-white mb-6 uppercase text-sm tracking-wider">
+                        Newsletter</h4>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Subscribe for the latest event updates and
+                        exclusive offers.</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Your email address"
+                            class="bg-gray-50 dark:bg-gray-800 border-none rounded-l-lg px-4 py-2 w-full text-sm focus:ring-2 focus:ring-purple-600 outline-none text-gray-800 dark:text-gray-200">
+                        <button
+                            class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-r-lg transition-colors flex items-center justify-center">
+                            <span class="material-icons text-sm">send</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                <p>&copy; 2026 Eventory. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 md:mt-0">
+                    <span class="flex items-center gap-1"><span
+                            class="material-icons text-[14px] text-green-500">public</span> English (Global)</span>
+                    <span class="flex items-center gap-1"><span
+                            class="material-icons text-[14px] text-yellow-500">payments</span> INR (₹)</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- END ULTRA PREMIUM FOOTER -->
+
+
+    <!-- Scroll Reveal Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Apply reveal class to all major container elements dynamically if not present
+            const revealElements = document.querySelectorAll('.card, .cinema-card, h1, h2, h3, .glass-panel');
+            revealElements.forEach(el => {
+                if (!el.classList.contains('reveal') && !el.closest('nav') && !el.closest('#mobile-menu')) {
+                    el.classList.add('reveal');
+                }
+            });
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal').forEach(el => {
+                observer.observe(el);
+            });
+
+            // Trigger immediately for elements in viewport on load
+            setTimeout(() => {
+                document.querySelectorAll('.reveal').forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top < window.innerHeight) {
+                        el.classList.add('active');
+                    }
+                });
+            }, 100);
+        });
+    </script>
+
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const tiltOptions = {
+                max: 5,
+                speed: 400,
+                glare: true,
+                "max-glare": 0.15,
+                scale: 1.02
+            };
+
+            VanillaTilt.init(document.querySelectorAll(".glass-panel, .cinema-card"), tiltOptions);
+
+            // Function to initialize tilt on cards
+            const initTilt = () => {
+                const cards = document.querySelectorAll('#eventGrid > div, #cinema-grid > div');
+                cards.forEach(card => {
+                    if (!card.vanillaTilt) {
+                        card.classList.add('tilt-card');
+                        VanillaTilt.init(card, tiltOptions);
+                    }
+                });
+            };
+
+            initTilt();
+
+            // Add tilt-card to dynamically generated events
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.addedNodes.length) {
+                        initTilt();
+                    }
+                });
+            });
+
+            const eventGrid = document.getElementById('eventGrid');
+            const cinemaGrid = document.getElementById('cinema-grid');
+            if (eventGrid) observer.observe(eventGrid, { childList: true });
+            if (cinemaGrid) observer.observe(cinemaGrid, { childList: true });
+        });
+    </script>
+
 </body>
 
 </html>

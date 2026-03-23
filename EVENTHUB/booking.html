@@ -87,6 +87,48 @@
             letter-spacing: -0.01em;
         }
 
+        /* Page Transitions */
+        .page {
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Selected Seats Animation */
+        .seat.selected {
+            background-color: #10b981 !important;
+            border-color: #059669 !important;
+            color: #ffffff !important;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
         ::selection {
             background: rgba(139, 92, 246, 0.3);
             color: inherit;
@@ -373,7 +415,7 @@
     <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
 </head>
 
-<body class="bg-gray-50 flex flex-col min-h-screen pb-20 md:pb-0 font-sans">
+<body class="bg-gray-50 flex flex-col min-h-screen pb-20 md:pb-0 font-sans page">
     <!-- NAVBAR -->
     <nav class="bg-white shadow border-b sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
@@ -540,6 +582,13 @@
                             <span id="subtotalAmount">₹0</span>
                         </div>
                         <p class="text-sm text-gray-600" id="selectedSeatsText">No seats selected</p>
+
+                        <!-- Auto-hide countdown timer -->
+                        <div id="seatTimerContainer"
+                            class="hidden mt-3 bg-orange-50 border border-orange-200 text-orange-800 text-sm font-semibold p-2 rounded-lg flex items-center gap-2 animate-pulse">
+                            <span class="material-icons text-orange-500 text-[18px]">timer</span>
+                            <span>⏳ Seats reserved for: <span id="seatTimerDisplay">04:59</span></span>
+                        </div>
                     </div>
                     <div class="border-t pt-4 space-y-2 text-sm">
                         <div class="flex justify-between">
@@ -1110,9 +1159,21 @@
 
                 document.getElementById("smartRecBtn").classList.remove("hidden");
 
+                document.getElementById("smartRecBtn").classList.remove("hidden");
+
                 layout.innerHTML = `
-                    <div class="screen-curve"></div>
-                    <span class="block text-center text-xs text-gray-400 mb-8 tracking-widest">SCREEN</span>
+                    <div class="w-full flex justify-center mb-8">
+                        <div class="relative w-3/4 max-w-md">
+                            <div class="h-2 bg-gradient-to-b from-gray-300 to-transparent rounded-t-[100%] shadow-[0_15px_30px_-5px_rgba(139,92,246,0.3)]"></div>
+                            <span class="block text-center text-[10px] text-gray-400 mt-2 font-bold tracking-[0.3em]">CINEMA SCREEN</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-center gap-6 mb-6 text-sm">
+                        <div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-white border-2 border-gray-300"></div> <span class="text-gray-600">Available</span></div>
+                        <div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-[#10b981] shadow"></div> <span class="text-gray-600 font-medium">Selected</span></div>
+                        <div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-gray-300 border-2 border-gray-400"></div> <span class="text-gray-600">Occupied</span></div>
+                    </div>
                 `;
 
                 rows.forEach(r => {
@@ -2027,6 +2088,9 @@
                 alert("Could not find " + count + " seats together. Please select manually.");
             }
         }
+        let seatTimerInterval;
+        let seatTimeLeft = 300; // 5 mins
+
         function updateSummary() {
             const subtotal = selectedSeats.reduce((s, x) => s + x.price, 0);
             const fee = Math.round(subtotal * 0.10);
@@ -2055,6 +2119,37 @@
             document.getElementById("totalAmount").textContent = `₹${total}`;
             document.getElementById("selectedSeatsText").textContent =
                 selectedSeats.length ? selectedSeats.map(s => s.id).join(", ") : "No seats selected";
+
+            // Timer logic
+            const timerContainer = document.getElementById('seatTimerContainer');
+            if (selectedSeats.length > 0) {
+                if (timerContainer) timerContainer.classList.remove('hidden');
+                if (!seatTimerInterval) {
+                    seatTimeLeft = 300;
+                    const display = document.getElementById('seatTimerDisplay');
+                    if (display) display.textContent = "04:59";
+
+                    seatTimerInterval = setInterval(() => {
+                        seatTimeLeft--;
+                        if (seatTimeLeft <= 0) {
+                            clearInterval(seatTimerInterval);
+                            seatTimerInterval = null;
+                            alert("Seat reservation time expired. Please select again.");
+                            location.reload();
+                        } else {
+                            let m = Math.floor(seatTimeLeft / 60);
+                            let s = seatTimeLeft % 60;
+                            if (display) display.textContent = (m < 10 ? '0' : '') + m + ":" + (s < 10 ? '0' : '') + s;
+                        }
+                    }, 1000);
+                }
+            } else {
+                if (timerContainer) timerContainer.classList.add('hidden');
+                if (seatTimerInterval) {
+                    clearInterval(seatTimerInterval);
+                    seatTimerInterval = null;
+                }
+            }
         }
 
         /** PROCEED TO PAYMENT **/

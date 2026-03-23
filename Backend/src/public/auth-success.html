@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Successful - Eventory</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body class="bg-gray-50 flex items-center justify-center h-screen">
@@ -74,6 +75,97 @@
             }
         }
     </script>
+
+    
+
+
+    <!-- Scroll Reveal Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Apply reveal class to all major container elements dynamically if not present
+            const revealElements = document.querySelectorAll('.card, .cinema-card, h1, h2, h3, .glass-panel');
+            revealElements.forEach(el => {
+                if(!el.classList.contains('reveal') && !el.closest('nav') && !el.closest('#mobile-menu')) {
+                    el.classList.add('reveal');
+                }
+            });
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal').forEach(el => {
+                observer.observe(el);
+            });
+            
+            // Trigger immediately for elements in viewport on load
+            setTimeout(()=> {
+                document.querySelectorAll('.reveal').forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    if(rect.top < window.innerHeight) {
+                        el.classList.add('active');
+                    }
+                });
+            }, 100);
+        });
+    </script>
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const tiltOptions = {
+            max: 5,
+            speed: 400,
+            glare: true,
+            "max-glare": 0.15,
+            scale: 1.02
+        };
+        
+        VanillaTilt.init(document.querySelectorAll(".glass-panel, .cinema-card"), tiltOptions);
+        
+        // Function to initialize tilt on cards
+        const initTilt = () => {
+            const cards = document.querySelectorAll('#eventGrid > div, #cinema-grid > div');
+            cards.forEach(card => {
+                if (!card.vanillaTilt) {
+                    card.classList.add('tilt-card');
+                    VanillaTilt.init(card, tiltOptions);
+                }
+            });
+        };
+        
+        initTilt();
+        
+        // Add tilt-card to dynamically generated events
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.addedNodes.length) {
+                    initTilt();
+                }
+            });
+        });
+        
+        const eventGrid = document.getElementById('eventGrid');
+        const cinemaGrid = document.getElementById('cinema-grid');
+        if (eventGrid) observer.observe(eventGrid, { childList: true });
+        if (cinemaGrid) observer.observe(cinemaGrid, { childList: true });
+    });
+</script>
+
 </body>
 
 </html>

@@ -1,0 +1,304 @@
+{
+    "info": {
+        "name": "Eventory API Testing (Local+Production)",
+        "description": "Comprehensive Postman collection for testing the core endpoints of the Eventory Backend.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "1. Events & Search",
+            "item": [
+                {
+                    "name": "Get All Events",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/events",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "events"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Smart Search (AI Engine)",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/events/smart-search?q=romantic movie",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "events",
+                                "smart-search"
+                            ],
+                            "query": [
+                                {
+                                    "key": "q",
+                                    "value": "romantic movie"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "2. Cinemas & Showtimes",
+            "item": [
+                {
+                    "name": "Get All Cinemas",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/cinemas",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "cinemas"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Showtimes by Event (Replace ID)",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/showtimes/movie/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "showtimes",
+                                "movie",
+                                "1"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "3. Booking & Live Seat Locking",
+            "item": [
+                {
+                    "name": "Fetch Occupied & Locked Seats",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/bookings/occupied-seats?event_id=1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "bookings",
+                                "occupied-seats"
+                            ],
+                            "query": [
+                                {
+                                    "key": "event_id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Lock a Seat (Temporary 5min)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"event_id\": 1,\n  \"showtime_id\": 1,\n  \"seat\": \"A1\",\n  \"user_id\": \"postman_tester_123\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/bookings/lock-seat",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "bookings",
+                                "lock-seat"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Unlock a Seat",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"event_id\": 1,\n  \"showtime_id\": 1,\n  \"seat\": \"A1\",\n  \"user_id\": \"postman_tester_123\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/bookings/unlock-seat",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "bookings",
+                                "unlock-seat"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Final Booking",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"event_id\": 1,\n  \"event_title\": \"Postman Integration Test\",\n  \"event_date\": \"2026-12-31\",\n  \"event_time\": \"19:00:00\",\n  \"venue\": \"Postman Arena\",\n  \"user_email\": \"postman@testing.com\",\n  \"seats\": [\"A1\", \"A2\"],\n  \"amount_paid\": 300\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/bookings/create",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "bookings",
+                                "create"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "4. Payments & Ticketing",
+            "item": [
+                {
+                    "name": "Payment Confirmation (Trigger PDF/Email)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"reference\": \"REPLACE_WITH_REFERENCE_FROM_CREATE_BOOKING\",\n  \"payment_method\": \"mock_wallet\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/payments/confirm",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "payments",
+                                "confirm"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "5. Authentication & Admin",
+            "item": [
+                {
+                    "name": "Admin Login",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"admin@ventory.com\",\n  \"password\": \"123456\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/auth/login",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "auth",
+                                "login"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Event (Requires Admin Session Cookie)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"title\": \"Postman Concert\",\n  \"description\": \"A magnificent testing concert.\\n\\nGenre: Music\",\n  \"category\": \"Concerts\",\n  \"price\": 100,\n  \"venue\": \"Tech Park\",\n  \"image_url\": \"\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/admin/events",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "admin",
+                                "events"
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "https://eventory-cyzy.onrender.com",
+            "type": "string"
+        }
+    ]
+}

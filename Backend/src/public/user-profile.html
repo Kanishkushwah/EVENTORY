@@ -6,19 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile - Eventory</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
     <script src="toast.js"></script>
 
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         .tab-btn.active {
             background-color: #F3E8FF;
             color: #7C3AED;
             font-weight: 600;
+        }
+
+        .dark .tab-btn.active {
+            background-color: rgba(139, 92, 246, 0.15);
+            color: #A78BFA;
         }
 
         /* Hide scrollbar for clean look */
@@ -32,7 +38,243 @@
             scrollbar-width: none;
             /* Firefox */
         }
+
+
+        /* =============== PREMIUM AESTHETICS =============== */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: -0.01em;
+        }
+
+        ::selection {
+            background: rgba(139, 92, 246, 0.3);
+            color: inherit;
+        }
+
+        /* Glassmorphism Navbar */
+        nav {
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            background-color: rgba(255, 255, 255, 0.75) !important;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+        }
+
+        .dark nav {
+            background-color: rgba(17, 24, 39, 0.75) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+        }
+
+        /* Smooth Interactive Elements */
+        button,
+        a,
+        .card,
+        .cinema-card,
+        .date-btn,
+        .showtime-btn,
+        input,
+        select {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Bouncy Button Hover */
+        button:hover,
+        a.nav-link:hover,
+        .hover\:-translate-y-1:hover {
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        /* Input Focus Glow */
+        input:focus,
+        select:focus,
+        textarea:focus {
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15) !important;
+            border-color: #8B5CF6 !important;
+        }
+
+        /* Soft Card Shadows */
+        .shadow-sm,
+        .shadow,
+        .shadow-md,
+        .shadow-lg,
+        .shadow-xl {
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08) !important;
+        }
+
+        .dark .shadow-sm,
+        .dark .shadow,
+        .dark .shadow-md,
+        .dark .shadow-lg,
+        .dark .shadow-xl {
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        /* ================================================= */
+
+        /* Essential Global Dark Mode Overrides */
+        .dark body {
+            background-color: #111827 !important;
+            color: #F3F4F6 !important;
+        }
+
+        .dark .bg-white {
+            background-color: #1F2937 !important;
+            border-color: #374151 !important;
+            color: #F3F4F6 !important;
+        }
+
+        .dark .bg-gray-50 {
+            background-color: #111827 !important;
+            color: #F3F4F6 !important;
+        }
+
+        .dark .bg-gray-100 {
+            background-color: #374151 !important;
+            color: #D1D5DB !important;
+        }
+
+        .dark .border-b,
+        .dark .border-t,
+        .dark .border,
+        .dark .border-r,
+        .dark .border-l {
+            border-color: #374151 !important;
+        }
+
+        .dark .shadow,
+        .dark .shadow-sm,
+        .dark .shadow-md,
+        .dark .shadow-lg {
+            box-shadow: none !important;
+        }
+
+        .dark .text-gray-900,
+        .dark .text-gray-800,
+        .dark .text-gray-700 {
+            color: #F9FAFB !important;
+        }
+
+        .dark .text-gray-600,
+        .dark .text-gray-500 {
+            color: #9CA3AF !important;
+        }
+
+        .dark input,
+        .dark select,
+        .dark textarea {
+            background-color: #374151 !important;
+            border-color: #4B5563 !important;
+            color: #F3F4F6 !important;
+        }
+
+        .dark nav.bg-white {
+            background-color: #1F2937 !important;
+            border-bottom-color: #374151 !important;
+        }
+
+        /* =============== ULTRA PREMIUM AESTHETICS =============== */
+        /* Custom Modern Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.3);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 92, 246, 0.6);
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: rgba(167, 139, 250, 0.3);
+        }
+
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: rgba(167, 139, 250, 0.6);
+        }
+
+        /* Floating Image Animation for Hero/Feature elements */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Scroll Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Glass Panels */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .dark .glass-panel {
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Glowing badge */
+        .glow-badge {
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+        }
+
+        /* ======================================================= */
     </style>
+    <script>
+        tailwind.config = { darkMode: 'class' };
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+            document.querySelectorAll('.theme-icon').forEach(el => el.textContent = localStorage.theme === 'dark' ? 'light_mode' : 'dark_mode');
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.theme-icon').forEach(el => el.textContent = document.documentElement.classList.contains('dark') ? 'light_mode' : 'dark_mode');
+        });
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body class="bg-gray-50 text-gray-800 pb-20 md:pb-0">
@@ -41,7 +283,7 @@
     <nav class="bg-white border-b shadow-sm sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <a href="index.html" class="flex items-center gap-2">
-                <span class="material-icons-outlined text-purple-600 text-3xl">event_seat</span>
+                <span class="material-icons text-purple-600 text-3xl">event_seat</span>
                 <span class="font-bold text-2xl text-purple-600">Eventory</span>
             </a>
 
@@ -53,6 +295,11 @@
 
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center gap-6">
+                    <button onclick="toggleTheme()"
+                        class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-purple-600 transition-colors focus:outline-none"
+                        title="Toggle Dark Mode">
+                        <span class="material-icons-outlined theme-icon text-lg">dark_mode</span>
+                    </button>
                     <a href="index.html" class="text-gray-600 hover:text-purple-600 text-sm font-medium">Browse
                         Events</a>
                     <a href="user-profile.html"
@@ -63,8 +310,57 @@
                     </button>
                 </div>
             </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden text-gray-600 hover:text-purple-600 focus:outline-none ml-auto"
+                onclick="toggleMobileMenu()">
+                <span class="material-icons text-3xl">menu</span>
+            </button>
         </div>
     </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu"
+        class="fixed inset-0 z-50 bg-white dark:bg-gray-900 transform translate-x-full transition-transform duration-300 md:hidden flex flex-col h-full shadow-2xl">
+        <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2">
+                <span class="material-icons text-purple-600 dark:text-purple-400 text-2xl">event</span>
+                <span class="font-bold text-xl text-purple-600 dark:text-purple-400">Eventory</span>
+            </a>
+            <div class="flex items-center gap-4">
+                <button onclick="toggleTheme()"
+                    class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-purple-600 transition-colors focus:outline-none">
+                    <span class="material-icons-outlined theme-icon text-lg">dark_mode</span>
+                </button>
+                <button onclick="toggleMobileMenu()" class="text-gray-500 hover:text-red-500 transition-colors">
+                    <span class="material-icons text-2xl">close</span>
+                </button>
+            </div>
+        </div>
+        <div class="flex-1 overflow-y-auto py-6 px-6 space-y-6">
+            <div class="space-y-4">
+                <a href="index.html"
+                    class="flex items-center gap-3 text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-purple-600 dark:hover:text-purple-400 transition-colors p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
+                    <span class="material-icons">home</span> Browse Events
+                </a>
+                <a href="user-dashboard.html"
+                    class="flex items-center gap-3 text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-purple-600 dark:hover:text-purple-400 transition-colors p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
+                    <span class="material-icons">confirmation_number</span> My Tickets
+                </a>
+                <a href="user-profile.html"
+                    class="flex items-center gap-3 text-lg font-medium text-purple-600 transition-colors p-2 rounded-lg hover:bg-gray-50">
+                    <span class="material-icons">person</span> My Profile
+                </a>
+            </div>
+
+            <div class="border-t border-gray-100 pt-6 space-y-4">
+                <button onclick="logout()"
+                    class="w-full flex items-center gap-3 text-lg font-medium text-red-600 hover:text-red-700 transition-colors p-2 rounded-lg hover:bg-red-50">
+                    <span class="material-icons">logout</span> Logout
+                </button>
+            </div>
+        </div>
+    </div>
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
@@ -78,7 +374,7 @@
                 <div class="absolute bottom-0 right-0 bg-green-500 w-6 h-6 rounded-full border-4 border-white"></div>
             </div>
             <div class="text-center md:text-left flex-1">
-                <h1 class="text-2xl font-bold text-gray-900" id="header-name">User Name</h1>
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white" id="header-name">User Name</h1>
                 <p class="text-gray-500" id="header-email">user@example.com</p>
                 <div class="flex flex-wrap gap-2 mt-3 justify-center md:justify-start">
                     <span
@@ -316,6 +612,106 @@
         </div>
     </main>
 
+    <!-- ULTRA PREMIUM FOOTER -->
+    <footer
+        class="bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 pt-16 pb-24 md:pb-8 mt-20 transition-colors duration-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-1">
+                    <a href="index.html" class="flex items-center gap-2 mb-4">
+                        <span class="material-icons text-purple-600 text-3xl">event_seat</span>
+                        <span class="font-bold text-2xl text-purple-600 tracking-tight">Eventory</span>
+                    </a>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
+                        The ultimate platform for discovering, booking, and managing events. Built with modern
+                        aesthetics and seamless user experience in mind.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-purple-50 dark:bg-gray-800 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all transform hover:scale-110">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-purple-50 dark:bg-gray-800 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all transform hover:scale-110">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-purple-50 dark:bg-gray-800 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all transform hover:scale-110">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4
+                        class="font-bold text-gray-900 dark:text-white dark:text-white mb-6 uppercase text-sm tracking-wider">
+                        Explore</h4>
+                    <ul class="space-y-4 text-sm text-gray-600 dark:text-gray-400">
+                        <li><a href="index.html"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Browse
+                                Events</a></li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Concerts</a>
+                        </li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Sports</a>
+                        </li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Workshops</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4
+                        class="font-bold text-gray-900 dark:text-white dark:text-white mb-6 uppercase text-sm tracking-wider">
+                        Help & Support</h4>
+                    <ul class="space-y-4 text-sm text-gray-600 dark:text-gray-400">
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">FAQ</a></li>
+                        <li><a href="#" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Terms
+                                of Service</a></li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Privacy
+                                Policy</a></li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Contact
+                                Us</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4
+                        class="font-bold text-gray-900 dark:text-white dark:text-white mb-6 uppercase text-sm tracking-wider">
+                        Newsletter</h4>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Subscribe for the latest event updates and
+                        exclusive offers.</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Your email address"
+                            class="bg-gray-50 dark:bg-gray-800 border-none rounded-l-lg px-4 py-2 w-full text-sm focus:ring-2 focus:ring-purple-600 outline-none text-gray-800 dark:text-gray-200">
+                        <button
+                            class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-r-lg transition-colors flex items-center justify-center">
+                            <span class="material-icons text-sm">send</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                <p>&copy; 2026 Eventory. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 md:mt-0">
+                    <span class="flex items-center gap-1"><span
+                            class="material-icons text-[14px] text-green-500">public</span> English (Global)</span>
+                    <span class="flex items-center gap-1"><span
+                            class="material-icons text-[14px] text-yellow-500">payments</span> INR (₹)</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- END ULTRA PREMIUM FOOTER -->
+
+
     <script>
         // --- 0. GOOGLE AUTH HANDLING (Must be first) ---
         const urlParams = new URLSearchParams(window.location.search);
@@ -377,8 +773,9 @@
                 const data = await res.json();
                 allBookingsCache = data.all || [];
 
-                // Update Header
-                bookingsCount.textContent = allBookingsCache.length;
+                // Update Header with only successful bookings count
+                const confirmedCount = allBookingsCache.filter(b => b.payment_status === 'completed' || b.payment_status === 'confirmed').length;
+                bookingsCount.textContent = confirmedCount;
 
                 renderBookings(allBookingsCache);
 
@@ -401,7 +798,7 @@
                     <div class="flex-1">
                         <div class="flex justify-between items-start">
                             <div>
-                                <h3 class="font-bold text-lg text-gray-900">${b.event_title}</h3>
+                                <h3 class="font-bold text-lg text-gray-900 dark:text-white">${b.event_title}</h3>
                                 <p class="text-sm text-gray-500">${new Date(b.event_date).toDateString()} • ${b.event_time}</p>
                                 <p class="text-sm text-gray-500">${b.venue}</p>
                             </div>
@@ -484,7 +881,7 @@
                          </button>
                     </div>
                     <div class="p-4">
-                        <h3 class="font-bold text-gray-900 truncate">${event.title}</h3>
+                        <h3 class="font-bold text-gray-900 dark:text-white truncate">${event.title}</h3>
                         <p class="text-sm text-gray-500 mb-3">${event.date || 'Date TBA'}</p>
                         <a href="booking.html?id=${event.id}" class="block w-full text-center bg-gray-900 text-white py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition">Book Now</a>
                     </div>
@@ -560,6 +957,107 @@
             </a>
         </div>
     </nav>
+    <script>
+        // Global Mobile Menu Toggle
+        window.toggleMobileMenu = function () {
+            const menu = document.getElementById('mobile-menu');
+            if (menu) {
+                if (menu.classList.contains('translate-x-full')) {
+                    menu.classList.remove('translate-x-full');
+                } else {
+                    menu.classList.add('translate-x-full');
+                }
+            }
+        };
+    </script>
+
+    <!-- Scroll Reveal Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Apply reveal class to all major container elements dynamically if not present
+            const revealElements = document.querySelectorAll('.card, .cinema-card, h1, h2, h3, .glass-panel');
+            revealElements.forEach(el => {
+                if (!el.classList.contains('reveal') && !el.closest('nav') && !el.closest('#mobile-menu')) {
+                    el.classList.add('reveal');
+                }
+            });
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal').forEach(el => {
+                observer.observe(el);
+            });
+
+            // Trigger immediately for elements in viewport on load
+            setTimeout(() => {
+                document.querySelectorAll('.reveal').forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top < window.innerHeight) {
+                        el.classList.add('active');
+                    }
+                });
+            }, 100);
+        });
+    </script>
+
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const tiltOptions = {
+                max: 5,
+                speed: 400,
+                glare: true,
+                "max-glare": 0.15,
+                scale: 1.02
+            };
+
+            VanillaTilt.init(document.querySelectorAll(".glass-panel, .cinema-card"), tiltOptions);
+
+            // Function to initialize tilt on cards
+            const initTilt = () => {
+                const cards = document.querySelectorAll('#eventGrid > div, #cinema-grid > div');
+                cards.forEach(card => {
+                    if (!card.vanillaTilt) {
+                        card.classList.add('tilt-card');
+                        VanillaTilt.init(card, tiltOptions);
+                    }
+                });
+            };
+
+            initTilt();
+
+            // Add tilt-card to dynamically generated events
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.addedNodes.length) {
+                        initTilt();
+                    }
+                });
+            });
+
+            const eventGrid = document.getElementById('eventGrid');
+            const cinemaGrid = document.getElementById('cinema-grid');
+            if (eventGrid) observer.observe(eventGrid, { childList: true });
+            if (cinemaGrid) observer.observe(cinemaGrid, { childList: true });
+        });
+    </script>
+
 </body>
 
 </html>

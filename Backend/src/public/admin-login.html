@@ -6,14 +6,126 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login - Eventory</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
 
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
+    
+        /* =============== PREMIUM AESTHETICS =============== */
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.01em; }
+        
+        ::selection { background: rgba(139, 92, 246, 0.3); color: inherit; }
+
+        /* Glassmorphism Navbar */
+        nav {
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            background-color: rgba(255, 255, 255, 0.75) !important;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+        }
+        .dark nav {
+            background-color: rgba(17, 24, 39, 0.75) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+        }
+
+        /* Smooth Interactive Elements */
+        button, a, .card, .cinema-card, .date-btn, .showtime-btn, input, select {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Bouncy Button Hover */
+        button:hover, a.nav-link:hover, .hover\:-translate-y-1:hover {
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        /* Input Focus Glow */
+        input:focus, select:focus, textarea:focus {
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15) !important;
+            border-color: #8B5CF6 !important;
+        }
+
+        /* Soft Card Shadows */
+        .shadow-sm, .shadow, .shadow-md, .shadow-lg, .shadow-xl {
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08) !important;
+        }
+        .dark .shadow-sm, .dark .shadow, .dark .shadow-md, .dark .shadow-lg, .dark .shadow-xl {
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.3) !important;
+        }
+        
+        /* ================================================= */
+
+    
+    /* =============== ULTRA PREMIUM AESTHETICS =============== */
+    /* Custom Modern Scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: rgba(139, 92, 246, 0.3);
+        border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgba(139, 92, 246, 0.6);
+    }
+    .dark ::-webkit-scrollbar-thumb {
+        background: rgba(167, 139, 250, 0.3);
+    }
+    .dark ::-webkit-scrollbar-thumb:hover {
+        background: rgba(167, 139, 250, 0.6);
+    }
+
+    /* Floating Image Animation for Hero/Feature elements */
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+    }
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    /* Scroll Reveal Animation */
+    .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+    }
+    .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Glass Panels */
+    .glass-panel {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+    .dark .glass-panel {
+        background: rgba(17, 24, 39, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    /* Glowing badge */
+    .glow-badge {
+        box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+    }
+    /* ======================================================= */
+
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body class="bg-gradient-to-br from-purple-50 to-indigo-100 min-h-screen flex items-center justify-center">
@@ -21,7 +133,7 @@
     <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
         <div class="text-center mb-8">
             <span class="material-icons-outlined text-purple-600 text-5xl">admin_panel_settings</span>
-            <h1 class="text-3xl font-bold mt-4 text-gray-900">Admin Login</h1>
+            <h1 class="text-3xl font-bold mt-4 text-gray-900 dark:text-white">Admin Login</h1>
             <p class="text-gray-600 mt-2">Sign in to access your dashboard</p>
         </div>
 
@@ -47,7 +159,7 @@
         </form>
 
         <div class="mt-6 text-center">
-            <a href="Index.html" class="text-sm text-purple-600 hover:underline">← Back to Home</a>
+            <a href="index.html" class="text-sm text-purple-600 hover:underline">← Back to Home</a>
         </div>
     </div>
 
@@ -86,6 +198,97 @@
             window.location.href = 'admin-dashboard.html';
         }
     </script>
+
+
+    
+
+
+    <!-- Scroll Reveal Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Apply reveal class to all major container elements dynamically if not present
+            const revealElements = document.querySelectorAll('.card, .cinema-card, h1, h2, h3, .glass-panel');
+            revealElements.forEach(el => {
+                if(!el.classList.contains('reveal') && !el.closest('nav') && !el.closest('#mobile-menu')) {
+                    el.classList.add('reveal');
+                }
+            });
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal').forEach(el => {
+                observer.observe(el);
+            });
+            
+            // Trigger immediately for elements in viewport on load
+            setTimeout(()=> {
+                document.querySelectorAll('.reveal').forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    if(rect.top < window.innerHeight) {
+                        el.classList.add('active');
+                    }
+                });
+            }, 100);
+        });
+    </script>
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const tiltOptions = {
+            max: 5,
+            speed: 400,
+            glare: true,
+            "max-glare": 0.15,
+            scale: 1.02
+        };
+        
+        VanillaTilt.init(document.querySelectorAll(".glass-panel, .cinema-card"), tiltOptions);
+        
+        // Function to initialize tilt on cards
+        const initTilt = () => {
+            const cards = document.querySelectorAll('#eventGrid > div, #cinema-grid > div');
+            cards.forEach(card => {
+                if (!card.vanillaTilt) {
+                    card.classList.add('tilt-card');
+                    VanillaTilt.init(card, tiltOptions);
+                }
+            });
+        };
+        
+        initTilt();
+        
+        // Add tilt-card to dynamically generated events
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.addedNodes.length) {
+                    initTilt();
+                }
+            });
+        });
+        
+        const eventGrid = document.getElementById('eventGrid');
+        const cinemaGrid = document.getElementById('cinema-grid');
+        if (eventGrid) observer.observe(eventGrid, { childList: true });
+        if (cinemaGrid) observer.observe(cinemaGrid, { childList: true });
+    });
+</script>
 
 </body>
 

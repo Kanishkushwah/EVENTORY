@@ -6,15 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Eventory</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="toast.js"></script>
 
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         .modal {
@@ -33,6 +33,164 @@
             align-items: center;
             justify-content: center;
         }
+
+        /* =============== PREMIUM AESTHETICS =============== */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: -0.01em;
+        }
+
+        ::selection {
+            background: rgba(139, 92, 246, 0.3);
+            color: inherit;
+        }
+
+        /* Glassmorphism Navbar */
+        nav {
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            background-color: rgba(255, 255, 255, 0.75) !important;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+        }
+
+        .dark nav {
+            background-color: rgba(17, 24, 39, 0.75) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+        }
+
+        /* Smooth Interactive Elements */
+        button,
+        a,
+        .card,
+        .cinema-card,
+        .date-btn,
+        .showtime-btn,
+        input,
+        select {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Bouncy Button Hover */
+        button:hover,
+        a.nav-link:hover,
+        .hover\:-translate-y-1:hover {
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        /* Input Focus Glow */
+        input:focus,
+        select:focus,
+        textarea:focus {
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15) !important;
+            border-color: #8B5CF6 !important;
+        }
+
+        /* Soft Card Shadows */
+        .shadow-sm,
+        .shadow,
+        .shadow-md,
+        .shadow-lg,
+        .shadow-xl {
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08) !important;
+        }
+
+        .dark .shadow-sm,
+        .dark .shadow,
+        .dark .shadow-md,
+        .dark .shadow-lg,
+        .dark .shadow-xl {
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        /* ================================================= */
+
+
+        /* =============== ULTRA PREMIUM AESTHETICS =============== */
+        /* Custom Modern Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.3);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 92, 246, 0.6);
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: rgba(167, 139, 250, 0.3);
+        }
+
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: rgba(167, 139, 250, 0.6);
+        }
+
+        /* Floating Image Animation for Hero/Feature elements */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Scroll Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Glass Panels */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .dark .glass-panel {
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Glowing badge */
+        .glow-badge {
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+        }
+
+        /* ======================================================= */
     </style>
 
     <script>
@@ -47,19 +205,71 @@
             }
         };
     </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body class="bg-gray-50 overflow-hidden">
 
     <!-- MOBILE TOP HEADER -->
     <div class="md:hidden bg-white border-b shadow-sm sticky top-0 z-50 px-4 py-3 flex justify-between items-center">
-        <div class="flex items-center gap-2">
-            <span class="material-icons-outlined text-primary text-2xl">event</span>
-            <span class="font-bold text-xl text-primary">Eventory</span>
+        <div class="flex items-center gap-3">
+            <button onclick="toggleMobileMenu()"
+                class="text-gray-600 hover:text-primary transition focus:outline-none flex items-center">
+                <span class="material-icons text-3xl">menu</span>
+            </button>
+            <div class="flex items-center gap-2">
+                <span class="material-icons-outlined text-primary text-2xl">event</span>
+                <span class="font-bold text-xl text-primary">Eventory</span>
+            </div>
         </div>
         <button onclick="logout()" class="p-2 text-red-600 bg-red-50 rounded-lg flex items-center">
             <span class="material-icons-outlined">logout</span>
         </button>
+    </div>
+
+    <!-- MOBILE MENU OVERLAY -->
+    <div id="mobile-menu"
+        class="fixed inset-0 z-[100] bg-white transform -translate-x-full transition-transform duration-300 md:hidden flex flex-col h-full shadow-2xl">
+        <div class="p-4 border-b flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <span class="material-icons-outlined text-primary text-2xl">event</span>
+                <span class="font-bold text-xl text-primary">Eventory</span>
+            </div>
+            <button onclick="toggleMobileMenu()" class="text-gray-500 hover:text-red-500 focus:outline-none">
+                <span class="material-icons text-3xl">close</span>
+            </button>
+        </div>
+        <div class="p-4 flex-1 overflow-y-auto">
+            <nav class="space-y-2">
+                <a href="#dashboard" onclick="showSection('dashboard'); toggleMobileMenu()" id="mob-nav-dashboard"
+                    class="mob-nav-link flex items-center gap-3 px-4 py-3 rounded-lg text-primary bg-purple-50 font-semibold transition">
+                    <span class="material-icons-outlined">dashboard</span>
+                    Dashboard
+                </a>
+                <a href="#bookings" onclick="showSection('bookings'); toggleMobileMenu()" id="mob-nav-bookings"
+                    class="mob-nav-link flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition">
+                    <span class="material-icons-outlined">confirmation_number</span>
+                    Bookings
+                </a>
+                <a href="#events" onclick="showSection('events'); toggleMobileMenu()" id="mob-nav-events"
+                    class="mob-nav-link flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition">
+                    <span class="material-icons-outlined">event_note</span>
+                    Events
+                </a>
+                <a href="admin-scanner.html" target="_blank" onclick="toggleMobileMenu()"
+                    class="mob-nav-link flex items-center gap-3 px-4 py-3 rounded-lg text-purple-600 hover:bg-purple-50 transition font-bold mt-2 border-t pt-4">
+                    <span class="material-icons-outlined">qr_code_scanner</span>
+                    Launch Scanner
+                </a>
+            </nav>
+        </div>
+        <div class="p-4 border-t mt-auto">
+            <button onclick="logout()"
+                class="flex items-center justify-center gap-3 px-4 py-3 rounded-lg text-red-600 bg-red-50 w-full transition font-semibold">
+                <span class="material-icons-outlined">logout</span>
+                Logout
+            </button>
+        </div>
     </div>
 
     <!-- MAIN WRAPPER -->
@@ -88,6 +298,11 @@
                         <span class="material-icons-outlined">event_note</span>
                         Events
                     </a>
+                    <a href="admin-scanner.html" target="_blank"
+                        class="nav-link flex items-center gap-3 px-4 py-3 rounded-lg text-purple-600 hover:bg-purple-50 transition font-bold mt-2 border-t pt-4">
+                        <span class="material-icons-outlined">qr_code_scanner</span>
+                        Launch Scanner
+                    </a>
                 </nav>
             </div>
 
@@ -101,12 +316,12 @@
         </aside>
 
         <!-- MAIN CONTENT -->
-        <main class="flex-1 overflow-y-auto pb-20 md:pb-0 bg-gray-50 w-full h-full relative z-0">
+        <main class="flex-1 overflow-y-auto bg-gray-50 w-full h-full relative z-0 pb-[80px] md:pb-0">
             <div class="p-4 md:p-8 max-w-7xl mx-auto">
                 <!-- HEADER -->
                 <div class="mb-8 flex justify-between items-center">
                     <div>
-                        <h1 class="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+                        <h1 class="text-3xl font-bold text-primary">Admin Dashboard</h1>
                         <p class="text-gray-600 mt-1">Manage your events and bookings</p>
                     </div>
                     <button onclick="exportBookingsCSV()"
@@ -270,6 +485,9 @@
 
             </div>
         </main>
+
+
+
     </div>
 
     <!-- ADD/EDIT EVENT MODAL -->
@@ -293,7 +511,8 @@
 
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Category</label>
-                        <select id="event-category" required class="w-full px-4 py-2 border rounded-lg">
+                        <select id="event-category" onchange="toggleGenreVisibility()" required
+                            class="w-full px-4 py-2 border rounded-lg bg-white">
                             <option value="Movies">Movies</option>
                             <option value="Music">Music</option>
                             <option value="Sports">Sports</option>
@@ -304,6 +523,23 @@
                     </div>
                 </div>
 
+                <div class="grid grid-cols-1 mb-4" id="genre-container">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Movie Genre <span
+                            class="text-xs font-normal text-gray-500">(Optional)</span></label>
+                    <select id="event-genre" class="w-full px-4 py-2 border rounded-lg bg-white">
+                        <option value="">Select Genre (Movies Only)</option>
+                        <option value="Action">Action</option>
+                        <option value="Comedy">Comedy</option>
+                        <option value="Drama">Drama</option>
+                        <option value="Horror">Horror</option>
+                        <option value="Science Fiction">Science Fiction</option>
+                        <option value="Romance">Romance</option>
+                        <option value="Thriller">Thriller</option>
+                        <option value="Animation">Animation</option>
+                        <option value="Documentary">Documentary</option>
+                    </select>
+                </div>
+
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Date</label>
@@ -311,33 +547,59 @@
                             placeholder="e.g., December 28, 2025">
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Time</label>
-                        <input type="text" id="event-time" required class="w-full px-4 py-2 border rounded-lg"
-                            placeholder="e.g., 7:00 PM">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Time</label>
+                            <input type="text" id="event-time" required class="w-full px-4 py-2 border rounded-lg"
+                                placeholder="e.g., 7:00 PM">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Price (₹)</label>
+                            <input type="number" id="event-price" value="0" required
+                                class="w-full px-4 py-2 border rounded-lg" placeholder="e.g., 500">
+                        </div>
                     </div>
-                </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Venue</label>
-                    <input type="text" id="event-venue" required class="w-full px-4 py-2 border rounded-lg">
-                </div>
+                    <div class="col-span-2">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Venue / Multiplex Group (e.g.
+                            INOX, PVR)</label>
+                        <input type="text" id="event-venue" required class="w-full px-4 py-2 border rounded-lg"
+                            placeholder="PVR Rahul Raj, VR Mall...">
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Image URL</label>
-                    <input type="url" id="event-image" required class="w-full px-4 py-2 border rounded-lg">
-                </div>
+                    <div class="col-span-2">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
+                        <textarea id="event-description" rows="3" class="w-full px-4 py-2 border rounded-lg"
+                            placeholder="About the event..."></textarea>
+                    </div>
 
-                <div class="flex gap-3 pt-4">
-                    <button type="submit"
-                        class="flex-1 bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-lg font-semibold">
-                        Save Event
-                    </button>
-                    <button type="button" onclick="closeEventModal()"
-                        class="px-6 py-3 border rounded-lg hover:bg-gray-50">
-                        Cancel
-                    </button>
-                </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Image (URL or Upload)</label>
+                        <div class="flex gap-2 mb-2">
+                            <button type="button"
+                                onclick="document.getElementById('event-image-url').classList.remove('hidden'); document.getElementById('event-image-file').classList.add('hidden');"
+                                class="text-xs bg-gray-200 px-3 py-1 rounded hover:bg-gray-300">Use URL</button>
+                            <button type="button"
+                                onclick="document.getElementById('event-image-file').classList.remove('hidden'); document.getElementById('event-image-url').classList.add('hidden');"
+                                class="text-xs bg-gray-200 px-3 py-1 rounded hover:bg-gray-300">Upload File</button>
+                        </div>
+                        <input type="url" id="event-image-url" class="w-full px-4 py-2 border rounded-lg"
+                            placeholder="https://...">
+                        <input type="file" id="event-image-file" accept="image/*"
+                            class="w-full px-4 py-2 border rounded-lg hidden">
+                    </div>
+
+                    <div class="flex gap-3 pt-4">
+                        <button type="submit"
+                            class="flex-1 bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-lg font-semibold">
+                            Save Event
+                        </button>
+                        <button type="button" onclick="closeEventModal()"
+                            class="px-6 py-3 border rounded-lg hover:bg-gray-50">
+                            Cancel
+                        </button>
+                    </div>
             </form>
         </div>
     </div>
@@ -553,15 +815,31 @@
         }
 
         // Event CRUD operations
+        function toggleGenreVisibility() {
+            const cat = document.getElementById('event-category').value;
+            const gc = document.getElementById('genre-container');
+            if (cat === 'Movies' || cat === 'movie') {
+                gc.style.display = 'block';
+            } else {
+                gc.style.display = 'none';
+                document.getElementById('event-genre').value = '';
+            }
+        }
+
         function openAddEventModal() {
             document.getElementById('modal-title').textContent = 'Add New Event';
             document.getElementById('event-id').value = '';
             document.getElementById('event-title').value = '';
-            document.getElementById('event-category').value = 'movie';
+            document.getElementById('event-category').value = 'Movies';
             document.getElementById('event-date').value = '';
             document.getElementById('event-time').value = '';
+            document.getElementById('event-price').value = '0';
             document.getElementById('event-venue').value = '';
-            document.getElementById('event-image').value = '';
+            document.getElementById('event-description').value = '';
+            document.getElementById('event-genre').value = '';
+            document.getElementById('event-image-url').value = '';
+            document.getElementById('event-image-file').value = '';
+            toggleGenreVisibility();
             document.getElementById('event-modal').classList.add('active');
         }
 
@@ -576,8 +854,23 @@
                 document.getElementById('event-category').value = event.category;
                 document.getElementById('event-date').value = event.date;
                 document.getElementById('event-time').value = event.time;
-                document.getElementById('event-venue').value = event.venue;
-                document.getElementById('event-image').value = event.image;
+                document.getElementById('event-price').value = event.price || 0;
+                document.getElementById('event-venue').value = event.venue || '';
+                document.getElementById('event-description').value = event.description || '';
+
+                // Extract genre from description if it was prepended
+                let desc = event.description || '';
+                let genreMatch = desc.match(/Genre: (.*?)(?:\n|$)/);
+                if (genreMatch && event.category === 'Movies') {
+                    document.getElementById('event-genre').value = genreMatch[1];
+                    document.getElementById('event-description').value = desc.replace(genreMatch[0], '').trim();
+                } else {
+                    document.getElementById('event-genre').value = '';
+                }
+
+                document.getElementById('event-image-url').value = event.image_url || event.image || '';
+                document.getElementById('event-image-file').value = '';
+                toggleGenreVisibility();
                 document.getElementById('event-modal').classList.add('active');
 
             } catch (err) {
@@ -589,26 +882,55 @@
             e.preventDefault();
 
             const id = document.getElementById('event-id').value;
+            let finalImageUrl = document.getElementById('event-image-url').value;
+            const fileInput = document.getElementById('event-image-file');
+
+            // Handle base64 image upload if file is selected
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                reader.onloadend = async function () {
+                    finalImageUrl = reader.result;
+                    await submitEventData(id, finalImageUrl);
+                }
+                reader.readAsDataURL(file);
+            } else {
+                await submitEventData(id, finalImageUrl);
+            }
+        }
+
+        async function submitEventData(id, imageUrl) {
+            const eventCategory = document.getElementById('event-category').value;
+            let finalOutputDesc = document.getElementById('event-description').value || '';
+
+            // Auto-append selected Genre natively to the database description field
+            if (eventCategory === 'Movies') {
+                const genre = document.getElementById('event-genre').value;
+                if (genre) {
+                    finalOutputDesc = `Genre: ${genre}\n\n${finalOutputDesc}`;
+                }
+            }
+
             const eventData = {
                 title: document.getElementById('event-title').value,
-                category: document.getElementById('event-category').value,
+                category: eventCategory,
                 date: document.getElementById('event-date').value,
                 time: document.getElementById('event-time').value,
+                price: parseInt(document.getElementById('event-price').value || 0),
                 venue: document.getElementById('event-venue').value,
-                image_url: document.getElementById('event-image').value
+                description: finalOutputDesc.trim(),
+                image_url: imageUrl
             };
 
             try {
                 let res;
                 if (id) {
-                    // Update existing event
                     res = await fetch(`/api/admin/events/${id}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(eventData)
                     });
                 } else {
-                    // Create new event
                     res = await fetch('/api/admin/events', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -713,6 +1035,15 @@
             window.location.href = 'admin-login.html';
         }
 
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            if (menu.classList.contains('-translate-x-full')) {
+                menu.classList.remove('-translate-x-full');
+            } else {
+                menu.classList.add('-translate-x-full');
+            }
+        }
+
         // Initialize
         loadDashboardStats();
     </script>
@@ -721,7 +1052,7 @@
     <div id="showtime-modal" class="modal bg-black/50 fixed inset-0 z-50 flex items-center justify-center hidden">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-8 relative">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-900">Add Showtime</h2>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Add Showtime</h2>
                 <button onclick="closeShowtimeModal()"
                     class="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-100 transition">
                     <span class="material-icons-outlined">close</span>
@@ -733,7 +1064,7 @@
                     <span class="material-icons text-primary">movie</span>
                 </div>
                 <div>
-                    <h3 class="font-bold text-gray-900" id="showtime-event-title">Event Title</h3>
+                    <h3 class="font-bold text-gray-900 dark:text-white" id="showtime-event-title">Event Title</h3>
                     <p class="text-xs text-gray-500">Adding showtimes for this movie</p>
                 </div>
             </div>
@@ -809,10 +1140,24 @@
                 }
             }
 
-            // Populate cinema dropdown
+            // Populate cinema dropdown based on selected city (if any)
+            let userCity = localStorage.getItem('userCity') || '';
+            const cityMap = { 'सूरत': 'Surat', 'સુરત': 'Surat', 'દિલ્હી': 'Delhi', 'दिल्ली': 'Delhi', 'મુંબઈ': 'Mumbai', 'मुंबई': 'Mumbai', 'કોલકાતા': 'Kolkata', 'कोलकाता': 'Kolkata' };
+            if (cityMap[userCity]) userCity = cityMap[userCity];
+
+            let filteredCinemas = allCinemas;
+
+            if (userCity && userCity !== 'Location' && userCity !== 'All Cities') {
+                filteredCinemas = allCinemas.filter(c => (c.city || '').toLowerCase() === userCity.toLowerCase());
+            }
+
             const cinemaSelect = document.getElementById('showtime-cinema');
             cinemaSelect.innerHTML = '<option value="">Select Cinema</option>' +
-                allCinemas.map(c => `<option value="${c.id}">${c.name} (${c.location})</option>`).join('');
+                filteredCinemas.map(c => `<option value="${c.id}">${c.name} (${c.location})</option>`).join('');
+
+            if (filteredCinemas.length === 0) {
+                cinemaSelect.innerHTML = `<option value="">No cinemas found in ${userCity || 'this location'}</option>`;
+            }
 
             document.getElementById('showtime-modal').classList.remove('hidden');
             document.getElementById('showtime-modal').classList.add('flex');
@@ -875,25 +1220,93 @@
             }
         }
     </script>
-    <!-- MOBILE BOTTOM NAV -->
-    <div
-        class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around p-2 z-[60] shadow-[0_-4px_20px_rgba(0,0,0,0.05)] pb-safe">
-        <a href="#dashboard" onclick="showSection('dashboard')" id="mob-nav-dashboard"
-            class="mob-nav-link flex flex-col items-center p-2 text-primary transition w-1/3">
-            <span class="material-icons-outlined">dashboard</span>
-            <span class="text-[10px] font-semibold mt-1">Dashboard</span>
-        </a>
-        <a href="#bookings" onclick="showSection('bookings')" id="mob-nav-bookings"
-            class="mob-nav-link flex flex-col items-center p-2 text-gray-500 transition w-1/3">
-            <span class="material-icons-outlined">confirmation_number</span>
-            <span class="text-[10px] font-semibold mt-1">Bookings</span>
-        </a>
-        <a href="#events" onclick="showSection('events')" id="mob-nav-events"
-            class="mob-nav-link flex flex-col items-center p-2 text-gray-500 transition w-1/3">
-            <span class="material-icons-outlined">event_note</span>
-            <span class="text-[10px] font-semibold mt-1">Events</span>
-        </a>
-    </div>
+
+    <!-- Scroll Reveal Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Apply reveal class to all major container elements dynamically if not present
+            const revealElements = document.querySelectorAll('.card, .cinema-card, h1, h2, h3, .glass-panel');
+            revealElements.forEach(el => {
+                if (!el.classList.contains('reveal') && !el.closest('nav') && !el.closest('#mobile-menu')) {
+                    el.classList.add('reveal');
+                }
+            });
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal').forEach(el => {
+                observer.observe(el);
+            });
+
+            // Trigger immediately for elements in viewport on load
+            setTimeout(() => {
+                document.querySelectorAll('.reveal').forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top < window.innerHeight) {
+                        el.classList.add('active');
+                    }
+                });
+            }, 100);
+        });
+    </script>
+
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const tiltOptions = {
+                max: 5,
+                speed: 400,
+                glare: true,
+                "max-glare": 0.15,
+                scale: 1.02
+            };
+
+            VanillaTilt.init(document.querySelectorAll(".glass-panel, .cinema-card"), tiltOptions);
+
+            // Function to initialize tilt on cards
+            const initTilt = () => {
+                const cards = document.querySelectorAll('#eventGrid > div, #cinema-grid > div');
+                cards.forEach(card => {
+                    if (!card.vanillaTilt) {
+                        card.classList.add('tilt-card');
+                        VanillaTilt.init(card, tiltOptions);
+                    }
+                });
+            };
+
+            initTilt();
+
+            // Add tilt-card to dynamically generated events
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.addedNodes.length) {
+                        initTilt();
+                    }
+                });
+            });
+
+            const eventGrid = document.getElementById('eventGrid');
+            const cinemaGrid = document.getElementById('cinema-grid');
+            if (eventGrid) observer.observe(eventGrid, { childList: true });
+            if (cinemaGrid) observer.observe(cinemaGrid, { childList: true });
+        });
+    </script>
 
 </body>
 

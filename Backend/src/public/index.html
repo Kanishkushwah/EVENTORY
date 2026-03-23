@@ -6,9 +6,9 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Eventory - Discover Amazing Events</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet" />
     <script>
         tailwind.config = {
             darkMode: "class",
@@ -23,8 +23,8 @@
                         "surface-dark": "#2D3748",
                     },
                     fontFamily: {
-                        display: ["Inter", "sans-serif"],
-                        body: ["Inter", "sans-serif"],
+                        display: ["Plus Jakarta Sans", "sans-serif"],
+                        body: ["Plus Jakarta Sans", "sans-serif"],
                     },
                     borderRadius: {
                         DEFAULT: "0.5rem",
@@ -35,39 +35,380 @@
             },
         };
     </script>
+    <script>
+        // Check local storage for theme early to prevent FOUC
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+                updateThemeIcons('dark_mode');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+                updateThemeIcons('light_mode');
+            }
+        }
+
+        function updateThemeIcons(icon) {
+            document.querySelectorAll('.theme-icon').forEach(el => el.textContent = icon);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateThemeIcons(document.documentElement.classList.contains('dark') ? 'light_mode' : 'dark_mode');
+        });
+    </script>
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         .hero-gradient {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(-45deg, #667eea, #764ba2, #8b5cf6, #3b82f6);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
         }
+
+        .dark .hero-gradient {
+            background: linear-gradient(-45deg, #0f172a, #312e81, #4c1d95, #2e1065);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* =============== PREMIUM AESTHETICS =============== */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: -0.01em;
+        }
+
+        ::selection {
+            background: rgba(139, 92, 246, 0.3);
+            color: inherit;
+        }
+
+        /* Glassmorphism Navbar */
+        nav {
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            background-color: rgba(255, 255, 255, 0.75) !important;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+        }
+
+        .dark nav {
+            background-color: rgba(17, 24, 39, 0.75) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+        }
+
+        /* Smooth Interactive Elements */
+        button,
+        a,
+        .card,
+        .cinema-card,
+        .date-btn,
+        .showtime-btn,
+        input,
+        select {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Bouncy Button Hover */
+        button:hover,
+        a.nav-link:hover,
+        .hover\:-translate-y-1:hover {
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        /* Input Focus Glow */
+        input:focus,
+        select:focus,
+        textarea:focus {
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15) !important;
+            border-color: #8B5CF6 !important;
+        }
+
+        /* Soft Card Shadows */
+        .shadow-sm,
+        .shadow,
+        .shadow-md,
+        .shadow-lg,
+        .shadow-xl {
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08) !important;
+        }
+
+        .dark .shadow-sm,
+        .dark .shadow,
+        .dark .shadow-md,
+        .dark .shadow-lg,
+        .dark .shadow-xl {
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        /* ================================================= */
+
+        /* =============== ULTRA PREMIUM AESTHETICS =============== */
+        /* Custom Modern Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.3);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 92, 246, 0.6);
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: rgba(167, 139, 250, 0.3);
+        }
+
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: rgba(167, 139, 250, 0.6);
+        }
+
+        /* Floating Image Animation for Hero/Feature elements */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Scroll Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Glass Panels */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .dark .glass-panel {
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Glowing badge */
+        .glow-badge {
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+        }
+
+        /* Hide scrollbars for specific containers */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        /* Page Transitions */
+        .page {
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Skeleton Loading */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+            border-radius: 1rem;
+        }
+
+        .dark .skeleton {
+            background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 37%, #2a2a2a 63%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 100% 0;
+            }
+
+            100% {
+                background-position: -100% 0;
+            }
+        }
+
+        /* Advanced Nav Highlights */
+        .nav-link.active {
+            color: #8B5CF6;
+            /* Primary color */
+            border-bottom: 2px solid #8B5CF6;
+            padding-bottom: 2px;
+        }
+
+        .dark .nav-link.active {
+            color: #A78BFA;
+            border-bottom: 2px solid #A78BFA;
+        }
+
+        /* ======================================================= */
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body
-    class="bg-background-light dark:bg-background-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col font-body transition-colors duration-200 pb-20 md:pb-0">
+    class="bg-background-light dark:bg-background-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col font-body transition-colors duration-200 pb-20 md:pb-0 page">
     <nav class="bg-surface-light dark:bg-surface-dark shadow-sm py-4 sticky top-0 z-50 transition-colors duration-200">
         <div class="container mx-auto px-4 md:px-8 flex items-center justify-between">
-            <a class="text-2xl font-bold text-primary tracking-tight flex items-center gap-2" href="Index.html">
-                Eventory
-            </a>
+            <div class="flex items-center gap-4">
+                <a class="text-2xl font-bold text-primary tracking-tight flex items-center gap-2" href="index.html">
+                    Eventory
+                </a>
+
+                <!-- City Selector Dropdown -->
+                <div class="relative">
+                    <button onclick="toggleCityDropdown()" id="citySelectBtn"
+                        class="flex items-center gap-2 text-sm bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900/50 px-4 py-2 rounded-full transition-all border border-purple-100 dark:border-purple-800/50 truncate max-w-[160px] font-medium shadow-sm">
+                        <span class="material-icons text-[18px]">location_on</span>
+                        <span id="currentCityDisplay">Select City</span>
+                        <span class="material-icons text-[18px]">expand_more</span>
+                    </button>
+
+                    <!-- Dropdown Menu -->
+                    <div id="cityDropdown"
+                        class="absolute left-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 hidden z-50 overflow-hidden transform origin-top-left transition-all">
+                        <div class="p-3 border-b border-gray-100 dark:border-gray-700">
+                            <button id="autoDetectBtn" onclick="autoDetectLocation()"
+                                class="w-full flex items-center gap-2 text-sm text-primary hover:bg-purple-50 dark:hover:bg-gray-700 p-2 rounded-lg transition-colors font-medium">
+                                <span class="material-icons text-base">my_location</span>
+                                Auto-detect my location
+                            </button>
+                        </div>
+                        <div class="max-h-60 overflow-y-auto p-2" id="cityListContainer">
+                            <button onclick="setCity('Select City')"
+                                class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors font-semibold">Any
+                                Location</button>
+                            <button onclick="setCity('Mumbai')"
+                                class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">Mumbai</button>
+                            <button onclick="setCity('Delhi')"
+                                class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">Delhi</button>
+                            <button onclick="setCity('Bangalore')"
+                                class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">Bangalore</button>
+                            <button onclick="setCity('Hyderabad')"
+                                class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">Hyderabad</button>
+                            <button onclick="setCity('Pune')"
+                                class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">Pune</button>
+                            <button onclick="setCity('Chennai')"
+                                class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">Chennai</button>
+                            <button onclick="setCity('Kolkata')"
+                                class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">Kolkata</button>
+                            <button onclick="setCity('Surat')"
+                                class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">Surat</button>
+                            <button onclick="setCity('Ahmedabad')"
+                                class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">Ahmedabad</button>
+                            <button onclick="setCity('Jaipur')"
+                                class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">Jaipur</button>
+                            <button onclick="setCity('Chandigarh')"
+                                class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">Chandigarh</button>
+                            <button onclick="setCity('Lucknow')"
+                                class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">Lucknow</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="hidden md:flex items-center space-x-6 text-sm font-medium text-gray-600 dark:text-gray-300">
-                <a class="flex items-center hover:text-primary transition-colors gap-1" href="Index.html">
+                <a class="nav-link active flex items-center hover:text-primary transition-colors gap-1"
+                    href="index.html">
                     <span class="material-icons text-lg">home</span>
                     Browse Events
                 </a>
-                <a class="flex items-center hover:text-primary transition-colors gap-1" href="booking.html">
+                <a class="nav-link flex items-center hover:text-primary transition-colors gap-1" href="booking.html">
                     <span class="material-icons text-lg">confirmation_number</span>
                     My Bookings
                 </a>
-                <a class="flex items-center hover:text-primary transition-colors gap-1" href="#search">
+                <a class="nav-link flex items-center hover:text-primary transition-colors gap-1" href="#search">
                     <span class="material-icons text-lg">search</span>
                     Search Booking
                 </a>
             </div>
             <div id="nav-auth-container" class="hidden md:flex items-center space-x-4 text-sm font-medium">
+                <!-- Notifications Bell -->
+                <button onclick="subscribeNewsletter()"
+                    class="relative w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors focus:outline-none shadow-sm"
+                    title="Notifications">
+                    <span class="material-icons">notifications</span>
+                    <span
+                        class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-gray-800"></span>
+                </button>
+                <button onclick="toggleTheme()"
+                    class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors focus:outline-none shadow-sm"
+                    title="Toggle Dark Mode">
+                    <span class="material-icons theme-icon">dark_mode</span>
+                </button>
                 <a class="flex items-center text-gray-600 dark:text-gray-300 hover:text-primary transition-colors gap-1"
                     href="login.html">
                     <span class="material-icons text-lg">login</span>
@@ -88,12 +429,22 @@
 
     <!-- Mobile Menu Overlay -->
     <div id="mobile-menu"
-        class="fixed inset-0 z-50 bg-white dark:bg-gray-900 transform translate-x-full transition-transform duration-300 md:hidden flex flex-col h-full shadow-2xl">
+        class="fixed inset-0 z-50 bg-white dark:bg-gray-900 transform translate-x-full transition-transform duration-300 md:hidden flex flex-col self-stretch shadow-2xl">
         <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
-            <span class="text-xl font-bold text-primary">Menu</span>
-            <button onclick="toggleMobileMenu()" class="text-gray-500 hover:text-red-500 transition-colors">
-                <span class="material-icons text-2xl">close</span>
-            </button>
+            <a href="index.html" class="flex items-center gap-2">
+                <span class="material-icons text-purple-600 dark:text-purple-400 text-2xl">event</span>
+                <span class="font-bold text-xl text-purple-600 dark:text-purple-400">Eventory</span>
+            </a>
+            <div class="flex items-center gap-4">
+                <button onclick="toggleTheme()"
+                    class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary transition-colors focus:outline-none"
+                    title="Toggle Dark Mode">
+                    <span class="material-icons theme-icon">dark_mode</span>
+                </button>
+                <button onclick="toggleMobileMenu()" class="text-gray-500 hover:text-red-500 transition-colors">
+                    <span class="material-icons text-2xl">close</span>
+                </button>
+            </div>
         </div>
         <div class="flex-1 overflow-y-auto py-6 px-6 space-y-6">
             <div class="space-y-4">
@@ -127,35 +478,44 @@
         </div>
     </div>
 
-    <header class="hero-gradient text-white py-16 md:py-24 relative overflow-hidden">
-        <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-            <div class="absolute top-10 left-10 w-32 h-32 rounded-full bg-white blur-3xl"></div>
-            <div class="absolute bottom-10 right-10 w-64 h-64 rounded-full bg-pink-500 blur-3xl"></div>
+    <header
+        class="hero-gradient text-white py-20 md:py-32 relative overflow-hidden transition-all duration-700 w-full rounded-b-[2rem] shadow-2xl mb-12">
+        <div class="absolute top-0 left-0 w-full self-stretch opacity-30 pointer-events-none">
+            <div class="absolute -top-10 -left-10 w-64 h-64 rounded-full bg-white blur-[100px] animate-pulse"></div>
+            <div class="absolute bottom-10 right-10 w-80 h-80 rounded-full bg-cyan-400 blur-[100px] animate-pulse"
+                style="animation-delay: 2s;"></div>
+            <div
+                class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-500 rounded-full blur-[150px] opacity-40">
+            </div>
         </div>
-        <div class="container mx-auto px-4 text-center relative z-10">
-            <h1 class="text-4xl md:text-5xl font-bold mb-4 drop-shadow-sm">Discover Amazing Events</h1>
-            <p class="text-lg md:text-xl text-purple-100 mb-10 max-w-2xl mx-auto font-light">
-                Find and book tickets for concerts, sports, workshops, and more
+        <div class="container mx-auto px-4 text-center relative z-10 reveal">
+            <h1 class="text-5xl md:text-7xl font-extrabold mb-6 drop-shadow-lg tracking-tight">Discover Events with
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500 font-black"
+                    style="font-family: 'Outfit', sans-serif;">AI Smart Discovery</span>
+            </h1>
+            <p class="text-lg md:text-2xl text-purple-100 mb-12 max-w-3xl mx-auto font-light leading-relaxed">
+                Find and book tickets for the best concerts, sports, workshops, and more.
             </p>
             <div
                 class="bg-white dark:bg-surface-dark p-1 md:p-2 rounded-full shadow-lg max-w-3xl mx-auto flex items-center transition-colors duration-200 w-full">
                 <span class="material-icons text-gray-400 ml-3 md:ml-4 flex-shrink-0">search</span>
                 <input
                     class="flex-grow bg-transparent border-none focus:ring-0 text-gray-800 dark:text-gray-100 placeholder-gray-400 px-2 md:px-4 py-2 text-sm md:text-base min-w-0"
-                    placeholder="Search..." type="text" id="searchInput" onkeyup="searchEvents()" />
+                    placeholder="e.g. romantic dinner under ₹2000" type="text" id="searchInput"
+                    onkeypress="if(event.key === 'Enter') searchEvents()" />
 
                 <!-- Desktop Search Button -->
-                <button
-                    class="hidden md:block bg-primary hover:bg-secondary text-white px-8 py-3 rounded-full font-medium transition-colors shadow-md"
+                <button id="searchBtn"
+                    class="hidden md:flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white px-8 py-3 rounded-full font-bold transition-all shadow-[0_4px_15px_rgba(236,72,153,0.4)]"
                     onclick="searchEvents()">
-                    Search
+                    <span class="material-icons text-sm">auto_awesome</span> Smart Search
                 </button>
 
                 <!-- Mobile Search Button (Compact) -->
-                <button
-                    class="md:hidden bg-primary hover:bg-secondary text-white p-2 rounded-full shadow-md transition-colors flex items-center justify-center flex-shrink-0 mr-1"
+                <button id="mobSearchBtn"
+                    class="md:hidden bg-gradient-to-r from-purple-600 to-pink-500 text-white p-2 rounded-full shadow-[0_4px_15px_rgba(236,72,153,0.4)] transition-all flex items-center justify-center flex-shrink-0 mr-1"
                     onclick="searchEvents()">
-                    <span class="material-icons text-white text-sm">arrow_forward</span>
+                    <span class="material-icons text-white text-sm">auto_awesome</span>
                 </button>
             </div>
             <div class="mt-8 md:mt-10 flex flex-wrap justify-center gap-2 md:gap-3 max-w-5xl mx-auto">
@@ -197,12 +557,12 @@
     <main class="flex-grow container mx-auto px-4 py-12 -mt-8 relative z-20">
 
         <!-- FEATURED: WORLD CUP BANNER -->
-        <div id="wcBanner" class="mb-12 rounded-2xl overflow-hidden shadow-2xl relative group hidden animate-fade-in">
+        <div id="wcBanner" class="mb-16 rounded-3xl overflow-hidden shadow-2xl relative group hidden reveal">
             <!-- Background Image -->
-            <div class="absolute inset-0">
+            <div class="absolute inset-0 bg-black">
                 <img src="https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&q=80&w=2000"
-                    class="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700">
-                <div class="absolute inset-0 bg-gradient-to-r from-blue-900/90 via-black/60 to-transparent"></div>
+                    class="w-full self-stretch object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000 ease-out">
+                <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent"></div>
             </div>
 
             <!-- Content -->
@@ -260,20 +620,22 @@
             </div>
         </div>
 
-        <div class="flex items-center justify-between mb-8 px-2">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Trending Events</h2>
-            <a class="text-primary hover:text-secondary font-medium text-sm flex items-center gap-1" href="#all-events">
-                View all <span class="material-icons text-sm">arrow_forward</span>
-            </a>
+        <div class="flex items-center justify-between mb-8 px-2 mt-4">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white dark:text-white">Trending Events</h2>
+            <button id="viewAllBtn" onclick="toggleViewAll()"
+                class="text-primary hover:text-secondary font-medium text-sm flex items-center gap-1 transition-all">
+                View All <span class="material-icons text-sm transition-transform duration-300">grid_view</span>
+            </button>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="eventGrid">
+        <div class="flex flex-row overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-4 pb-8 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-8 transition-all duration-500 ease-in-out"
+            id="eventGrid" style="align-items: stretch;">
             <!-- MOVIE Card 1 - Pushpa 2 -->
-            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700"
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col self-stretch border border-gray-100 dark:border-gray-700 min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto md:shrink-1"
                 data-category="movie">
                 <div class="relative h-72 overflow-hidden">
                     <img alt="Pushpa 2"
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        class="w-full self-stretch object-cover group-hover:scale-105 transition-transform duration-500"
                         src="https://assets-in.bmscdn.com/discovery-catalog/events/tr:w-400,h-600,bg-CCCCCC:w-400.0,h-660.0,cm-pad_resize,bg-000000,fo-top:l-image,i-discovery-catalog@@icons@@star-icon-202203010609.png,lx-24,ly-615,w-29,l-end:l-text,ie-OC42LzEwICAzNjlLIFZvdGVz,fs-29,co-FFFFFF,ly-612,lx-70,pa-8_0_0_0,l-end/et00356724-jruwpnhzdg-portrait.jpg" />
                     <div
                         class="absolute top-3 right-3 bg-red-600 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm">
@@ -292,7 +654,8 @@
                         <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"><span
                                 class="material-icons text-sm">location_on</span> Surat</span>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">Pushpa 2: The Rule
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white dark:text-white mb-2 line-clamp-2">Pushpa
+                        2: The Rule
                     </h3>
                     <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow line-clamp-3">
                         The epic conclusion to Pushpa's journey. Allu Arjun returns in this action-packed sequel.
@@ -309,11 +672,11 @@
             </div>
 
             <!-- MOVIE Card 2 - Dunki -->
-            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700"
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col self-stretch border border-gray-100 dark:border-gray-700 min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto md:shrink-1"
                 data-category="movie">
                 <div class="relative h-72 overflow-hidden">
                     <img alt="Dunki"
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        class="w-full self-stretch object-cover group-hover:scale-105 transition-transform duration-500"
                         src="https://assets-in.bmscdn.com/discovery-catalog/events/tr:w-400,h-600,bg-CCCCCC:w-400.0,h-660.0,cm-pad_resize,bg-000000,fo-top:l-image,i-discovery-catalog@@icons@@star-icon-202203010609.png,lx-24,ly-615,w-29,l-end:l-text,ie-OS44LzEwICAyMDBLIFZvdGVz,fs-29,co-FFFFFF,ly-612,lx-70,pa-8_0_0_0,l-end/et00304730-fwbwbqkjka-portrait.jpg" />
                     <div
                         class="absolute top-3 right-3 bg-red-600 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm">
@@ -332,7 +695,8 @@
                         <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"><span
                                 class="material-icons text-sm">location_on</span> Surat</span>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">Dunki</h3>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white dark:text-white mb-2 line-clamp-2">Dunki
+                    </h3>
                     <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow line-clamp-3">
                         Shah Rukh Khan and Rajkumar Hirani unite for an emotional journey of friendship and dreams.
                     </p>
@@ -348,11 +712,11 @@
             </div>
 
             <!-- MOVIE Card 3 - Salaar -->
-            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700"
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col self-stretch border border-gray-100 dark:border-gray-700 min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto md:shrink-1"
                 data-category="movie">
                 <div class="relative h-72 overflow-hidden">
                     <img alt="Salaar"
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        class="w-full self-stretch object-cover group-hover:scale-105 transition-transform duration-500"
                         src="https://assets-in.bmscdn.com/discovery-catalog/events/tr:w-400,h-600,bg-CCCCCC:w-400.0,h-660.0,cm-pad_resize,bg-000000,fo-top:l-image,i-discovery-catalog@@icons@@star-icon-202203010609.png,lx-24,ly-615,w-29,l-end:l-text,ie-OS4xLzEwICAzMTZLIFZvdGVz,fs-29,co-FFFFFF,ly-612,lx-70,pa-8_0_0_0,l-end/et00073677-yajymybpzu-portrait.jpg" />
                     <div
                         class="absolute top-3 right-3 bg-red-600 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm">
@@ -371,7 +735,8 @@
                         <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"><span
                                 class="material-icons text-sm">location_on</span> Surat</span>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">Salaar: Part 1 -
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white dark:text-white mb-2 line-clamp-2">
+                        Salaar: Part 1 -
                         Ceasefire</h3>
                     <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow line-clamp-3">
                         Prabhas returns with an intense action saga directed by Prashanth Neel.
@@ -388,11 +753,11 @@
             </div>
 
             <!-- Event Card 1 -->
-            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700"
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col self-stretch border border-gray-100 dark:border-gray-700 min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto md:shrink-1"
                 data-category="business">
                 <div class="relative h-48 overflow-hidden">
                     <img alt="Concert crowd with stage lights"
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        class="w-full self-stretch object-cover group-hover:scale-105 transition-transform duration-500"
                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuBC6_SyhJOY8aUXrJ_VaXB_vT_iDTBUmeTEukkGCqMhDv_G88XVjQPUjI6lwXPq96UlyU1thwDxcu4NsfwLtH2I0GxesLvt2B6txbDHiW7bZqhCVzZMPRODG3d1kMwjTp7QPVqcqt91FUKXMe-shTBvTdqHY3tvmzz-0nhglwrACOIQeep3RxlQBPJCwzjWV6xAvvHNYKw5cT-ljJiY7_EECAPRNsusBidYQXTpD493V77cdIdUi6PXzJTASOh94hMCNMUuOd4wUgs" />
                     <div
                         class="absolute top-3 right-3 bg-white/90 dark:bg-black/70 backdrop-blur-sm px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide text-primary shadow-sm">
@@ -405,7 +770,8 @@
                         <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"><span
                                 class="material-icons text-sm">location_on</span> Mumbai</span>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">India's Only Concrete
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white dark:text-white mb-2 line-clamp-2">
+                        India's Only Concrete
                         Show 2024</h3>
                     <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow line-clamp-3">
                         Join the biggest gathering of construction professionals featuring the latest innovations in
@@ -423,11 +789,11 @@
             </div>
 
             <!-- Event Card 2 -->
-            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700"
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col self-stretch border border-gray-100 dark:border-gray-700 min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto md:shrink-1"
                 data-category="music">
                 <div class="relative h-48 overflow-hidden">
                     <img alt="Music festival lights and fireworks"
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        class="w-full self-stretch object-cover group-hover:scale-105 transition-transform duration-500"
                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-5rHDZ8M5GGVzvclyI4laXZPhS4nAfnTsmdmu5FE6gwLC6-rXBTyrlHbywyCjJRfk-sNgPoH_2PMsqVSH0ODBpSiuXuwOCp5rnfiaCxNA6NI_hLTxYRhOFeU1EyJEbLpLZNdo5Jhr-g1NHL10lgRgA-FnhtU_edUXup1CGq3luKsJX3HwC9R-lfq-GR63BzRMqjhCbzlV3AH7T5nnAVuVh36F2KHALadRMkVauwmeQ1x1gDCv5KGwX53UACgYZwWkKrhFWRxxoJ4" />
                     <div
                         class="absolute top-3 right-3 bg-white/90 dark:bg-black/70 backdrop-blur-sm px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide text-primary shadow-sm">
@@ -440,7 +806,8 @@
                         <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"><span
                                 class="material-icons text-sm">location_on</span> Goa</span>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">Sunburn Festival 2025
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white dark:text-white mb-2 line-clamp-2">
+                        Sunburn Festival 2025
                     </h3>
                     <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow line-clamp-3">
                         Experience Asia's biggest electronic dance music festival. Get ready to feel the beat with top
@@ -458,11 +825,11 @@
             </div>
 
             <!-- Event Card 3 -->
-            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700"
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col self-stretch border border-gray-100 dark:border-gray-700 min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto md:shrink-1"
                 data-category="sports">
                 <div class="relative h-48 overflow-hidden">
                     <img alt="Cricket stadium match"
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        class="w-full self-stretch object-cover group-hover:scale-105 transition-transform duration-500"
                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJvRDTKzGrb8wZeUy2yo5-8UDx_CESTXq1iuJuYL166Q5pI35R8r1edhTmHt8JpddwrumyRlZKXIS1RANPvlf9P0bG0raONWeomtzAll_FZt_pC7zMQl57ZdjwcAnycmnSiwOIICRJZtWT_LBVrRff7Y9sMXE3PT87x5BUPG4OASpClyhKBHq-RfDApySOH072QG1i33ZHp9w0uA3_fWNOWsOwN3LRcWAdGrV_tLib7tEsBTp-C60EZZYYFRJAW8tu5cYAcz1NPFY" />
                     <div
                         class="absolute top-3 right-3 bg-white/90 dark:bg-black/70 backdrop-blur-sm px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide text-primary shadow-sm">
@@ -473,9 +840,10 @@
                     <div class="flex justify-between items-start mb-2">
                         <span class="text-xs font-semibold text-primary bg-primary/10 px-2 py-1 rounded">APR 12</span>
                         <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"><span
-                                class="material-icons text-sm">location_on</span> Wankhede</span>
+                                class="material-icons text-sm">location_on</span> Eden Gardens</span>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">IPL 2024: MI vs RCB
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white dark:text-white mb-2 line-clamp-2">IPL
+                        2024: MI vs RCB
                     </h3>
                     <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow line-clamp-3">
                         The ultimate cricket rivalry! Watch Mumbai Indians take on Royal Challengers Bangalore in a
@@ -493,11 +861,11 @@
             </div>
 
             <!-- Event Card 4 -->
-            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700"
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col self-stretch border border-gray-100 dark:border-gray-700 min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto md:shrink-1"
                 data-category="arts">
                 <div class="relative h-48 overflow-hidden">
                     <img alt="Standup comedy microphone"
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        class="w-full self-stretch object-cover group-hover:scale-105 transition-transform duration-500"
                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8F37f_ZCtKxu76yDk45jqJ7zLIVovQIHH9OhXhJkvB6iKYhX1F1-H6rv_fOafUhRtrhKPMshRXFKWFbQFpB8s7apBFGmNPc6L68_OO9fRraklGP4F7plLJv9v8trTujyLqh1A1WjQUyAKMsIrsOCdbyBR1URJe-58BnvAlRRyZRZZPrdyCqlfCx1PQAvExmFwHXVcgtws9m08hOgmFFdke0k1hWpfp8JvOKPlWhog1IoqLXWkZD2cbjpCHy3gMlNhDE7_G5XTncs" />
                     <div
                         class="absolute top-3 right-3 bg-white/90 dark:bg-black/70 backdrop-blur-sm px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide text-primary shadow-sm">
@@ -510,7 +878,8 @@
                         <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"><span
                                 class="material-icons text-sm">location_on</span> Bangalore</span>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">Laugh Riot: Standup
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white dark:text-white mb-2 line-clamp-2">Laugh
+                        Riot: Standup
                         Special</h3>
                     <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow line-clamp-3">
                         An evening of hilarious standup comedy featuring some of the country's best comedians.
@@ -527,11 +896,11 @@
             </div>
 
             <!-- Event Card 5 -->
-            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700"
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col self-stretch border border-gray-100 dark:border-gray-700 min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto md:shrink-1"
                 data-category="arts">
                 <div class="relative h-48 overflow-hidden">
                     <img alt="Workshop setting with people"
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        class="w-full self-stretch object-cover group-hover:scale-105 transition-transform duration-500"
                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRLVa45R5oojqnHubsA7XDhOs8vANFip92o0Yhg4EhwwYCsTNKkf1jGhwnBwZ3AWMplmoNl4Jx6JW7qzOK5qiVJWe83ZzDDorkw9AuJDoV-RV9fhpIe7P2sWXTr-9dH0yBTKxphY1hj-aqEGV9ycOQisFLgWpCKZlKL0d5IANemo4KdxB7doDEOURbG2pWJCMWYeKYfcUaJqEZiD2YRaB2HnC1lCcSqITfr7qhUaAq3SW8r7-8DqdNbiRiCg1edYS4EpojAQbRUQ0" />
                     <div
                         class="absolute top-3 right-3 bg-white/90 dark:bg-black/70 backdrop-blur-sm px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide text-primary shadow-sm">
@@ -544,7 +913,8 @@
                         <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"><span
                                 class="material-icons text-sm">location_on</span> Delhi</span>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">Digital Art
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white dark:text-white mb-2 line-clamp-2">
+                        Digital Art
                         Masterclass</h3>
                     <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow line-clamp-3">
                         Learn the secrets of digital painting from industry experts. Suitable for beginners and
@@ -562,11 +932,11 @@
             </div>
 
             <!-- Event Card 6 -->
-            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700"
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col self-stretch border border-gray-100 dark:border-gray-700 min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto md:shrink-1"
                 data-category="business">
                 <div class="relative h-48 overflow-hidden">
                     <img alt="Business conference speaker"
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        class="w-full self-stretch object-cover group-hover:scale-105 transition-transform duration-500"
                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsUeWu13WEVN7Szd6mkpBOCpwIgaRV06zAV5G1ZFMiS73PXtsQh6QfnxO-mU8ECFc8d70qzhdZRhFDnyDQlwbosRnHv2174vjH2Uq4aG1ZUGvNv2Cz_Ea0ptlyFOViwNqmyPkBxR0eYvOFjpXN8eSrGmBdoIh8yz7xg55QKyiJdZtZ-KJxR49S7G4p-IJUTHz_5iG6MjW8XGuHLqh-liNfwtduq3ZBDIjoBhvNoRVfcazUn_JXnqmuH7DTX7Pf9QXUT6KG_x2BdcY" />
                     <div
                         class="absolute top-3 right-3 bg-white/90 dark:bg-black/70 backdrop-blur-sm px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide text-primary shadow-sm">
@@ -579,7 +949,8 @@
                         <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"><span
                                 class="material-icons text-sm">location_on</span> Hyderabad</span>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">Tech Startups Summit
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white dark:text-white mb-2 line-clamp-2">Tech
+                        Startups Summit
                         2024</h3>
                     <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow line-clamp-3">
                         Network with founders, investors, and tech enthusiasts. Discover the next big thing in the
@@ -606,76 +977,121 @@
         </div>
     </main>
 
+    <!-- ULTRA PREMIUM FOOTER -->
     <footer
-        class="bg-surface-light dark:bg-surface-dark border-t border-gray-200 dark:border-gray-700 mt-12 py-12 transition-colors duration-200">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+        class="bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 pt-16 pb-24 md:pb-8 mt-20 transition-colors duration-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                 <div class="col-span-1 md:col-span-1">
-                    <a class="text-2xl font-bold text-primary tracking-tight mb-4 block" href="Index.html">
-                        EventHub
+                    <a href="index.html" class="flex items-center gap-2 mb-4">
+                        <span class="material-icons text-purple-600 text-3xl">event_seat</span>
+                        <span class="font-bold text-2xl text-purple-600 tracking-tight">Eventory</span>
                     </a>
-                    <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">
-                        Your go-to platform for discovering and booking amazing events around you.
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
+                        The ultimate platform for discovering, booking, and managing events. Built with modern
+                        aesthetics and seamless user experience in mind.
                     </p>
                     <div class="flex space-x-4">
-                        <a class="text-gray-400 hover:text-primary" href="#"><i class="material-icons">facebook</i></a>
-                        <a class="text-gray-400 hover:text-primary" href="#"><i
-                                class="material-icons">camera_alt</i></a>
-                        <a class="text-gray-400 hover:text-primary" href="#"><i
-                                class="material-icons">alternate_email</i></a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-purple-50 dark:bg-gray-800 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all transform hover:scale-110">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-purple-50 dark:bg-gray-800 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all transform hover:scale-110">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-purple-50 dark:bg-gray-800 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all transform hover:scale-110">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
                     </div>
                 </div>
+
                 <div>
-                    <h4 class="font-bold text-gray-900 dark:text-white mb-4">Quick Links</h4>
-                    <ul class="space-y-2 text-sm text-gray-500 dark:text-gray-400">
-                        <li><a class="hover:text-primary" href="#">About Us</a></li>
-                        <li><a class="hover:text-primary" href="#">Contact Support</a></li>
-                        <li><a class="hover:text-primary" href="#">List Your Event</a></li>
-                        <li><a class="hover:text-primary" href="#">Careers</a></li>
+                    <h4
+                        class="font-bold text-gray-900 dark:text-white dark:text-white mb-6 uppercase text-sm tracking-wider">
+                        Explore
+                    </h4>
+                    <ul class="space-y-4 text-sm text-gray-600 dark:text-gray-400">
+                        <li><a href="index.html"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Browse
+                                Events</a></li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Concerts</a>
+                        </li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Sports</a>
+                        </li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Workshops</a>
+                        </li>
                     </ul>
                 </div>
+
                 <div>
-                    <h4 class="font-bold text-gray-900 dark:text-white mb-4">Categories</h4>
-                    <ul class="space-y-2 text-sm text-gray-500 dark:text-gray-400">
-                        <li><a class="hover:text-primary" href="#">Concerts</a></li>
-                        <li><a class="hover:text-primary" href="#">Sports</a></li>
-                        <li><a class="hover:text-primary" href="#">Workshops</a></li>
-                        <li><a class="hover:text-primary" href="#">Theatre</a></li>
+                    <h4
+                        class="font-bold text-gray-900 dark:text-white dark:text-white mb-6 uppercase text-sm tracking-wider">
+                        Help &
+                        Support</h4>
+                    <ul class="space-y-4 text-sm text-gray-600 dark:text-gray-400">
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">FAQ</a></li>
+                        <li><a href="#" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Terms
+                                of Service</a></li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Privacy
+                                Policy</a></li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Contact
+                                Us</a></li>
                     </ul>
                 </div>
+
                 <div>
-                    <h4 class="font-bold text-gray-900 dark:text-white mb-4">Stay Updated</h4>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Subscribe to our newsletter for the latest
-                        event updates.</p>
-                    <form class="flex flex-col space-y-2" onsubmit="event.preventDefault(); subscribeNewsletter();">
-                        <input
-                            class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-gray-900 dark:text-white"
-                            placeholder="Your email address" type="email" id="newsletterEmail" />
+                    <h4
+                        class="font-bold text-gray-900 dark:text-white dark:text-white mb-6 uppercase text-sm tracking-wider">
+                        Newsletter
+                    </h4>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Subscribe for the latest event updates and
+                        exclusive offers.</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Your email address"
+                            class="bg-gray-50 dark:bg-gray-800 border-none rounded-l-lg px-4 py-2 w-full text-sm focus:ring-2 focus:ring-purple-600 outline-none text-gray-800 dark:text-gray-200">
                         <button
-                            class="bg-primary hover:bg-secondary text-white py-2 rounded-lg text-sm font-medium transition-colors"
-                            type="submit">Subscribe</button>
-                    </form>
+                            class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-r-lg transition-colors flex items-center justify-center">
+                            <span class="material-icons text-sm">send</span>
+                        </button>
+                    </div>
                 </div>
             </div>
+
             <div
-                class="border-t border-gray-200 dark:border-gray-700 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500 dark:text-gray-400">
-                <p>© 2024 EventHub. All rights reserved.</p>
-                <div class="flex space-x-6 mt-4 md:mt-0">
-                    <a class="hover:text-primary" href="#">Privacy Policy</a>
-                    <a class="hover:text-primary" href="#">Terms of Service</a>
+                class="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                <p>&copy; 2026 Eventory. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 md:mt-0">
+                    <span class="flex items-center gap-1"><span
+                            class="material-icons text-[14px] text-green-500">public</span> English (Global)</span>
+                    <span class="flex items-center gap-1"><span
+                            class="material-icons text-[14px] text-yellow-500">payments</span> INR (₹)</span>
                 </div>
             </div>
-        </div>
-        <div class="mt-8 pt-8 border-t border-gray-800 text-center text-gray-500 text-sm">
-            <p>&copy; 2024 Eventory. All rights reserved. <span class="text-xs text-gray-700">v2.1</span></p>
         </div>
     </footer>
+    <!-- END ULTRA PREMIUM FOOTER -->
 
     <script>
         let allEvents = [];
 
-        // Load events from API
+        // Load API
         async function loadEvents() {
+            // SHOW SKELETONS INSTEAD OF EMPTY OR TEXT LOADING
+            const eventGrid = document.getElementById('eventGrid');
+            if (eventGrid) {
+                eventGrid.innerHTML = Array(6).fill().map(() => `
+                    <div class="skeleton w-[85vw] max-w-[340px] md:max-w-none h-96 flex-none snap-center self-stretch"></div>
+                 `).join('');
+            }
+
             try {
                 // Add timestamp to prevent caching
                 const response = await fetch('/api/events?v=' + Date.now());
@@ -686,27 +1102,22 @@
                 // Handle wrapped response { data: [...] }
                 allEvents = Array.isArray(json) ? json : (json.data || []);
 
-                // Removed debug dump
-
                 // Use the filter logic to handle grouping immediately
                 filterCategory('all');
 
             } catch (err) {
                 console.error('Failed to load events:', err);
-                // Dump error to UI
-                const debugDiv = document.createElement('div');
-                debugDiv.className = "fixed bottom-0 left-0 w-full bg-red-900 text-white p-4 text-xs font-mono z-50";
-                debugDiv.innerText = "Error: " + err.message;
-                document.body.appendChild(debugDiv);
 
-                document.getElementById('eventGrid').innerHTML = `
-                    <div class="col-span-3 text-center py-12 flex flex-col items-center justify-center gap-4">
-                        <p class="text-gray-500 text-lg">Unable to connect to the server.</p>
-                        <p class="text-red-500 text-sm font-mono bg-red-50 p-2 rounded border border-red-200">${err.message}</p>
-                        <button onclick="loadEvents()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition-colors flex items-center gap-2">
-                            <span class="material-icons">refresh</span> Retry Connection
-                        </button>
-                    </div>`;
+                // Keep skeletons instead of "Unable to connect" text as requested, or add a subtle refresh overlay
+                if (eventGrid) {
+                    eventGrid.innerHTML = Array(6).fill().map(() => `
+                        <div class="skeleton w-[85vw] max-w-[340px] md:max-w-none h-96 flex-none snap-center self-stretch relative opacity-50">
+                             <div class="absolute inset-0 flex items-center justify-center">
+                                  <button onclick="loadEvents()" class="bg-primary/80 text-white px-4 py-2 rounded-lg backdrop-blur text-sm font-medium">Retry</button>
+                             </div>
+                        </div>
+                     `).join('');
+                }
             }
         }
 
@@ -741,7 +1152,7 @@
                 // Check if it's the special summary card
                 if (event.isSummary) {
                     return `
-                    <div class="relative rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 md:col-span-2 group cursor-pointer border border-blue-700 bg-gray-900"
+                    <div class="relative rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 md:col-span-2 group w-[85vw] max-w-[340px] flex-none snap-center md:max-w-none md:w-auto border border-blue-700 bg-gray-900 cursor-pointer"
                          onclick="filterCategory('sports')">
                         <!-- Background Image -->
                         <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" 
@@ -753,7 +1164,7 @@
                         <div class="absolute top-4 right-4 animate-pulse z-10">
                             <span class="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded shadow">LIVE TOURNAMENT</span>
                         </div>
-                        <div class="p-8 flex flex-col h-full justify-center relative z-10">
+                        <div class="p-8 flex flex-col self-stretch justify-center relative z-10">
                             <h3 class="text-3xl font-extrabold text-white mb-2 drop-shadow-md">🏏 ICC World Cup 2026</h3>
                             <p class="text-blue-100 mb-6 max-w-md font-medium drop-shadow-sm">Catch the biggest cricket showdown! 50+ Matches, 10 Teams. Book your tickets now.</p>
                             <button class="bg-white text-blue-900 hover:bg-blue-50 font-bold py-3 px-6 rounded-lg self-start transition-transform hover:scale-105 flex items-center gap-2 shadow-lg">
@@ -772,16 +1183,25 @@
                 const savedEvents = JSON.parse(localStorage.getItem('savedEvents') || '[]');
                 const isSaved = savedEvents.some(e => e.id === event.id);
 
+                // Add Trending/Fast Filling Badge
+                const badgeIndex = (event.id || 0) % 3;
+                let badgeHTML = '';
+                if (badgeIndex === 0) badgeHTML = `<div class="absolute top-3 right-3 bg-orange-500 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm z-10 flex items-center gap-1"><span>🔥</span> Trending</div>`;
+                else if (badgeIndex === 1) badgeHTML = `<div class="absolute top-3 right-3 bg-rose-500 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm z-10 flex items-center gap-1"><span>⚡</span> Fast Filling</div>`;
+                else badgeHTML = `<div class="absolute top-3 right-3 bg-amber-500 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm z-10 flex items-center gap-1"><span>⭐</span> Recommended</div>`;
+
                 return `
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col h-full border border-gray-100 dark:border-gray-700 animate-fade-in" 
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col self-stretch border border-gray-100 dark:border-gray-700 animate-fade-in w-[85vw] max-w-[340px] flex-none snap-center md:max-w-none md:w-auto" 
                      data-id="${event.id}"
                      data-category="${normCat}"
                      data-title="${event.title.toLowerCase()}">
                     <div class="relative h-72 overflow-hidden">
-                        <img alt="${event.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="${event.image_url}" onerror="this.src='https://via.placeholder.com/400x600'"/>
+                        <img alt="${event.title}" class="w-full self-stretch object-cover group-hover:scale-105 transition-transform duration-500" src="${event.image_url}" onerror="this.src='https://via.placeholder.com/400x600'"/>
                         
-                        <!-- Category Badge -->
-                        <div class="absolute top-3 right-3 bg-red-600 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm z-10">
+                        <!-- Category / Trending Badge -->
+                        ${badgeHTML}
+
+                        <div class="absolute bottom-3 right-3 bg-red-600/90 backdrop-blur-sm text-white px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wide shadow-sm z-10">
                             ${event.category}
                         </div>
 
@@ -799,7 +1219,7 @@
                             <span class="text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/30 px-2 py-1 rounded">${formatDate(event.date)}</span>
                             <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"><span class="material-icons text-sm">location_on</span> ${event.venue}</span>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">${event.title}</h3>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white dark:text-white mb-2 line-clamp-2">${event.title}</h3>
                         <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow line-clamp-3">
                             ${event.description || 'No description available'}
                         </p>
@@ -849,13 +1269,38 @@
             const navContainer = document.getElementById('nav-auth-container') || document.querySelector('nav .flex.items-center.gap-6') || document.querySelector('nav .flex.items-center.space-x-4');
 
             if (user && navContainer) {
+                // Use a profile dropdown instead of simple links
                 navContainer.innerHTML = `
-                    <a href="user-profile.html" class="text-purple-600 hover:text-purple-800 text-sm font-semibold flex items-center gap-1 transition-colors">
-                        <span class="material-icons text-lg">person</span> ${user.name ? user.name.split(' ')[0].toUpperCase() : 'PROFILE'}
-                    </a>
-                    <button onclick="logout()" class="text-gray-500 hover:text-red-600 text-sm font-medium flex items-center gap-1 transition-colors ml-2">
-                        <span class="material-icons text-lg">logout</span> Logout
+                    <button onclick="subscribeNewsletter()"
+                        class="relative w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors focus:outline-none shadow-sm"
+                        title="Notifications">
+                        <span class="material-icons">notifications</span>
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-gray-800"></span>
                     </button>
+                    <button onclick="toggleTheme()"
+                        class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors focus:outline-none shadow-sm"
+                        title="Toggle Dark Mode">
+                        <span class="material-icons theme-icon">dark_mode</span>
+                    </button>
+                    <div class="relative group">
+                        <button class="flex items-center gap-2 text-primary bg-purple-50 dark:bg-purple-900/30 hover:bg-purple-100 dark:hover:bg-purple-900/50 px-4 py-2 rounded-full transition-all font-semibold shadow-sm border border-purple-100 dark:border-purple-800/50">
+                            <span class="material-icons text-lg">person</span>
+                            ${user.name ? user.name.split(' ')[0].toUpperCase() : 'PROFILE'}
+                            <span class="material-icons text-sm transition-transform group-hover:rotate-180">expand_more</span>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 hidden group-hover:block overflow-hidden transition-all z-50">
+                            <a href="user-profile.html" class="block px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-purple-50 dark:hover:bg-gray-700 hover:text-primary transition-colors flex items-center gap-2">
+                                <span class="material-icons text-sm">account_circle</span> My Profile
+                            </a>
+                            <a href="booking.html" class="block px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-purple-50 dark:hover:bg-gray-700 hover:text-primary transition-colors flex items-center gap-2">
+                                <span class="material-icons text-sm">confirmation_number</span> My Bookings
+                            </a>
+                            <div class="border-t border-gray-100 dark:border-gray-700"></div>
+                            <button onclick="logout()" class="w-full text-left px-4 py-3 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-2">
+                                <span class="material-icons text-sm">logout</span> Logout
+                            </button>
+                        </div>
+                    </div>
                 `;
             }
         }
@@ -960,26 +1405,115 @@
         }
 
         // Search functionality
-        function searchEvents() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            cards.forEach(card => {
-                const title = card.querySelector('h3').textContent.toLowerCase();
-                const description = card.querySelector('p').textContent.toLowerCase();
-                if (title.includes(query) || description.includes(query)) {
-                    card.style.display = 'block';
+        async function searchEvents() {
+            const query = document.getElementById('searchInput').value.trim();
+            const searchBtn = document.getElementById('searchBtn');
+            const mobSearchBtn = document.getElementById('mobSearchBtn');
+            const eventGrid = document.getElementById('eventGrid');
+
+            if (!query) {
+                // Return to normal
+                location.reload();
+                return;
+            }
+
+            // UI Loading state
+            if (searchBtn) searchBtn.innerHTML = '<span class="material-icons animate-spin text-sm">refresh</span> Thinking...';
+            if (mobSearchBtn) mobSearchBtn.innerHTML = '<span class="material-icons animate-spin text-sm">refresh</span>';
+
+            // Scroll down securely
+            const gridSection = document.getElementById('eventGrid');
+            if (gridSection) {
+                gridSection.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            try {
+                const response = await fetch(`/api/events/smart-search?q=${encodeURIComponent(query)}`);
+                const matches = await response.json();
+
+                // Structural CSS switch for mobile responsiveness
+                eventGrid.classList.remove('flex', 'flex-row', 'overflow-x-auto', 'snap-x', 'snap-mandatory', 'hide-scrollbar');
+                eventGrid.classList.add('grid', 'grid-cols-1', 'md:grid-cols-2', 'lg:grid-cols-3', 'gap-6');
+
+                // Hide View All button since we are in search mode
+                const btn = document.getElementById('viewAllBtn');
+                if (btn) btn.style.display = 'none';
+
+                // Clear grid and show AI Header
+                eventGrid.innerHTML = `<div class="col-span-full mb-6 py-4 px-6 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-200 dark:border-purple-800 rounded-xl flex items-center gap-3">
+                    <span class="material-icons text-pink-500 text-3xl">auto_awesome</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 dark:text-white">AI Search Results for "${query}"</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Found ${matches.length} perfectly matched events.</p>
+                    </div>
+                </div>`;
+
+                if (matches.length === 0) {
+                    eventGrid.innerHTML += `<div class="col-span-full text-center py-12">
+                        <span class="material-icons text-6xl text-gray-300 dark:text-gray-600 mb-4">search_off</span>
+                        <h3 class="text-xl font-bold text-gray-600 dark:text-gray-300">No matching events found</h3>
+                        <p class="text-gray-400 mt-2">Try adjusting your filters or search terms.</p>
+                    </div>`;
                 } else {
-                    card.style.display = 'none';
+                    matches.forEach(event => {
+                        const card = document.createElement('div');
+                        card.className = "bg-white dark:bg-surface-dark border dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col h-full transform hover:-translate-y-1 relative w-full";
+
+                        let priceDisplay = event.price === 0 ? "Free Entry" : "Rs." + event.price;
+                        let catBadge = `<span class="absolute top-4 left-4 bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1 rounded-full shadow-md backdrop-blur-sm z-10 flex items-center gap-1"><span class="material-icons text-[12px]">auto_awesome</span> Best Match</span>`;
+
+                        card.innerHTML = `
+                            ${catBadge}
+                            <div class="relative overflow-hidden h-48 md:h-56">
+                                <img src="${event.image_url || event.image || 'https://images.unsplash.com/photo-1540039155732-6761b54cbaca?w=800&q=80'}" alt="${event.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                                <div class="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+                                    <div class="text-white">
+                                        <div class="flex items-center gap-1 text-sm font-medium mb-1">
+                                            <span class="material-icons text-[16px] text-primary-light">calendar_today</span>
+                                            ${new Date(event.date || new Date()).toLocaleDateString('en-GB')}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-5 flex flex-col flex-grow">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="text-lg md:text-xl font-bold text-gray-900 dark:text-white line-clamp-1">${event.title}</h3>
+                                </div>
+                                <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 mb-4">
+                                    <span class="material-icons text-[16px] text-gray-400">location_on</span>
+                                    <span class="line-clamp-1">${event.venue || 'Multiple Venues'}</span>
+                                </div>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-6 flex-grow">${event.description || ''}</p>
+                                <div class="pt-4 border-t dark:border-gray-800 flex justify-between items-center mt-auto">
+                                    <span class="text-lg font-bold text-primary dark:text-primary-light">${priceDisplay}</span>
+                                    <button onclick="bookEvent('${event.id}')" class="bg-gray-100 hover:bg-primary hover:text-white dark:bg-gray-800 dark:text-white dark:hover:bg-primary dark:hover:text-white text-gray-900 px-5 py-2 rounded-lg font-semibold transition-colors flex items-center gap-2 button-click">
+                                        Book Now <span class="material-icons text-[18px]">arrow_forward</span>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        eventGrid.appendChild(card);
+                    });
                 }
-            });
+            } catch (e) {
+                console.error("AI Search Failed:", e);
+                alert("Smart Engine offline. Please try again.");
+            } finally {
+                if (searchBtn) searchBtn.innerHTML = '<span class="material-icons text-sm">auto_awesome</span> Smart Search';
+                if (mobSearchBtn) mobSearchBtn.innerHTML = '<span class="material-icons text-white text-sm">auto_awesome</span>';
+            }
         }
 
         // Helper function to store event for booking
         function setCurrentEvent(eventId) {
             localStorage.setItem('currentEventId', eventId);
-            // Find event in loaded events
-            const event = allEvents.find(e => e.id === eventId);
+            // Find event in loaded events (loose equality handles string vs number ID mismatch)
+            const event = allEvents.find(e => e.id == eventId);
             if (event) {
                 localStorage.setItem('currentEventData', JSON.stringify(event));
+            } else {
+                console.error("Critical: Could not find event data for ID " + eventId);
             }
         }
 
@@ -989,12 +1523,46 @@
             window.location.href = 'booking.html?id=' + eventId;
         }
 
-        // Newsletter subscription
+        // Newsletter/Notifications subscription
         function subscribeNewsletter() {
-            const email = document.getElementById('newsletterEmail').value;
+            const email = document.getElementById('newsletterEmail') ? document.getElementById('newsletterEmail').value : null;
             if (email) {
-                alert('Thank you for subscribing! We\'ll keep you updated.');
+                alert('Thank you! You will be notified of new events at ' + email);
                 document.getElementById('newsletterEmail').value = '';
+            } else {
+                alert('Notification Subscription Enabled! We will notify your registered email about new upcoming events immediately.');
+            }
+        }
+
+        // Toggle Event Grid between Horizontal Scroll and Vertical Stack
+        function toggleViewAll() {
+            const grid = document.getElementById('eventGrid');
+            const btn = document.getElementById('viewAllBtn');
+            const isHorizontal = grid.classList.contains('flex');
+
+            if (isHorizontal) {
+                // Switch to Vertical List on Mobile
+                grid.classList.remove('flex', 'flex-row', 'overflow-x-auto', 'snap-x', 'snap-mandatory', 'hide-scrollbar');
+                grid.classList.add('grid', 'grid-cols-1');
+                btn.innerHTML = 'Collapse <span class="material-icons text-sm">view_carousel</span>';
+
+                // Remove horizontal constraints from all cards and allow them to take full width
+                Array.from(grid.children).forEach(child => {
+                    child.classList.remove('w-[85vw]', 'max-w-[340px]', 'flex-none', 'snap-center', 'md:max-w-none', 'md:w-auto');
+                    child.classList.remove('min-w-[85vw]', 'shrink-0', 'md:min-w-0', 'md:shrink-1'); // also clean up old classes if present from static
+                    child.classList.add('w-full');
+                });
+            } else {
+                // Revert to Horizontal Scroll
+                grid.classList.add('flex', 'flex-row', 'overflow-x-auto', 'snap-x', 'snap-mandatory', 'hide-scrollbar');
+                grid.classList.remove('grid', 'grid-cols-1');
+                btn.innerHTML = 'View All <span class="material-icons text-sm">grid_view</span>';
+
+                // Add back structural classes
+                Array.from(grid.children).forEach(child => {
+                    child.classList.add('w-[85vw]', 'max-w-[340px]', 'flex-none', 'snap-center', 'md:max-w-none', 'md:w-auto');
+                    child.classList.remove('w-full');
+                });
             }
         }
 
@@ -1039,27 +1607,198 @@
         class="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] border-t border-gray-100 dark:border-gray-800 z-50">
         <div class="flex justify-around items-center h-16">
             <a href="index.html"
-                class="flex flex-col items-center justify-center w-full h-full text-primary dark:text-primary-light">
+                class="flex flex-col items-center justify-center w-full self-stretch text-primary dark:text-primary-light">
                 <span class="material-icons">home</span>
                 <span class="text-[10px] font-medium mt-1">Home</span>
             </a>
             <a href="booking.html"
-                class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors">
+                class="flex flex-col items-center justify-center w-full self-stretch text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors">
                 <span class="material-icons">confirmation_number</span>
                 <span class="text-[10px] font-medium mt-1">Bookings</span>
             </a>
             <a href="#search" onclick="document.getElementById('searchInput').focus()"
-                class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors">
+                class="flex flex-col items-center justify-center w-full self-stretch text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors">
                 <span class="material-icons">search</span>
                 <span class="text-[10px] font-medium mt-1">Search</span>
             </a>
             <a href="user-profile.html"
-                class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors">
+                class="flex flex-col items-center justify-center w-full self-stretch text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors">
                 <span class="material-icons">person</span>
                 <span class="text-[10px] font-medium mt-1">Profile</span>
             </a>
         </div>
     </nav>
+    <script>
+        // --- LOCATION LOGIC ---
+        function toggleCityDropdown() {
+            const dropdown = document.getElementById('cityDropdown');
+            dropdown.classList.toggle('hidden');
+        }
+
+        function setCity(cityName) {
+            localStorage.setItem('userCity', cityName);
+            document.getElementById('currentCityDisplay').innerText = cityName;
+            document.getElementById('cityDropdown').classList.add('hidden');
+
+            // Optionally, we could filter events by city here!
+            console.log("City set to:", cityName);
+        }
+
+        function loadSavedCity() {
+            const savedCity = localStorage.getItem('userCity');
+            if (savedCity) {
+                document.getElementById('currentCityDisplay').innerText = savedCity;
+            }
+        }
+
+        async function autoDetectLocation() {
+            const btn = document.getElementById('autoDetectBtn');
+            const originalText = btn.innerHTML;
+
+            btn.innerHTML = `<span class="animate-spin material-icons text-base">refresh</span> Detecting...`;
+
+            if (!("geolocation" in navigator)) {
+                alert("Geolocation is not supported by your browser.");
+                btn.innerHTML = originalText;
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(async (position) => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+
+                try {
+                    // Use OpenStreetMap Nominatim for free reverse geocoding (Forcing English names)
+                    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&accept-language=en`);
+                    const data = await response.json();
+
+                    // Extract city name from response
+                    const city = data.address.city || data.address.town || data.address.village || data.address.state_district;
+
+                    if (city) {
+                        setCity(city);
+                    } else {
+                        alert("Could not detect the city name exactly.");
+                    }
+                } catch (error) {
+                    console.error("Geocoding failed:", error);
+                    alert("Failed to get location name.");
+                } finally {
+                    btn.innerHTML = originalText;
+                }
+            }, (error) => {
+                console.error("Geolocation error:", error);
+                alert("Permission denied onavailable.");
+                btn.innerHTML = originalText;
+            }, {
+                timeout: 10000
+            });
+        }
+
+        // Close dropdown if clicked outside
+        document.addEventListener('click', function (event) {
+            const citySelectBtn = document.getElementById('citySelectBtn');
+            const cityDropdown = document.getElementById('cityDropdown');
+            if (citectBityDropdown) {
+                if (!citySelectBtn.contains(event.target) && !cityDropdown.contains(event.target)) {
+                    cityDropdown.classList.add('hidden');
+                }
+            }
+        });
+
+        // Initialize things on load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSavedCity();
+        });
+    </script>
+
+    <!-- Scroll Reveal Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Apply reveal class to all major container elements dynamically if not present
+            const revealElements = document.querySelectorAll('.card, .cinema-card, h1, h2, h3, .glass-panel');
+            revealElements.forEach(el => {
+                if (!el.classList.contains('reveal') && !el.closest('nav') && !el.closest('#mobile-menu')) {
+                    el.classList.add('reveal');
+                }
+            });
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal').forEach(el => {
+                observer.observe(el);
+            });
+
+            // Trigger immediately for elements in viewport on load
+            setTimeout(() => {
+                document.querySelectorAll('.reveal').forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top < window.innerHeight) {
+                        el.classList.add('active');
+                    }
+                });
+            }, 100);
+        });
+    </script>
+
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const tiltOptions = {
+                max: 5,
+                speed: 400,
+                glare: true,
+                "max-glare": 0.15,
+                scale: 1.02
+            };
+
+            VanillaTilt.init(document.querySelectorAll(".glass-panel, .cinema-card"), tiltOptions);
+
+            // Function to initialize tilt on cards
+            const initTilt = () => {
+                const cards = document.querySelectorAll('#eventGrid > div, #cinema-grid > div');
+                cards.forEach(card => {
+                    if (!card.vanillaTilt) {
+                        card.classList.add('tilt-card');
+                        VanillaTilt.init(card, tiltOptions);
+                    }
+                });
+            };
+
+            initTilt();
+
+            // Add tilt-card to dynamically generated events
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.addedNodes.length) {
+                        initTilt();
+                    }
+                });
+            });
+
+            const eventGrid = document.getElementById('eventGrid');
+            const cinemaGrid = document.getElementById('cinema-grid');
+            if (eventGrid) observer.observe(eventGrid, { childList: true });
+            if (cinemaGrid) observer.observe(cinemaGrid, { childList: true });
+        });
+    </script>
+
 </body>
 
 </html>

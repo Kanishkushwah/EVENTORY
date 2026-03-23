@@ -6,12 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EventHub - Booking</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet" />
 
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         .seat {
@@ -74,21 +75,363 @@
             stroke-width: 4;
             transform: scale(1.07);
         }
+
+
+        /* =============== PREMIUM AESTHETICS =============== */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: -0.01em;
+        }
+
+        /* Page Transitions */
+        .page {
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Selected Seats Animation */
+        .seat.selected {
+            background-color: #10b981 !important;
+            border-color: #059669 !important;
+            color: #ffffff !important;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        ::selection {
+            background: rgba(139, 92, 246, 0.3);
+            color: inherit;
+        }
+
+        /* Glassmorphism Navbar */
+        nav {
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            background-color: rgba(255, 255, 255, 0.75) !important;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+        }
+
+        .dark nav {
+            background-color: rgba(17, 24, 39, 0.75) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+        }
+
+        /* Smooth Interactive Elements */
+        button,
+        a,
+        .card,
+        .cinema-card,
+        .date-btn,
+        .showtime-btn,
+        input,
+        select {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Bouncy Button Hover */
+        button:hover,
+        a.nav-link:hover,
+        .hover\:-translate-y-1:hover {
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        /* Input Focus Glow */
+        input:focus,
+        select:focus,
+        textarea:focus {
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15) !important;
+            border-color: #8B5CF6 !important;
+        }
+
+        /* Soft Card Shadows */
+        .shadow-sm,
+        .shadow,
+        .shadow-md,
+        .shadow-lg,
+        .shadow-xl {
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08) !important;
+        }
+
+        .dark .shadow-sm,
+        .dark .shadow,
+        .dark .shadow-md,
+        .dark .shadow-lg,
+        .dark .shadow-xl {
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        /* ================================================= */
+
+        /* Essential Global Dark Mode Overrides */
+        .dark body {
+            background-color: #111827 !important;
+            color: #F3F4F6 !important;
+        }
+
+        .dark .bg-white {
+            background-color: #1F2937 !important;
+            border-color: #374151 !important;
+            color: #F3F4F6 !important;
+        }
+
+        .dark .bg-gray-50 {
+            background-color: #111827 !important;
+        }
+
+        .dark .bg-gray-100 {
+            background-color: #374151 !important;
+        }
+
+        .dark .border-b,
+        .dark .border-t,
+        .dark .border {
+            border-color: #374151 !important;
+        }
+
+        .dark .text-gray-900,
+        .dark .text-gray-800,
+        .dark .text-gray-700 {
+            color: #F9FAFB !important;
+        }
+
+        .dark .text-gray-600,
+        .dark .text-gray-500 {
+            color: #9CA3AF !important;
+        }
+
+        .dark input,
+        .dark select,
+        .dark textarea {
+            background-color: #374151 !important;
+            border-color: #4B5563 !important;
+            color: #F3F4F6 !important;
+        }
+
+        .dark nav.bg-white {
+            background-color: #1F2937 !important;
+            border-bottom-color: #374151 !important;
+        }
+
+        .dark .seat:not(.occupied) {
+            border-color: #4B5563 !important;
+        }
+
+        /* Dark Mode Selection Fixes */
+        .dark .bg-purple-50 {
+            background-color: rgba(139, 92, 246, 0.15) !important;
+            color: #E9D5FF !important;
+        }
+
+        .dark .hover\:bg-purple-50:hover {
+            background-color: rgba(139, 92, 246, 0.25) !important;
+            color: #E9D5FF !important;
+        }
+
+        .dark .border-purple-500 {
+            border-color: #8B5CF6 !important;
+        }
+
+        .dark .text-purple-700 {
+            color: #C4B5FD !important;
+        }
+
+        .dark .bg-purple-100 {
+            background-color: rgba(139, 92, 246, 0.2) !important;
+            color: #DDD6FE !important;
+        }
+
+
+        /* DARK MODE SEAT SELECTION FIX */
+        .dark .bg-white.selected,
+        .dark .seat.selected,
+        .dark .seat-circle.selected,
+        .dark .cricket-block.selected-block {
+            background-color: #10b981 !important;
+            border-color: #059669 !important;
+            color: #ffffff !important;
+        }
+
+        .seat.selected {
+            background-color: #10b981 !important;
+            border-color: #059669 !important;
+            color: #ffffff !important;
+        }
+
+        .seat-selected {
+            color: #10B981 !important;
+            filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.8)) !important;
+        }
+
+        .seat-selected {
+            color: #10B981 !important;
+            filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.8)) !important;
+        }
+
+        /* =============== ULTRA PREMIUM AESTHETICS =============== */
+        /* Custom Modern Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.3);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 92, 246, 0.6);
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: rgba(167, 139, 250, 0.3);
+        }
+
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: rgba(167, 139, 250, 0.6);
+        }
+
+        /* Floating Image Animation for Hero/Feature elements */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Scroll Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Glass Panels */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .dark .glass-panel {
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Glowing badge */
+        .glow-badge {
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+        }
+
+        /* ======================================================= */
     </style>
+    <script>
+        tailwind.config = { darkMode: 'class' };
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+            document.querySelectorAll('.theme-icon').forEach(el => el.textContent = localStorage.theme === 'dark' ? 'light_mode' : 'dark_mode');
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.theme-icon').forEach(el => el.textContent = document.documentElement.classList.contains('dark') ? 'light_mode' : 'dark_mode');
+        });
+    </script>
+
+    <script>
+        // Global Mobile Menu Toggle
+        window.toggleMobileMenu = function () {
+            const menu = document.getElementById('mobile-menu');
+            if (menu) {
+                if (menu.classList.contains('translate-x-full')) {
+                    menu.classList.remove('translate-x-full');
+                } else {
+                    menu.classList.add('translate-x-full');
+                }
+            }
+        };
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
 </head>
 
-<body class="bg-gray-50 flex flex-col min-h-screen pb-20 md:pb-0 font-sans">
+<body class="bg-gray-50 flex flex-col min-h-screen pb-20 md:pb-0 font-sans page">
     <!-- NAVBAR -->
     <nav class="bg-white shadow border-b sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-            <a href="Index.html" class="flex items-center gap-2">
+            <a href="index.html" class="flex items-center gap-2">
                 <span class="material-icons text-purple-600 text-3xl">event_seat</span>
                 <span class="font-bold text-2xl text-purple-600">Eventory</span>
             </a>
 
             <!-- Desktop Menu -->
             <div class="hidden md:flex items-center space-x-6 text-sm font-medium text-gray-600">
-                <a class="flex items-center hover:text-purple-600 transition-colors gap-1" href="Index.html">
+                <button onclick="toggleTheme()"
+                    class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-purple-600 transition-colors focus:outline-none"
+                    title="Toggle Dark Mode">
+                    <span class="material-icons theme-icon text-lg">dark_mode</span>
+                </button>
+                <a class="flex items-center hover:text-purple-600 transition-colors gap-1" href="index.html">
                     <span class="material-icons text-lg">home</span> Browse Events
                 </a>
                 <a class="flex items-center hover:text-purple-600 transition-colors gap-1" href="booking.html">
@@ -112,25 +455,28 @@
 
     <!-- Mobile Menu Overlay -->
     <div id="mobile-menu"
-        class="fixed inset-0 z-50 bg-white transform translate-x-full transition-transform duration-300 md:hidden flex flex-col h-full shadow-2xl">
-        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-            <span class="text-xl font-bold text-purple-600">Menu</span>
+        class="fixed inset-0 z-50 bg-white dark:bg-gray-900 transform translate-x-full transition-transform duration-300 md:hidden flex flex-col h-full shadow-2xl">
+        <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2">
+                <span class="material-icons text-purple-600 dark:text-purple-400 text-2xl">event</span>
+                <span class="font-bold text-xl text-purple-600 dark:text-purple-400">Eventory</span>
+            </a>
             <button onclick="toggleMobileMenu()" class="text-gray-500 hover:text-red-500 transition-colors">
                 <span class="material-icons text-2xl">close</span>
             </button>
         </div>
         <div class="flex-1 overflow-y-auto py-6 px-6 space-y-6">
             <div class="space-y-4">
-                <a href="Index.html"
-                    class="flex items-center gap-3 text-lg font-medium text-gray-700 hover:text-purple-600 transition-colors p-2 rounded-lg hover:bg-gray-50">
+                <a href="index.html"
+                    class="flex items-center gap-3 text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-purple-600 dark:hover:text-purple-400 transition-colors p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
                     <span class="material-icons">home</span> Browse Events
                 </a>
                 <a href="booking.html"
-                    class="flex items-center gap-3 text-lg font-medium text-gray-700 hover:text-purple-600 transition-colors p-2 rounded-lg hover:bg-gray-50">
+                    class="flex items-center gap-3 text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-purple-600 dark:hover:text-purple-400 transition-colors p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
                     <span class="material-icons">confirmation_number</span> My Bookings
                 </a>
                 <a href="#search"
-                    class="flex items-center gap-3 text-lg font-medium text-gray-700 hover:text-purple-600 transition-colors p-2 rounded-lg hover:bg-gray-50"
+                    class="flex items-center gap-3 text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-purple-600 dark:hover:text-purple-400 transition-colors p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
                     onclick="toggleMobileMenu()">
                     <span class="material-icons">search</span> Search Booking
                 </a>
@@ -139,11 +485,11 @@
             <div class="border-t border-gray-100 pt-6 space-y-4">
                 <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Account</p>
                 <a href="login.html"
-                    class="flex items-center gap-3 text-lg font-medium text-gray-700 hover:text-purple-600 transition-colors p-2 rounded-lg hover:bg-gray-50">
+                    class="flex items-center gap-3 text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-purple-600 dark:hover:text-purple-400 transition-colors p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
                     <span class="material-icons">login</span> Login
                 </a>
                 <a href="register.html"
-                    class="flex items-center gap-3 text-lg font-medium text-gray-700 hover:text-purple-600 transition-colors p-2 rounded-lg hover:bg-gray-50">
+                    class="flex items-center gap-3 text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-purple-600 dark:hover:text-purple-400 transition-colors p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
                     <span class="material-icons">person_add</span> Register
                 </a>
             </div>
@@ -236,6 +582,13 @@
                             <span id="subtotalAmount">₹0</span>
                         </div>
                         <p class="text-sm text-gray-600" id="selectedSeatsText">No seats selected</p>
+
+                        <!-- Auto-hide countdown timer -->
+                        <div id="seatTimerContainer"
+                            class="hidden mt-3 bg-orange-50 border border-orange-200 text-orange-800 text-sm font-semibold p-2 rounded-lg flex items-center gap-2 animate-pulse">
+                            <span class="material-icons text-orange-500 text-[18px]">timer</span>
+                            <span>⏳ Seats reserved for: <span id="seatTimerDisplay">04:59</span></span>
+                        </div>
                     </div>
                     <div class="border-t pt-4 space-y-2 text-sm">
                         <div class="flex justify-between">
@@ -252,6 +605,28 @@
                         </div>
                     </div>
 
+
+                    <div class="border-t pt-4 mt-4 space-y-3">
+                        <h3 class="font-bold text-gray-900 dark:text-white dark:text-white flex items-center gap-2">
+                            <span class="material-icons text-purple-600 text-[20px]">fastfood</span> Add Snacks
+                        </h3>
+                        <div class="flex items-center justify-between">
+                            <label class="text-sm dark:text-gray-300 font-medium">🍿 Large Popcorn (+₹250)</label>
+                            <input type="checkbox" id="addPopcorn" onchange="updateSummary()"
+                                class="rounded w-5 h-5 text-purple-600 focus:ring-purple-500 cursor-pointer">
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <label class="text-sm dark:text-gray-300 font-medium">🥤 Coca Cola (+₹150)</label>
+                            <input type="checkbox" id="addCoke" onchange="updateSummary()"
+                                class="rounded w-5 h-5 text-purple-600 focus:ring-purple-500 cursor-pointer">
+                        </div>
+                        <div class="flex justify-between text-sm pt-2 text-purple-600 dark:text-purple-400 font-semibold hidden"
+                            id="snacksDisplayRow">
+                            <span>Snacks Total</span>
+                            <span id="snacksDisplay">₹0</span>
+                        </div>
+                    </div>
+
                     <button onclick="proceedToPayment()"
                         class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg mt-6 transition">
                         Proceed to Payment
@@ -261,21 +636,147 @@
         </div>
     </main>
 
+    <!-- ULTRA PREMIUM FOOTER -->
+    <footer
+        class="bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 pt-16 pb-24 md:pb-8 mt-20 transition-colors duration-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-1">
+                    <a href="index.html" class="flex items-center gap-2 mb-4">
+                        <span class="material-icons text-purple-600 text-3xl">event_seat</span>
+                        <span class="font-bold text-2xl text-purple-600 tracking-tight">Eventory</span>
+                    </a>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
+                        The ultimate platform for discovering, booking, and managing events. Built with modern
+                        aesthetics and seamless user experience in mind.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-purple-50 dark:bg-gray-800 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all transform hover:scale-110">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-purple-50 dark:bg-gray-800 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all transform hover:scale-110">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-purple-50 dark:bg-gray-800 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all transform hover:scale-110">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4
+                        class="font-bold text-gray-900 dark:text-white dark:text-white mb-6 uppercase text-sm tracking-wider">
+                        Explore</h4>
+                    <ul class="space-y-4 text-sm text-gray-600 dark:text-gray-400">
+                        <li><a href="index.html"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Browse
+                                Events</a></li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Concerts</a>
+                        </li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Sports</a>
+                        </li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Workshops</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4
+                        class="font-bold text-gray-900 dark:text-white dark:text-white mb-6 uppercase text-sm tracking-wider">
+                        Help & Support</h4>
+                    <ul class="space-y-4 text-sm text-gray-600 dark:text-gray-400">
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">FAQ</a></li>
+                        <li><a href="#" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Terms
+                                of Service</a></li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Privacy
+                                Policy</a></li>
+                        <li><a href="#"
+                                class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Contact
+                                Us</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4
+                        class="font-bold text-gray-900 dark:text-white dark:text-white mb-6 uppercase text-sm tracking-wider">
+                        Newsletter</h4>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Subscribe for the latest event updates and
+                        exclusive offers.</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Your email address"
+                            class="bg-gray-50 dark:bg-gray-800 border-none rounded-l-lg px-4 py-2 w-full text-sm focus:ring-2 focus:ring-purple-600 outline-none text-gray-800 dark:text-gray-200">
+                        <button
+                            class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-r-lg transition-colors flex items-center justify-center">
+                            <span class="material-icons text-sm">send</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                <p>&copy; 2026 Eventory. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 md:mt-0">
+                    <span class="flex items-center gap-1"><span
+                            class="material-icons text-[14px] text-green-500">public</span> English (Global)</span>
+                    <span class="flex items-center gap-1"><span
+                            class="material-icons text-[14px] text-yellow-500">payments</span> INR (₹)</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- END ULTRA PREMIUM FOOTER -->
+
+
     <!-- JS LOGIC -->
     <script>
         let selectedSeats = [];
+        let socket;
+        try {
+            socket = io(window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:8000' : 'https://eventory-backend.onrender.com'); // Match your backend domain
+        } catch (e) { console.error("Socket IO failed to load"); }
+
+        if (socket) {
+            socket.on("seatLocked", ({ seatId, by }) => {
+                const btn = document.getElementById('seat-btn-' + seatId) || Array.from(document.querySelectorAll('.seat-icon')).find(svg => svg.parentElement.innerHTML.includes(seatId))?.parentElement;
+                if (btn && !selectedSeats.find(s => s.id === seatId)) {
+                    btn.classList.add('locked-by-other', 'bg-red-900', 'cursor-not-allowed', 'opacity-50');
+                    btn.disabled = true;
+                    btn.title = "This seat is currently being viewed/locked by someone else!";
+                }
+            });
+            socket.on("seatUnlocked", ({ seatId }) => {
+                const btn = document.getElementById('seat-btn-' + seatId) || Array.from(document.querySelectorAll('.seat-icon')).find(svg => svg.parentElement.innerHTML.includes(seatId))?.parentElement;
+                if (btn) {
+                    btn.classList.remove('locked-by-other', 'bg-red-900', 'cursor-not-allowed', 'opacity-50');
+                    btn.disabled = false;
+                    btn.title = "";
+                }
+            });
+        }
+
         let selectedCinema = null;
         let selectedDate = null;
         let selectedShowtime = null;
+        if (socket && selectedShowtime) socket.emit("joinShowtime", selectedShowtime.id);
         let showtimes = [];
-        const maxSeats = 10;
+        // Dynamic max seats based on dropdown
+        Object.defineProperty(window, 'maxSeats', { get: () => parseInt(document.getElementById('autoSeatCount')?.value || 10) });
 
         // Get event from localStorage (set by index.html)
         const currentEvent = JSON.parse(localStorage.getItem('currentEventData'));
 
         if (!currentEvent) {
             alert("No event selected");
-            window.location.href = "Index.html";
+            window.location.href = "index.html";
         }
 
         // Normalize category to lowercase for consistency
@@ -323,35 +824,81 @@
                 const showtimeRes = await fetch(`/api/showtimes/movie/${currentEvent.id}`);
                 const movieShowtimes = await showtimeRes.json();
 
-                // 2. Get the list of cinemas that have showtimes
-                const validCinemaIds = movieShowtimes.map(group => group.cinema.id);
+                // 2. Filter cinemas by user's selected city
+                let userCity = localStorage.getItem('userCity') || '';
 
-                if (validCinemaIds.length === 0) {
-                    document.getElementById('cinemaList').innerHTML = '<p class="text-red-500">No showtimes available for this movie yet.</p>';
+                // Map local script/translations to database English names
+                const cityMap = { 'सूरत': 'Surat', 'સુરત': 'Surat', 'દિલ્હી': 'Delhi', 'दिल्ली': 'Delhi', 'મુંબઈ': 'Mumbai', 'मुंबई': 'Mumbai' };
+                if (cityMap[userCity]) userCity = cityMap[userCity];
+
+                let validShowtimes = movieShowtimes;
+                if (userCity && userCity !== 'Location' && userCity !== 'All Cities') {
+                    validShowtimes = movieShowtimes.filter(group => (group.cinema.city || '').toLowerCase() === userCity.toLowerCase());
+                }
+
+                if (validShowtimes.length === 0) {
+                    document.getElementById('cinemaList').innerHTML = '<p class="text-red-500">No showtimes available for this movie in ' + (userCity || 'this location') + ' yet.</p>';
                     return;
                 }
 
-                // 3. Render only valid cinemas
+                // 3. Render city filter if no userCity was strictly found, to avoid a mess of 10+ theaters
+                let filterHtml = '';
+                if (!userCity || userCity === 'Location' || userCity === 'All Cities' || userCity === 'Select City') {
+                    const uniqueCities = [...new Set(validShowtimes.map(g => g.cinema.city))];
+                    if (uniqueCities.length > 1) {
+                        filterHtml = `
+                            <div class="mb-4">
+                                <label class="text-xs font-semibold text-gray-500 uppercase">Filter by City</label>
+                                <select id="inlineCityFilter" onchange="filterCinemasByCity(this.value)" class="w-full mt-1 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block p-2.5">
+                                    <option value="All">All Cities</option>
+                                    ${uniqueCities.map(c => `<option value="${c}">${c}</option>`).join('')}
+                                </select>
+                            </div>
+                        `;
+                    }
+                }
+
+                // 4. Render only valid cinemas
                 const cinemaList = document.getElementById('cinemaList');
-                cinemaList.innerHTML = movieShowtimes.map(group => `
-                    <div class="cinema-card border-2 rounded-lg p-4 cursor-pointer hover:border-purple-500 transition hover:bg-purple-50"
-                         onclick="selectCinema(${group.cinema.id}, '${group.cinema.name}')"
-                         data-cinema-id="${group.cinema.id}">
-                        <h4 class="font-bold text-lg text-gray-800">${group.cinema.name}</h4>
-                        <p class="text-sm text-gray-600">${group.cinema.location}</p>
-                        <div class="flex gap-2 mt-2">
-                            ${group.showtimes.slice(0, 3).map(t =>
-                    `<span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">${formatTime12h(t.show_time)}</span>`
-                ).join('')}
-                            ${group.showtimes.length > 3 ? `<span class="text-xs text-gray-500">+${group.showtimes.length - 3} more</span>` : ''}
-                        </div>
-                    </div>
-                `).join('');
+                cinemaList.innerHTML = filterHtml + '<div id="filteredCinemaCards">' + renderCinemaCardsChunk(validShowtimes) + '</div>';
 
             } catch (err) {
                 console.error('Error loading cinemas:', err);
                 document.getElementById('cinemaList').innerHTML = '<p class="text-red-500">Failed to load cinemas.</p>';
             }
+        }
+
+        function renderCinemaCardsChunk(showtimes) {
+            return showtimes.map(group => `
+                <div class="cinema-card border-2 rounded-lg p-4 mb-3 border-gray-200 cursor-pointer hover:border-purple-500 transition hover:bg-purple-50"
+                     onclick="selectCinema(${group.cinema.id}, '${group.cinema.name}')"
+                     data-cinema-id="${group.cinema.id}" data-city="${group.cinema.city}">
+                    <h4 class="font-bold text-lg text-gray-800">${group.cinema.name}</h4>
+                    <div class="flex items-center justify-between mb-2 mt-1">
+                        <p class="text-sm text-gray-600">${group.cinema.location}, <span class="font-semibold text-purple-600">${group.cinema.city}</span></p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(group.cinema.name + ' ' + group.cinema.location + ' ' + group.cinema.city)}" target="_blank" onclick="event.stopPropagation()" class="text-purple-600 hover:text-purple-800 flex items-center gap-1 text-xs bg-purple-50 px-2 py-1 rounded-full transition-colors font-medium cursor-pointer relative z-10 dark:bg-gray-800 dark:text-purple-400">
+                            <span class="material-icons text-[14px]">map</span> Map
+                        </a>
+                    </div>
+                    <div class="flex gap-2 flex-wrap">
+                        ${group.showtimes.slice(0, 3).map(t =>
+                `<span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded border">${formatTime12h(t.show_time)}</span>`
+            ).join('')}
+                        ${group.showtimes.length > 3 ? `<span class="text-xs text-gray-500">+${group.showtimes.length - 3} more</span>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.filterCinemasByCity = function (selectedCity) {
+            const cards = document.querySelectorAll('.cinema-card');
+            cards.forEach(c => {
+                if (selectedCity === 'All' || c.getAttribute('data-city') === selectedCity) {
+                    c.style.display = 'block';
+                } else {
+                    c.style.display = 'none';
+                }
+            });
         }
 
         // Select cinema
@@ -374,7 +921,6 @@
                 const response = await fetch(`/api/showtimes/movie/${currentEvent.id}`);
                 const data = await response.json();
 
-                // Find showtimes for selected cinema - CORRECTED PROPERTY ACCESS
                 const cinemaShowtimes = data.find(c => c.cinema.id === selectedCinema.id);
                 if (!cinemaShowtimes) {
                     alert('No showtimes available at this cinema');
@@ -382,34 +928,61 @@
                 }
 
                 showtimes = cinemaShowtimes.showtimes;
-                const uniqueDates = [...new Set(showtimes.map(st => st.show_date))];
+
+                // Generate next 5 days dynamically
+                const next5Days = [];
+                const today = new Date();
+
+                for (let i = 0; i < 5; i++) {
+                    const tempDate = new Date(today);
+                    tempDate.setDate(today.getDate() + i);
+
+                    const yyyy = tempDate.getFullYear();
+                    const mm = String(tempDate.getMonth() + 1).padStart(2, '0');
+                    const dd = String(tempDate.getDate()).padStart(2, '0');
+                    const dateStr = `${yyyy}-${mm}-${dd}`;
+
+                    next5Days.push({
+                        dateStr: dateStr,
+                        dateObj: tempDate
+                    });
+                }
 
                 document.getElementById('dateSelection').classList.remove('hidden');
                 const dateList = document.getElementById('dateList');
-                dateList.innerHTML = uniqueDates.map(date => {
-                    const d = new Date(date);
-                    return `
-                        <button class="date-btn px-4 py-2 border-2 rounded-lg hover:border-purple-500 whitespace-nowrap"
-                                onclick="selectDate('${date}')">
-                            <div class="font-bold">${d.getDate()}</div>
-                            <div class="text-xs">${d.toLocaleDateString('en-US', { month: 'short' })}</div>
-                        </button>
-                    `;
-                }).join('');
+
+                dateList.innerHTML = next5Days.map(dayInfo => `
+                    <button class="date-btn px-4 py-2 border-2 rounded-lg hover:border-purple-500 whitespace-nowrap date-box flex flex-col items-center justify-center transition-colors shadow-sm bg-white dark:bg-gray-800"
+                            onclick="selectDate('${dayInfo.dateStr}', this)">
+                        <span class="day-number text-xl font-bold">${dayInfo.dateObj.getDate()}</span>
+                        <span class="month text-xs text-gray-500 font-semibold uppercase">${dayInfo.dateObj.toLocaleDateString('en-US', { month: 'short' })}</span>
+                    </button>
+                `).join('');
+
+                // Automatically click today's date after brief timeout rendering
+                setTimeout(() => {
+                    const todayBtn = dateList.querySelector('.date-btn');
+                    if (todayBtn) todayBtn.click();
+                }, 10);
+
             } catch (err) {
                 console.error('Error loading dates:', err);
             }
         }
 
         // Select date
-        function selectDate(date) {
+        function selectDate(date, element) {
             selectedDate = date;
 
             // Highlight selected
             document.querySelectorAll('.date-btn').forEach(btn => {
                 btn.classList.remove('border-purple-500', 'bg-purple-50');
             });
-            event.target.closest('.date-btn').classList.add('border-purple-500', 'bg-purple-50');
+            if (element) {
+                element.classList.add('border-purple-500', 'bg-purple-50');
+            } else if (event && event.target) {
+                event.target.closest('.date-btn').classList.add('border-purple-500', 'bg-purple-50');
+            }
 
             loadShowtimes(date);
         }
@@ -422,25 +995,72 @@
 
             document.getElementById('showtimeSelection').classList.remove('hidden');
             const showtimeGrid = document.getElementById('showtimeGrid');
-            showtimeGrid.innerHTML = dateShowtimes.map(st => `
-                <button class="showtime-btn border-2 rounded-lg p-3 hover:border-purple-500 transition"
-                        onclick='selectShowtime(${JSON.stringify(st).replace(/'/g, "&apos;")})'>
-                    <div class="font-bold">${formatTime12h(st.show_time)}</div>
-                    <div class="text-xs text-gray-600">₹${st.price}</div>
-                    <div class="text-xs text-green-600">${st.available_seats} seats</div>
-                </button>
-            `).join('');
+
+            if (dateShowtimes.length === 0) {
+                showtimeGrid.innerHTML = '<div class="text-gray-500 w-full col-span-full py-4 text-center">No active showtimes available for this date.</div>';
+                return;
+            }
+
+            const now = new Date();
+
+            showtimeGrid.innerHTML = dateShowtimes.map(st => {
+                let isPast = false;
+                try {
+                    // Try parsing showtime into a comparable date object (e.g. 14:00 or 10:00 AM)
+                    let timeParts = st.show_time.match(/(\d+):(\d+)\s*(AM|PM)?/i);
+                    if (timeParts) {
+                        let hours = parseInt(timeParts[1]);
+                        let minutes = parseInt(timeParts[2]);
+                        let ampm = timeParts[3] ? timeParts[3].toUpperCase() : null;
+
+                        if (ampm === 'PM' && hours < 12) hours += 12;
+                        if (ampm === 'AM' && hours === 12) hours = 0;
+
+                        let showDateTime = new Date(`${st.show_date}T00:00:00`);
+                        showDateTime.setHours(hours, minutes, 0, 0);
+
+                        if (showDateTime < now) {
+                            isPast = true;
+                        }
+                    }
+                } catch (e) {
+                    console.error("Error parsing date", e);
+                }
+
+                if (isPast) {
+                    return `
+                        <button class="showtime-btn border-2 rounded-lg p-3 opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-800 transition" disabled>
+                            <div class="font-bold text-gray-400 line-through">${formatTime12h(st.show_time)}</div>
+                            <div class="text-xs text-red-500 font-semibold mt-1">Booking Closed</div>
+                        </button>
+                    `;
+                }
+
+                return `
+                    <button class="showtime-btn border-2 rounded-lg p-3 hover:border-purple-500 transition"
+                            onclick='selectShowtime(${JSON.stringify(st).replace(/'/g, "&apos;")}, this)'>
+                        <div class="font-bold">${formatTime12h(st.show_time)}</div>
+                        <div class="text-xs text-gray-600">₹${st.price}</div>
+                        <div class="text-xs text-green-600">${st.available_seats} seats</div>
+                    </button>
+                `;
+            }).join('');
         }
 
         // Select showtime
-        function selectShowtime(showtimeData) {
+        function selectShowtime(showtimeData, element) {
             selectedShowtime = showtimeData;
+            if (socket && selectedShowtime) socket.emit("joinShowtime", selectedShowtime.id);
 
             // Highlight selected
             document.querySelectorAll('.showtime-btn').forEach(btn => {
                 btn.classList.remove('border-purple-500', 'bg-purple-50');
             });
-            event.target.closest('.showtime-btn').classList.add('border-purple-500', 'bg-purple-50');
+            if (element) {
+                element.classList.add('border-purple-500', 'bg-purple-50');
+            } else if (event && event.target) {
+                event.target.closest('.showtime-btn').classList.add('border-purple-500', 'bg-purple-50');
+            }
 
             // Update summary
             document.getElementById('selectionSummary').classList.remove('hidden');
@@ -456,7 +1076,29 @@
         }
 
         /** MOVIE / MUSIC / SPORTS LAYOUTS **/
-        function generateSeats() {
+        async function generateSeats() {
+            window.userSessionId = JSON.parse(localStorage.getItem('loggedInUser') || "null")?.email || localStorage.getItem('sessionLockUserId');
+            if (!window.userSessionId) {
+                window.userSessionId = 'session_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('sessionLockUserId', window.userSessionId);
+            }
+
+            // Fetch live occupied seats
+            let liveOccupied = [];
+            let liveLocked = [];
+            let liveLockedBy = {};
+            try {
+                let url = '/api/bookings/occupied-seats?event_id=' + currentEvent.id;
+                if (selectedShowtime) url += '&showtime_id=' + selectedShowtime.id;
+                const res = await fetch(url);
+                const data = await res.json();
+                liveOccupied = data.occupied || [];
+                liveLocked = data.locked || [];
+                liveLockedBy = data.lockedBy || {};
+            } catch (e) {
+                console.error("Failed to fetch occupied seats", e);
+            }
+
             const layout = document.getElementById("seatLayout");
 
             // DEBUG: Log the category
@@ -517,9 +1159,21 @@
 
                 document.getElementById("smartRecBtn").classList.remove("hidden");
 
+                document.getElementById("smartRecBtn").classList.remove("hidden");
+
                 layout.innerHTML = `
-                    <div class="screen-curve"></div>
-                    <span class="block text-center text-xs text-gray-400 mb-8 tracking-widest">SCREEN</span>
+                    <div class="w-full flex justify-center mb-8">
+                        <div class="relative w-3/4 max-w-md">
+                            <div class="h-2 bg-gradient-to-b from-gray-300 to-transparent rounded-t-[100%] shadow-[0_15px_30px_-5px_rgba(139,92,246,0.3)]"></div>
+                            <span class="block text-center text-[10px] text-gray-400 mt-2 font-bold tracking-[0.3em]">CINEMA SCREEN</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-center gap-6 mb-6 text-sm">
+                        <div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-white border-2 border-gray-300"></div> <span class="text-gray-600">Available</span></div>
+                        <div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-[#10b981] shadow"></div> <span class="text-gray-600 font-medium">Selected</span></div>
+                        <div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-gray-300 border-2 border-gray-400"></div> <span class="text-gray-600">Occupied</span></div>
+                    </div>
                 `;
 
                 rows.forEach(r => {
@@ -542,8 +1196,21 @@
                         seat.className = "seat border-2 bg-white border-gray-300";
                         const id = `${r.name}${i}`;
 
-                        if (r.occupied.includes(i)) seat.classList.add("occupied");
-                        else seat.onclick = () => toggleSeat(id, seat, r.price);
+                        if (r.occupied.includes(i) || liveOccupied.includes(id)) {
+                            seat.classList.add("occupied");
+                        } else if (liveLocked.includes(id) && liveLockedBy[id] !== window.userSessionId) {
+                            seat.classList.add("locked");
+                            seat.style.backgroundColor = "#FCD34D"; // Yellow
+                            seat.style.border = "2px solid #D97706";
+                            seat.style.cursor = "not-allowed";
+                            seat.title = "Currently being booked by someone else (Locked for 5m)";
+                        } else {
+                            if (liveLocked.includes(id) && liveLockedBy[id] === window.userSessionId) {
+                                seat.classList.add("selected");
+                                if (!selectedSeats.find(s => s.id === id)) selectedSeats.push({ id, price: r.price });
+                            }
+                            seat.onclick = () => toggleSeat(id, seat, r.price);
+                        }
 
                         document.getElementById(`row-${r.name}`).appendChild(seat);
                     }
@@ -692,7 +1359,8 @@
 
                     const availableSeats = [];
                     for (let i = 1; i <= section.capacity; i++) {
-                        if (!section.occupied.includes(i)) availableSeats.push(i);
+                        const sId = `${sectionKey.toUpperCase()}-${i}`;
+                        if (!section.occupied.includes(i) && !liveOccupied.includes(sId)) availableSeats.push(i);
                     }
 
                     const buttonsContainer = document.getElementById('concert-seat-buttons');
@@ -974,7 +1642,8 @@
 
                     const availableSeats = [];
                     for (let i = 1; i <= block.capacity; i++) {
-                        if (!block.occupied.includes(i)) availableSeats.push(i);
+                        const sId = `${blockKey}-SEAT${i}`;
+                        if (!block.occupied.includes(i) && !liveOccupied.includes(sId)) availableSeats.push(i);
                     }
 
                     const buttonsContainer = document.getElementById('cricket-seat-buttons');
@@ -1180,7 +1849,7 @@
                         seatBtn.className = 'w-8 h-8 flex items-center justify-center transition-all duration-300 relative group';
 
                         // Seat Icon (SVG)
-                        const isOccupied = premiumConfig.occupied.includes(globalId);
+                        const isOccupied = premiumConfig.occupied.includes(globalId) || liveOccupied.includes(seatId);
 
                         seatBtn.innerHTML = `
                             <svg viewBox="0 0 24 24" class="w-full h-full drop-shadow-sm transition-colors duration-300 ${isOccupied ? 'text-gray-300 cursor-not-allowed' : 'text-purple-200 hover:text-purple-500 cursor-pointer seat-icon'}">
@@ -1195,24 +1864,29 @@
                             seatBtn.onclick = function () {
                                 // Toggle Selection Visuals
                                 const icon = this.querySelector('svg');
-                                const isSelected = icon.classList.contains('text-green-500');
+                                const isSelected = icon.classList.contains('seat-selected');
 
                                 if (isSelected) {
                                     // Deselect
-                                    icon.classList.remove('text-green-500');
+                                    icon.classList.remove('seat-selected', 'text-green-500');
                                     icon.classList.add('text-purple-200');
                                     selectedSeats = selectedSeats.filter(s => s.id !== seatId);
+                                    if (socket && selectedShowtime) socket.emit("unlockSeat", { showtimeId: selectedShowtime.id, seatId: seatId });
                                 } else {
                                     // Select
-                                    if (selectedSeats.length >= maxSeats) return alert("Max 10 seats!");
+                                    if (selectedSeats.length >= maxSeats) {
+                                        alert("You can only select " + maxSeats + " seat(s). Please unselect one first or change the dropdown limit.");
+                                        return;
+                                    }
                                     icon.classList.remove('text-purple-200', 'hover:text-purple-500');
-                                    icon.classList.add('text-green-500');
+                                    icon.classList.add('seat-selected', 'text-green-500');
 
                                     // Bouncing animation
                                     this.style.transform = "scale(1.2)";
                                     setTimeout(() => this.style.transform = "scale(1)", 200);
 
                                     selectedSeats.push({ id: seatId, price: premiumConfig.price });
+                                    if (socket && selectedShowtime) socket.emit("lockSeat", { showtimeId: selectedShowtime.id, seatId: seatId });
                                 }
                                 updateSummary();
                             };
@@ -1252,7 +1926,7 @@
                     for (let seat = 0; seat < seatsInRow; seat++) {
                         const seatNum = seat + 1;
                         const seatId = `${rowLabel}${seatNum}`;
-                        const isOccupied = standardConfig.occupied.includes(seat * (row + 1)); // distinct pattern
+                        const isOccupied = standardConfig.occupied.includes(seat * (row + 1)) || liveOccupied.includes(seatId);
 
                         const seatBtn = document.createElement('button');
                         seatBtn.className = 'w-7 h-7 flex items-center justify-center transition-all duration-300 relative group';
@@ -1269,21 +1943,26 @@
                         } else {
                             seatBtn.onclick = function () {
                                 const icon = this.querySelector('svg');
-                                const isSelected = icon.classList.contains('text-green-500');
+                                const isSelected = icon.classList.contains('seat-selected');
 
                                 if (isSelected) {
-                                    icon.classList.remove('text-green-500');
+                                    icon.classList.remove('seat-selected', 'text-green-500');
                                     icon.classList.add('text-teal-200');
                                     selectedSeats = selectedSeats.filter(s => s.id !== seatId);
+                                    if (socket && selectedShowtime) socket.emit("unlockSeat", { showtimeId: selectedShowtime.id, seatId: seatId });
                                 } else {
-                                    if (selectedSeats.length >= maxSeats) return alert("Max 10 seats!");
+                                    if (selectedSeats.length >= maxSeats) {
+                                        alert("You can only select " + maxSeats + " seat(s). Please unselect one first or change the dropdown limit.");
+                                        return;
+                                    }
                                     icon.classList.remove('text-teal-200', 'hover:text-teal-500');
-                                    icon.classList.add('text-green-500');
+                                    icon.classList.add('seat-selected', 'text-green-500');
 
                                     this.style.transform = "scale(1.2)";
                                     setTimeout(() => this.style.transform = "scale(1)", 200);
 
                                     selectedSeats.push({ id: seatId, price: standardConfig.price });
+                                    if (socket && selectedShowtime) socket.emit("lockSeat", { showtimeId: selectedShowtime.id, seatId: seatId });
                                 }
                                 updateSummary();
                             };
@@ -1300,16 +1979,6 @@
                     standardContainer.appendChild(rowDiv);
                 }
 
-                // Add Toggle Mobile Menu Function
-                window.toggleMobileMenu = function () {
-                    const menu = document.getElementById('mobile-menu');
-                    if (menu.classList.contains('translate-x-full')) {
-                        menu.classList.remove('translate-x-full');
-                    } else {
-                        menu.classList.add('translate-x-full');
-                    }
-                };
-
                 // Zoom functionality
                 let currentZoom = 1;
                 window.zoomSeats = function (delta) {
@@ -1324,21 +1993,44 @@
             }
         }
 
-        function toggleSeat(id, el, price) {
-            if (el.classList.contains("occupied")) return;
+        async function toggleSeat(id, el, price) {
+            if (el.classList.contains("occupied") || el.classList.contains("locked")) return;
 
             if (el.classList.contains("selected")) {
                 el.classList.remove("selected");
                 selectedSeats = selectedSeats.filter(s => s.id !== id);
-            } else {
-                if (selectedSeats.length >= maxSeats) return alert("Maximum 10 seats allowed");
-                el.classList.add("selected");
 
-                // Add pop animation
+                // Unlock backend
+                fetch('/api/bookings/unlock-seat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ event_id: currentEvent.id, showtime_id: selectedShowtime?.id, seat: id, user_id: window.userSessionId })
+                }).catch(e => console.error("Could not unlock seat", e));
+            } else {
+                if (selectedSeats.length >= maxSeats) return alert("You can only select " + maxSeats + " seat(s). Please unselect one first or change the dropdown limit.");
+
+                el.classList.add("selected");
                 el.style.transform = "scale(1.2)";
                 setTimeout(() => el.style.transform = "", 200);
 
                 selectedSeats.push({ id, price });
+
+                // Lock backend
+                try {
+                    const res = await fetch('/api/bookings/lock-seat', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ event_id: currentEvent.id, showtime_id: selectedShowtime?.id, seat: id, user_id: window.userSessionId })
+                    });
+                    const data = await res.json();
+                    if (!res.ok) {
+                        alert(data.message || "Seat could not be locked.");
+                        el.classList.remove("selected");
+                        selectedSeats = selectedSeats.filter(s => s.id !== id);
+                    }
+                } catch (e) {
+                    console.error("Lock error", e);
+                }
             }
             updateSummary();
         }
@@ -1396,11 +2088,29 @@
                 alert("Could not find " + count + " seats together. Please select manually.");
             }
         }
+        let seatTimerInterval;
+        let seatTimeLeft = 300; // 5 mins
 
         function updateSummary() {
             const subtotal = selectedSeats.reduce((s, x) => s + x.price, 0);
             const fee = Math.round(subtotal * 0.10);
-            const total = subtotal + fee;
+
+            // Calculate Snacks
+            let snacksTotal = 0;
+            const popcornCb = document.getElementById('addPopcorn');
+            const cokeCb = document.getElementById('addCoke');
+            if (popcornCb && popcornCb.checked) snacksTotal += 250;
+            if (cokeCb && cokeCb.checked) snacksTotal += 150;
+
+            const snacksDisplayRow = document.getElementById('snacksDisplayRow');
+            if (snacksTotal > 0) {
+                snacksDisplayRow.classList.remove('hidden');
+                document.getElementById('snacksDisplay').textContent = `₹${snacksTotal}`;
+            } else {
+                if (snacksDisplayRow) snacksDisplayRow.classList.add('hidden');
+            }
+
+            const total = subtotal + fee + snacksTotal;
 
             document.getElementById("ticketCount").textContent = selectedSeats.length;
             document.getElementById("subtotalAmount").textContent = `₹${subtotal}`;
@@ -1409,6 +2119,37 @@
             document.getElementById("totalAmount").textContent = `₹${total}`;
             document.getElementById("selectedSeatsText").textContent =
                 selectedSeats.length ? selectedSeats.map(s => s.id).join(", ") : "No seats selected";
+
+            // Timer logic
+            const timerContainer = document.getElementById('seatTimerContainer');
+            if (selectedSeats.length > 0) {
+                if (timerContainer) timerContainer.classList.remove('hidden');
+                if (!seatTimerInterval) {
+                    seatTimeLeft = 300;
+                    const display = document.getElementById('seatTimerDisplay');
+                    if (display) display.textContent = "04:59";
+
+                    seatTimerInterval = setInterval(() => {
+                        seatTimeLeft--;
+                        if (seatTimeLeft <= 0) {
+                            clearInterval(seatTimerInterval);
+                            seatTimerInterval = null;
+                            alert("Seat reservation time expired. Please select again.");
+                            location.reload();
+                        } else {
+                            let m = Math.floor(seatTimeLeft / 60);
+                            let s = seatTimeLeft % 60;
+                            if (display) display.textContent = (m < 10 ? '0' : '') + m + ":" + (s < 10 ? '0' : '') + s;
+                        }
+                    }, 1000);
+                }
+            } else {
+                if (timerContainer) timerContainer.classList.add('hidden');
+                if (seatTimerInterval) {
+                    clearInterval(seatTimerInterval);
+                    seatTimerInterval = null;
+                }
+            }
         }
 
         /** PROCEED TO PAYMENT **/
@@ -1435,6 +2176,10 @@
                 seats: selectedSeats.map(s => s.id),
                 amount_paid: total,
                 event_type: currentEvent.category,
+                snacks: {
+                    popcorn: document.getElementById('addPopcorn') ? document.getElementById('addPopcorn').checked : false,
+                    coke: document.getElementById('addCoke') ? document.getElementById('addCoke').checked : false
+                },
                 poster_url: currentEvent.image_url || currentEvent.image
             };
 
@@ -1473,6 +2218,16 @@
             }
         }
 
+        // Ensure autoSeatCount validates dynamically
+        const seatCountDropdown = document.getElementById("autoSeatCount");
+        if (seatCountDropdown) {
+            seatCountDropdown.addEventListener('change', function () {
+                if (selectedSeats.length > parseInt(this.value)) {
+                    alert("You've selected more seats than your new limit! Please unselect some seats before proceeding.");
+                }
+            });
+        }
+
         // Initialize on page load
         initializeBooking();
     </script>
@@ -1501,6 +2256,94 @@
             </a>
         </div>
     </nav>
+
+    <!-- Scroll Reveal Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Apply reveal class to all major container elements dynamically if not present
+            const revealElements = document.querySelectorAll('.card, .cinema-card, h1, h2, h3, .glass-panel');
+            revealElements.forEach(el => {
+                if (!el.classList.contains('reveal') && !el.closest('nav') && !el.closest('#mobile-menu')) {
+                    el.classList.add('reveal');
+                }
+            });
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal').forEach(el => {
+                observer.observe(el);
+            });
+
+            // Trigger immediately for elements in viewport on load
+            setTimeout(() => {
+                document.querySelectorAll('.reveal').forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top < window.innerHeight) {
+                        el.classList.add('active');
+                    }
+                });
+            }, 100);
+        });
+    </script>
+
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const tiltOptions = {
+                max: 5,
+                speed: 400,
+                glare: true,
+                "max-glare": 0.15,
+                scale: 1.02
+            };
+
+            VanillaTilt.init(document.querySelectorAll(".glass-panel, .cinema-card"), tiltOptions);
+
+            // Function to initialize tilt on cards
+            const initTilt = () => {
+                const cards = document.querySelectorAll('#eventGrid > div, #cinema-grid > div');
+                cards.forEach(card => {
+                    if (!card.vanillaTilt) {
+                        card.classList.add('tilt-card');
+                        VanillaTilt.init(card, tiltOptions);
+                    }
+                });
+            };
+
+            initTilt();
+
+            // Add tilt-card to dynamically generated events
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.addedNodes.length) {
+                        initTilt();
+                    }
+                });
+            });
+
+            const eventGrid = document.getElementById('eventGrid');
+            const cinemaGrid = document.getElementById('cinema-grid');
+            if (eventGrid) observer.observe(eventGrid, { childList: true });
+            if (cinemaGrid) observer.observe(cinemaGrid, { childList: true });
+        });
+    </script>
+
 </body>
 
 </html>
