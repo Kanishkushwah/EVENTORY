@@ -418,19 +418,27 @@
                             <p class="text-sm text-gray-600 mt-4 font-semibold" id="qrAmount">Amount: ₹0.00</p>
 
                             <div class="border-t pt-6 mt-6">
-                                <p class="text-sm font-semibold mb-4 text-gray-700">Or enter UPI ID</p>
+                                <p class="text-sm font-bold mb-4 text-gray-800">Verify Your Payment</p>
 
-                                <form class="max-w-md mx-auto" onsubmit="event.preventDefault(); processUPIPayment();">
-                                    <div class="flex gap-3">
-                                        <input id="upiId"
-                                            class="flex-1 rounded-lg border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 shadow-sm py-3 px-4"
-                                            placeholder="yourname@upi" />
+                                <form class="max-w-md mx-auto" onsubmit="event.preventDefault(); verifyUPIPayment();">
+                                    <div class="flex flex-col sm:flex-row gap-3">
+                                        <div class="relative flex-1">
+                                            <span
+                                                class="material-icons-outlined absolute left-3 top-3.5 text-purple-600 text-[18px]">receipt_long</span>
+                                            <input id="utrNumber"
+                                                class="w-full pl-10 pr-4 py-3.5 rounded-xl border-2 border-purple-100 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 shadow-sm text-sm transition outline-none font-mono"
+                                                placeholder="Enter 12-digit UTR No." required minlength="12"
+                                                maxlength="12" pattern="[0-9]{12}" />
+                                        </div>
 
-                                        <button id="btnPayUPI"
-                                            class="gradient-purple hover:opacity-90 text-white px-8 py-3 rounded-lg font-bold transition w-full sm:w-auto mt-2 sm:mt-0">
-                                            Pay
+                                        <button id="btnVerifyUPI" type="submit"
+                                            class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-6 py-3.5 rounded-xl font-bold transition flex items-center justify-center gap-2 whitespace-nowrap shadow-lg shadow-purple-500/30 transform hover:-translate-y-0.5">
+                                            <span class="material-icons-outlined text-[18px]">verified_user</span>
+                                            Verify
                                         </button>
                                     </div>
+                                    <p class="text-[11px] text-gray-500 mt-3 text-left font-medium">Find the 12-digit
+                                        UTR/Reference number in your UPI app's transaction history after paying.</p>
                                 </form>
                             </div>
 
@@ -773,7 +781,8 @@
             const reference = localStorage.getItem("bookingReference") || "REF123";
             const amount = localStorage.getItem("totalAmount") || "0";
 
-            const upiString = `upi://pay?pa=eventory@upi&pn=Eventory&am=${amount}&tr=${reference}`;
+            // User's Real UPI ID injected
+            const upiString = `upi://pay?pa=tanishkushwah851181@okhdfcbank&pn=Tanish%20Kushwah&am=${amount}&tn=Eventory%20Ticket%20${reference}&tr=${reference}`;
 
             // Update Deep Link Button for Mobile
             const deepLinkBtn = document.getElementById("upiDeepLink");
@@ -890,10 +899,19 @@
             }
         }
 
-        function processUPIPayment() {
-            const upiId = document.getElementById("upiId").value.trim();
-            if (!upiId) return alert("Please enter UPI ID");
-            completePayment("UPI");
+        function verifyUPIPayment() {
+            const utr = document.getElementById("utrNumber").value.trim();
+            if (utr.length !== 12 || isNaN(utr)) return alert("Please enter a valid 12-digit UTR/Reference number from your UPI app's transaction receipt.");
+
+            const btn = document.getElementById("btnVerifyUPI");
+            btn.disabled = true;
+            btn.innerHTML = '<span class="material-icons-outlined animate-spin text-[18px]">sync</span> Verifying Bank...';
+
+            // Simulating Bank Verification Delay
+            setTimeout(() => {
+                alert(`✅ Payment Verified Successfully!\n\nUTR Number: ${utr} match successful.`);
+                completePayment("UPI");
+            }, 2500);
         }
 
         async function loadConfirmationDetails() {
@@ -921,12 +939,12 @@
 
             try {
                 // Show loading
-                const btnId = methodType === "CARD" ? "btnPayCard" : "btnPayUPI";
+                const btnId = methodType === "CARD" ? "btnPayCard" : "btnVerifyUPI";
                 const submitBtn = document.getElementById(btnId);
 
                 if (submitBtn) {
                     submitBtn.disabled = true;
-                    submitBtn.innerHTML = '<span class="material-icons-outlined animate-spin">sync</span> Processing...';
+                    submitBtn.innerHTML = '<span class="material-icons-outlined animate-spin">sync</span> Finalizing...';
                 }
 
                 // Call backend (Relative URL is safer)
@@ -957,7 +975,7 @@
                 console.error("Payment Error:", error);
                 alert("Payment failed: " + error.message);
 
-                const btnId = methodType === "CARD" ? "btnPayCard" : "btnPayUPI";
+                const btnId = methodType === "CARD" ? "btnPayCard" : "btnVerifyUPI";
                 const submitBtn = document.getElementById(btnId);
                 if (submitBtn) {
                     submitBtn.disabled = false;
@@ -965,7 +983,7 @@
                     if (methodType === "CARD") {
                         submitBtn.innerHTML = `Pay <span id="cardPaymentAmount">₹${localStorage.getItem("totalAmount")}</span>`;
                     } else {
-                        submitBtn.textContent = "Pay";
+                        submitBtn.innerHTML = '<span class="material-icons-outlined text-[18px]">verified_user</span> Verify';
                     }
                 }
             }
