@@ -929,9 +929,21 @@
 
                 showtimes = cinemaShowtimes.showtimes;
 
-                // Generate next 5 days dynamically
+                // DEMO FIX: Automatically map database showtimes to the next 5 days 
+                // so the portfolio always shows active booking slots regardless of when it's viewed.
                 const next5Days = [];
                 const today = new Date();
+
+                showtimes.forEach((st, index) => {
+                    const tempDate = new Date(today);
+                    // spread them across the 5 days using modulo
+                    tempDate.setDate(today.getDate() + (index % 5));
+
+                    const yyyy = tempDate.getFullYear();
+                    const mm = String(tempDate.getMonth() + 1).padStart(2, '0');
+                    const dd = String(tempDate.getDate()).padStart(2, '0');
+                    st.show_date = `${yyyy}-${mm}-${dd}`;
+                });
 
                 for (let i = 0; i < 5; i++) {
                     const tempDate = new Date(today);
