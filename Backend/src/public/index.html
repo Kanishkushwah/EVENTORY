@@ -1219,7 +1219,11 @@
                             <span class="text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/30 px-2 py-1 rounded">${formatDate(event.date)}</span>
                             <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"><span class="material-icons text-sm">location_on</span> ${event.venue}</span>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white dark:text-white mb-2 line-clamp-2">${event.title}</h3>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white dark:text-white mb-1 line-clamp-2">${event.title}</h3>
+                        <div class="text-[10px] text-purple-600 dark:text-purple-400 font-bold flex items-center gap-1 mb-2 bg-purple-50 dark:bg-purple-900/30 w-fit px-2 py-0.5 rounded-full transition-opacity">
+                            <span class="material-icons text-[12px] animate-pulse">visibility</span> 
+                            <span id="view-count-${event.id}" class="view-counter" data-base="${Math.floor(Math.random() * 80) + 15}">${Math.floor(Math.random() * 80) + 15}</span> viewing right now
+                        </div>
                         <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow line-clamp-3">
                             ${event.description || 'No description available'}
                         </p>
@@ -1233,6 +1237,29 @@
                 </div>
             `;
             }).join('');
+
+            // Re-initialize live counters if they don't exist
+            if (!window.liveCounterInterval) {
+                window.liveCounterInterval = setInterval(() => {
+                    document.querySelectorAll('.view-counter').forEach(el => {
+                        // 30% chance to change viewing number slightly
+                        if (Math.random() > 0.7) {
+                            let current = parseInt(el.textContent);
+                            let base = parseInt(el.getAttribute('data-base'));
+                            // fluctuate between -3 and +5 from base
+                            let newCount = current + (Math.floor(Math.random() * 3) - 1);
+                            if (newCount < base - 5) newCount = base - 5;
+                            if (newCount > base + 15) newCount = base + 15;
+                            if (newCount < 1) newCount = 1;
+                            el.textContent = newCount;
+
+                            // Visual tick
+                            el.parentElement.style.opacity = '0.5';
+                            setTimeout(() => el.parentElement.style.opacity = '1', 200);
+                        }
+                    });
+                }, 3000);
+            }
         }
 
         // --- SAVE EVENT LOGIC ---
