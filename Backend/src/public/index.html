@@ -1142,12 +1142,16 @@
                         document.getElementById("heroTrailerBtn").setAttribute("onclick", `window.open('${config.hero.trailerUrl}', '_blank')`);
 
                         // Parse Youtube Link for Background Autoplay
-                        if (config.hero.trailerUrl && config.hero.trailerUrl.includes('youtube.com')) {
+                        if (config.hero.trailerUrl && config.hero.trailerUrl.includes('youtu')) {
                             try {
-                                const urlObj = new URL(config.hero.trailerUrl);
-                                const ytId = urlObj.searchParams.get('v');
+                                const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+                                const match = config.hero.trailerUrl.match(regExp);
+                                const ytId = (match && match[7].length === 11) ? match[7] : null;
+
                                 if (ytId) {
-                                    document.getElementById("heroVideo").src = `https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${ytId}&modestbranding=1&rel=0`;
+                                    // origin parameter helps prevent some embed errors
+                                    const embedUrl = `https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${ytId}&modestbranding=1&rel=0&playsinline=1&enablejsapi=1&origin=${window.location.origin}`;
+                                    document.getElementById("heroVideo").src = embedUrl;
                                     document.getElementById("heroVideoContainer").classList.remove('hidden');
                                     document.getElementById("heroImage").classList.add('hidden');
                                 } else {
