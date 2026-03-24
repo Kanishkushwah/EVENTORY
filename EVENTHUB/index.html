@@ -490,7 +490,7 @@
         <div class="absolute inset-0 z-0 group animate-fade-in overflow-hidden flex items-center justify-center">
             <!-- YouTube Trailer Background overlay -->
             <div id="heroVideoContainer"
-                class="w-[300%] md:w-[150%] h-[300%] md:h-[150%] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none hidden z-0 opacity-70">
+                class="w-[300%] md:w-[150%] h-[300%] md:h-[150%] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none hidden z-0 opacity-100">
                 <iframe id="heroVideo" class="w-full h-full" frameborder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerpolicy="strict-origin-when-cross-origin" allowfullscreen src=""></iframe>
@@ -501,15 +501,14 @@
                 src="https://images.unsplash.com/photo-1682695796497-31a44224d6d6?q=80&w=2600&auto=format&fit=crop"
                 class="w-full h-full object-cover opacity-50 transform scale-105 transition-transform duration-[20s] ease-linear group-hover:scale-110 relative z-0" />
 
-            <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent z-10"></div>
-            <div
-                class="absolute inset-0 bg-gradient-to-t from-black/100 via-black/40 to-transparent z-10 pb-20 mt-auto">
+            <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/30 to-transparent z-10"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10 pb-20 mt-auto">
             </div>
         </div>
 
         <div class="container mx-auto px-8 md:px-16 relative z-10 reveal">
-            <h1 id="heroTitle" class="text-6xl md:text-8xl mb-4 drop-shadow-2xl text-white font-medium"
-                style="font-family: 'Pacifico', cursive; line-height: 1.4; padding-bottom: 2rem;">
+            <h1 id="heroTitle" class="text-6xl md:text-8xl mb-4 drop-shadow-2xl text-white font-black tracking-tight"
+                style="line-height: 1.2; padding-bottom: 2rem;">
                 Ocean's Legacy
             </h1>
             <p id="heroDesc"
@@ -1151,7 +1150,7 @@
 
                                 if (ytId) {
                                     // Removed experimental parameters to match standard oEmbed strictly
-                                    const embedUrl = `https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${ytId}&playsinline=1`;
+                                    const embedUrl = `https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${ytId}&playsinline=1&vq=hd1080`;
                                     document.getElementById("heroVideo").src = embedUrl;
                                     document.getElementById("heroVideoContainer").classList.remove('hidden');
                                     document.getElementById("heroImage").classList.add('hidden');
@@ -1173,7 +1172,7 @@
                             document.getElementById("heroBookBtn").setAttribute("onclick", `bookEvent('${match.id}')`);
                         } else {
                             // Focus search if not found
-                            document.getElementById("heroBookBtn").setAttribute("onclick", `document.getElementById('searchInput').focus(); document.getElementById('searchInput').value = '${config.hero.title}'; searchEvents();`);
+                            document.getElementById("heroBookBtn").setAttribute("onclick", `document.getElementById('searchInput').focus(); document.getElementById('searchInput').value = '${config.hero.title}'; searchEvents(); `);
                         }
                     }
                 }
@@ -1194,12 +1193,12 @@
                 // Keep skeletons instead of "Unable to connect" text as requested, or add a subtle refresh overlay
                 if (eventGrid) {
                     eventGrid.innerHTML = Array(6).fill().map(() => `
-                        <div class="skeleton w-[85vw] max-w-[340px] md:max-w-none h-96 flex-none snap-center self-stretch relative opacity-50">
-                             <div class="absolute inset-0 flex items-center justify-center">
-                                  <button onclick="loadEvents()" class="bg-primary/80 text-white px-4 py-2 rounded-lg backdrop-blur text-sm font-medium">Retry</button>
-                             </div>
-                        </div>
-                     `).join('');
+                                        < div class="skeleton w-[85vw] max-w-[340px] md:max-w-none h-96 flex-none snap-center self-stretch relative opacity-50" >
+                                            <div class="absolute inset-0 flex items-center justify-center">
+                                                <button onclick="loadEvents()" class="bg-primary/80 text-white px-4 py-2 rounded-lg backdrop-blur text-sm font-medium">Retry</button>
+                                            </div>
+                        </div >
+                                        `).join('');
                 }
             }
         }
@@ -1235,13 +1234,13 @@
                 // Check if it's the special summary card
                 if (event.isSummary) {
                     return `
-                    <div class="relative rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 md:col-span-2 group w-[85vw] max-w-[340px] flex-none snap-center md:max-w-none md:w-auto border border-blue-700 bg-gray-900 cursor-pointer"
-                         onclick="filterCategory('sports')">
+                                        < div class="relative rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 md:col-span-2 group w-[85vw] max-w-[340px] flex-none snap-center md:max-w-none md:w-auto border border-blue-700 bg-gray-900 cursor-pointer"
+                                    onclick = "filterCategory('sports')" >
                         <!-- Background Image -->
                         <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" 
                              style="background-image: url('https://scontent.fstv5-1.fna.fbcdn.net/v/t39.30808-6/629225282_1375341887943839_8233480659945814975_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=13d280&_nc_ohc=dy8s1wqarZwQ7kNvwGnn_Fl&_nc_oc=AdkCnJpTs98hlFC8Gel43Mit-zdGpsv_PB3gRy4C8F78g3TuMdgdMiTFFEL6YUiXBf8Px4iCuR5QWTlVXqm70M_0&_nc_zt=23&_nc_ht=scontent.fstv5-1.fna&_nc_gid=kSUb0-KZbGsN6tasy3kKTQ&oh=00_AfsACJgjrDrQ4AJz0PIAuHuoiBHOMnrvDQYYDz4OHIYoeQ&oe=699CFABA');">
                         </div>
-                        <!-- Gradient Overlay for Text Readability -->
+                        <!--Gradient Overlay for Text Readability-- >
                         <div class="absolute inset-0 bg-gradient-to-r from-blue-900/90 via-blue-900/40 to-transparent"></div>
 
                         <div class="absolute top-4 right-4 animate-pulse z-10">
@@ -1254,7 +1253,7 @@
                                 View All Matches <span class="material-icons">arrow_forward</span>
                             </button>
                         </div>
-                    </div>`;
+                    </div > `;
                 }
 
                 // Normal Event Card
@@ -1269,56 +1268,56 @@
                 // Add Trending/Fast Filling Badge
                 const badgeIndex = (event.id || 0) % 3;
                 let badgeHTML = '';
-                if (badgeIndex === 0) badgeHTML = `<div class="absolute top-3 right-3 bg-orange-500 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm z-10 flex items-center gap-1"><span>🔥</span> Trending</div>`;
-                else if (badgeIndex === 1) badgeHTML = `<div class="absolute top-3 right-3 bg-rose-500 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm z-10 flex items-center gap-1"><span>⚡</span> Fast Filling</div>`;
-                else badgeHTML = `<div class="absolute top-3 right-3 bg-amber-500 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm z-10 flex items-center gap-1"><span>⭐</span> Recommended</div>`;
+                if (badgeIndex === 0) badgeHTML = `< div class="absolute top-3 right-3 bg-orange-500 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm z-10 flex items-center gap-1" > <span>🔥</span> Trending</div > `;
+                else if (badgeIndex === 1) badgeHTML = `< div class="absolute top-3 right-3 bg-rose-500 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm z-10 flex items-center gap-1" > <span>⚡</span> Fast Filling</div > `;
+                else badgeHTML = `< div class="absolute top-3 right-3 bg-amber-500 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm z-10 flex items-center gap-1" > <span>⭐</span> Recommended</div > `;
 
                 return `
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col self-stretch border border-gray-100 dark:border-gray-700 animate-fade-in w-[85vw] max-w-[340px] flex-none snap-center md:max-w-none md:w-auto" 
-                     data-id="${event.id}"
-                     data-category="${normCat}"
-                     data-title="${event.title.toLowerCase()}">
-                    <div class="relative h-72 overflow-hidden">
-                        <img alt="${event.title}" class="w-full self-stretch object-cover group-hover:scale-105 transition-transform duration-500" src="${event.image_url}" onerror="this.src='https://via.placeholder.com/400x600'"/>
-                        
-                        <!-- Category / Trending Badge -->
-                        ${badgeHTML}
+                                        < div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col self-stretch border border-gray-100 dark:border-gray-700 animate-fade-in w-[85vw] max-w-[340px] flex-none snap-center md:max-w-none md:w-auto"
+                                    data - id="${event.id}"
+                                    data - category="${normCat}"
+                                    data - title="${event.title.toLowerCase()}" >
+                                        <div class="relative h-72 overflow-hidden">
+                                            <img alt="${event.title}" class="w-full self-stretch object-cover group-hover:scale-105 transition-transform duration-500" src="${event.image_url}" onerror="this.src='https://via.placeholder.com/400x600'" />
 
-                        <div class="absolute bottom-3 right-3 bg-red-600/90 backdrop-blur-sm text-white px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wide shadow-sm z-10">
-                            ${event.category}
-                        </div>
+                                            <!-- Category / Trending Badge -->
+                                            ${badgeHTML}
 
-                        <!-- Heart Button (Emoji) -->
-                        <button onclick="event.stopPropagation(); toggleSaveEvent('${event.id}', '${event.title.replace(/'/g, "\\'")}', '${event.image_url}', '${formatDate(event.date)}')" 
-                                class="absolute top-3 left-3 bg-white/90 p-2 rounded-full shadow-md z-20 hover:scale-110 transition-transform group/heart flex items-center justify-center w-10 h-10"
-                                title="${isSaved ? 'Remove from Saved' : 'Save Event'}">
-                            <span class="text-2xl leading-none" id="heart-${event.id}">
-                                ${isSaved ? '❤️' : '🤍'}
-                            </span>
-                        </button>
-                    </div>
-                    <div class="p-5 flex flex-col flex-grow">
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/30 px-2 py-1 rounded">${formatDate(event.date)}</span>
-                            <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"><span class="material-icons text-sm">location_on</span> ${event.venue}</span>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white dark:text-white mb-1 line-clamp-2">${event.title}</h3>
-                        <div class="text-[10px] text-purple-600 dark:text-purple-400 font-bold flex items-center gap-1 mb-2 bg-purple-50 dark:bg-purple-900/30 w-fit px-2 py-0.5 rounded-full transition-opacity">
-                            <span class="material-icons text-[12px] animate-pulse">visibility</span> 
-                            <span id="view-count-${event.id}" class="view-counter" data-base="${Math.floor(Math.random() * 80) + 15}">${Math.floor(Math.random() * 80) + 15}</span> viewing right now
-                        </div>
-                        <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow line-clamp-3">
-                            ${event.description || 'No description available'}
-                        </p>
-                        <div class="pt-4 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center mt-auto">
-                            <div class="text-sm font-medium text-gray-900 dark:text-white">From ₹${event.price}</div>
-                            <button onclick="bookEvent(${event.id})" class="text-white bg-red-600 hover:bg-red-700 font-medium text-sm px-4 py-1.5 rounded-lg transition-colors">
-                                Book Tickets
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
+                                            <div class="absolute bottom-3 right-3 bg-red-600/90 backdrop-blur-sm text-white px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wide shadow-sm z-10">
+                                                ${event.category}
+                                            </div>
+
+                                            <!-- Heart Button (Emoji) -->
+                                            <button onclick="event.stopPropagation(); toggleSaveEvent('${event.id}', '${event.title.replace(/'/g, "\\'")}', '${event.image_url}', '${formatDate(event.date)}')"
+                                            class="absolute top-3 left-3 bg-white/90 p-2 rounded-full shadow-md z-20 hover:scale-110 transition-transform group/heart flex items-center justify-center w-10 h-10"
+                                            title="${isSaved ? 'Remove from Saved' : 'Save Event'}">
+                                            <span class="text-2xl leading-none" id="heart-${event.id}">
+                                                ${isSaved ? '❤️' : '🤍'}
+                                            </span>
+                                        </button>
+                    </div >
+                                        <div class="p-5 flex flex-col flex-grow">
+                                            <div class="flex justify-between items-start mb-2">
+                                                <span class="text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/30 px-2 py-1 rounded">${formatDate(event.date)}</span>
+                                                <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"><span class="material-icons text-sm">location_on</span> ${event.venue}</span>
+                                            </div>
+                                            <h3 class="text-xl font-bold text-gray-900 dark:text-white dark:text-white mb-1 line-clamp-2">${event.title}</h3>
+                                            <div class="text-[10px] text-purple-600 dark:text-purple-400 font-bold flex items-center gap-1 mb-2 bg-purple-50 dark:bg-purple-900/30 w-fit px-2 py-0.5 rounded-full transition-opacity">
+                                                <span class="material-icons text-[12px] animate-pulse">visibility</span>
+                                                <span id="view-count-${event.id}" class="view-counter" data-base="${Math.floor(Math.random() * 80) + 15}">${Math.floor(Math.random() * 80) + 15}</span> viewing right now
+                                            </div>
+                                            <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow line-clamp-3">
+                                                ${event.description || 'No description available'}
+                                            </p>
+                                            <div class="pt-4 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center mt-auto">
+                                                <div class="text-sm font-medium text-gray-900 dark:text-white">From ₹${event.price}</div>
+                                                <button onclick="bookEvent(${event.id})" class="text-white bg-red-600 hover:bg-red-700 font-medium text-sm px-4 py-1.5 rounded-lg transition-colors">
+                                                    Book Tickets
+                                                </button>
+                                            </div>
+                                        </div>
+                </div >
+                                        `;
             }).join('');
 
             // Re-initialize live counters if they don't exist
@@ -1349,7 +1348,7 @@
         function toggleSaveEvent(id, title, image, date) {
             let saved = JSON.parse(localStorage.getItem('savedEvents') || '[]');
             const index = saved.findIndex(e => e.id == id);
-            const heartSpan = document.getElementById(`heart-${id}`);
+            const heartSpan = document.getElementById(`heart - ${id} `);
 
             if (index > -1) {
                 // Remove
@@ -1381,12 +1380,12 @@
             if (user && navContainer) {
                 // Use a profile dropdown instead of simple links
                 navContainer.innerHTML = `
-                    <button onclick="subscribeNewsletter()"
-                        class="relative w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors focus:outline-none shadow-sm"
-                        title="Notifications">
+                                        < button onclick = "subscribeNewsletter()"
+                                    class="relative w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors focus:outline-none shadow-sm"
+                                    title = "Notifications" >
                         <span class="material-icons">notifications</span>
                         <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-gray-800"></span>
-                    </button>
+                    </button >
                     <button onclick="toggleTheme()"
                         class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors focus:outline-none shadow-sm"
                         title="Toggle Dark Mode">
@@ -1411,7 +1410,7 @@
                             </button>
                         </div>
                     </div>
-                `;
+                                    `;
             }
         }
 
@@ -1541,7 +1540,7 @@
             }
 
             try {
-                const response = await fetch(`/api/events/smart-search?q=${encodeURIComponent(query)}`);
+                const response = await fetch(`/ api / events / smart - search ? q = ${encodeURIComponent(query)} `);
                 const matches = await response.json();
 
                 // Structural CSS switch for mobile responsiveness
@@ -1553,27 +1552,27 @@
                 if (btn) btn.style.display = 'none';
 
                 // Clear grid and show AI Header
-                eventGrid.innerHTML = `<div class="col-span-full mb-6 py-4 px-6 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-200 dark:border-purple-800 rounded-xl flex items-center gap-3">
+                eventGrid.innerHTML = `< div class="col-span-full mb-6 py-4 px-6 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-200 dark:border-purple-800 rounded-xl flex items-center gap-3" >
                     <span class="material-icons text-pink-500 text-3xl">auto_awesome</span>
                     <div>
                         <h3 class="font-bold text-gray-800 dark:text-white">AI Search Results for "${query}"</h3>
                         <p class="text-sm text-gray-600 dark:text-gray-400">Found ${matches.length} perfectly matched events.</p>
                     </div>
-                </div>`;
+                </div > `;
 
                 if (matches.length === 0) {
-                    eventGrid.innerHTML += `<div class="col-span-full text-center py-12">
+                    eventGrid.innerHTML += `< div class="col-span-full text-center py-12" >
                         <span class="material-icons text-6xl text-gray-300 dark:text-gray-600 mb-4">search_off</span>
                         <h3 class="text-xl font-bold text-gray-600 dark:text-gray-300">No matching events found</h3>
                         <p class="text-gray-400 mt-2">Try adjusting your filters or search terms.</p>
-                    </div>`;
+                    </div > `;
                 } else {
                     matches.forEach(event => {
                         const card = document.createElement('div');
                         card.className = "bg-white dark:bg-surface-dark border dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col h-full transform hover:-translate-y-1 relative w-full";
 
                         let priceDisplay = event.price === 0 ? "Free Entry" : "Rs." + event.price;
-                        let catBadge = `<span class="absolute top-4 left-4 bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1 rounded-full shadow-md backdrop-blur-sm z-10 flex items-center gap-1"><span class="material-icons text-[12px]">auto_awesome</span> Best Match</span>`;
+                        let catBadge = `< span class="absolute top-4 left-4 bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1 rounded-full shadow-md backdrop-blur-sm z-10 flex items-center gap-1" > <span class="material-icons text-[12px]">auto_awesome</span> Best Match</span > `;
 
                         card.innerHTML = `
                             ${catBadge}
@@ -1768,7 +1767,7 @@
             const btn = document.getElementById('autoDetectBtn');
             const originalText = btn.innerHTML;
 
-            btn.innerHTML = `<span class="animate-spin material-icons text-base">refresh</span> Detecting...`;
+            btn.innerHTML = `< span class="animate-spin material-icons text-base" > refresh</span > Detecting...`;
 
             if (!("geolocation" in navigator)) {
                 alert("Geolocation is not supported by your browser.");
