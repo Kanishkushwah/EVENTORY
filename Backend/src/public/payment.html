@@ -485,6 +485,20 @@
                     </div>
                 </div>
 
+                <div class="mb-5 border border-dashed border-gray-300 bg-gray-50 rounded-lg p-3">
+                    <label
+                        class="block text-xs font-bold text-gray-700 uppercase mb-2 tracking-wide flex items-center gap-1"><span
+                            class="material-icons-outlined text-[14px] text-purple-600">local_offer</span> Have a Promo
+                        Code?</label>
+                    <div class="flex gap-2">
+                        <input id="couponInput" type="text" placeholder="Enter code"
+                            class="w-full flex-1 px-3 py-2 border-2 border-gray-200 bg-white rounded-lg focus:border-purple-500 focus:ring-2 outline-none uppercase font-mono text-sm transition text-gray-900 font-bold" />
+                        <button onclick="applyCoupon()" id="btnApplyCoupon"
+                            class="bg-gray-900 hover:bg-black text-white px-5 py-2 rounded-lg font-bold text-sm transition shadow-md active:scale-95">Apply</button>
+                    </div>
+                    <p id="couponMsg" class="text-xs font-medium mt-2 hidden"></p>
+                </div>
+
                 <div class="bg-green-50 border border-green-200 rounded-lg p-3 flex items-start gap-2">
                     <span class="material-icons-outlined text-green-600 text-lg">verified_user</span>
                     <div class="text-xs text-green-700">
@@ -751,6 +765,48 @@
         let method = "card";
         const stripe = Stripe("pk_test_YOUR_STRIPE_PUBLIC_KEY"); // Replace with your actual Stripe publishable key
         let elements;
+
+        let isCouponApplied = false;
+        let originalTotal = 0;
+
+        function applyCoupon() {
+            if (isCouponApplied) return alert("A discount is already applied to this order!");
+
+            const code = document.getElementById("couponInput").value.trim().toUpperCase();
+            if (code === "95OFF") {
+                isCouponApplied = true;
+                const msg = document.getElementById("couponMsg");
+                msg.textContent = "✅ Boom! 95% Discount Applied";
+                msg.className = "text-xs font-bold text-green-600 mt-2 block animate-pulse";
+                document.getElementById("btnApplyCoupon").disabled = true;
+                document.getElementById("btnApplyCoupon").classList.add("opacity-50", "cursor-not-allowed");
+
+                originalTotal = parseFloat(localStorage.getItem("totalAmount") || "0");
+                const discountedTotal = (originalTotal * 0.05).toFixed(2); // 95% off
+
+                // Update Local Storage globally
+                localStorage.setItem("totalAmount", discountedTotal);
+
+                // Update DOM elements intelligently
+                const summTotal = document.getElementById("summaryTotal");
+                if (summTotal) summTotal.innerHTML = `<span class="line-through text-gray-400 text-sm font-normal mr-2">₹${originalTotal}</span>₹${discountedTotal}`;
+
+                const cardAmt = document.getElementById("cardPaymentAmount");
+                if (cardAmt) cardAmt.textContent = "₹" + discountedTotal;
+
+                const qrAmt = document.getElementById("qrAmount");
+                if (qrAmt) qrAmt.textContent = "Amount: ₹" + discountedTotal;
+
+                // Re-initialize dynamic payment engines with new amount
+                if (method === "upi") generateUPIQR();
+                initializeStripe(); // Needs to fetch new intent with lower amount
+
+            } else {
+                const msg = document.getElementById("couponMsg");
+                msg.textContent = "❌ Invalid Promo Code";
+                msg.className = "text-xs font-bold text-red-600 mt-2 block animate-shake";
+            }
+        }
 
         function switchPaymentMethod(m) {
             method = m;
