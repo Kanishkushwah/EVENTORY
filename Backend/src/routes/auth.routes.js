@@ -17,7 +17,7 @@ router.get('/google/callback',
         const protocol = req.headers['x-forwarded-proto'] || req.protocol;
         const host = req.get('host');
         const baseUrl = `${protocol}://${host}`;
-        
+
         // Redirect to Backend-Served Frontend
         const dashboardUrl = new URL(`${baseUrl}/EVENTHUB/user-profile.html`);
         dashboardUrl.searchParams.set('googleauth', '1');
@@ -32,25 +32,48 @@ router.get('/google/callback',
 
 // Logout
 router.get('/logout', (req, res) => {
-    req.logout((err) => {
-        if (err) return res.status(500).json({ message: 'Logout failed' });
-        res.json({ message: 'Logged out successfully' });
+    res.cookie('jwt', '', {
+        httpOnly: true,
+        expires: new Date(0)
     });
+    // Fallback for passport session if still used for oauth
+    req.logout && req.logout((err) => {
+        if (err) console.error("Passport logout error:", err);
+    });
+    res.json({ message: 'Logged out successfully' });
 });
 
-// Get current user
+// Get current user (Combines Session and JWT logic)
+import jwt from 'jsonwebtoken';
+
 router.get('/user', (req, res) => {
-    if (req.isAuthenticated()) {
+    // 1. Check JWT Cookie First
+    if (req.cookies.jwt) {
+        try {
+            const decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET || 'fallback_secret_for_dev');
+            return res.json({
+                loggedIn: true,
+                user: { id: decoded.id, role: decoded.role }
+            });
+        } catch (err) {
+            console.error("JWT Verification failed on /user check", err.message);
+        }
+    }
+
+    // 2. Fallback to session check for Google OAuth users (since we didn't rewrite passport strategy fully)
+    if (req.isAuthenticated && req.isAuthenticated()) {
         return res.json({
             loggedIn: true,
             user: { id: req.user.id, email: req.user.email, name: req.user.name, profilePicture: req.user.profile_picture }
         });
     }
+
     res.json({ loggedIn: false });
 });
 
 // Manual Registration
 import { UserService } from '../services/user.service.js';
+import generateToken from '../utils/generateToken.js';
 
 router.post('/register', async (req, res) => {
     try {
@@ -65,14 +88,10 @@ router.post('/register', async (req, res) => {
             return res.status(400).json({ message: result.error.message || "Registration failed" });
         }
 
-        // Log the user in immediately
-        req.login(result, (err) => {
-            if (err) {
-                console.error("Login Error after Register:", err);
-                return res.status(500).json({ message: "Login failed" });
-            }
-            return res.json({ success: true, message: "Registered successfully", user: result });
-        });
+        // Generate JWT Token
+        generateToken(res, result.id, 'user');
+
+        return res.json({ success: true, message: "Registered successfully", user: result });
 
     } catch (err) {
         console.error("Register Route Error:", err);
@@ -102,17 +121,13 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ message: "Invalid credentials" });
         }
 
-        req.login(result, (err) => {
-            if (err) {
-                console.error("Login Error:", err);
-                return res.status(500).json({ message: "Login failed" });
-            }
-            return res.json({
-                success: true,
-                message: "Logged in successfully",
-                user: result,
-                redirect: 'user-profile.html' // Standard user redirect
-            });
+        generateToken(res, result.id, 'user');
+
+        return res.json({
+            success: true,
+            message: "Logged in successfully",
+            user: result,
+            redirect: 'user-profile.html' // Standard user redirect
         });
 
     } catch (err) {

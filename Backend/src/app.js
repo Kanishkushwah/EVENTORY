@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from "express";
 import cors from "cors";
 import session from "express-session";
@@ -16,6 +17,12 @@ import cancellationRoutes from "./routes/cancellation.routes.js";
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { ReminderService } from './services/reminder.service.js';
+import helmet from 'helmet';
+import compression from 'compression';
+import morgan from 'morgan';
+import rateLimit from 'express-rate-limit';
+import cookieParser from 'cookie-parser';
+import { errorHandler } from './middleware/error.middleware.js';
 
 const app = express();
 
@@ -24,6 +31,21 @@ ReminderService.init();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+app.use(helmet({
+    contentSecurityPolicy: false, // Too restrictive for external CDNs by default without careful config
+    crossOriginEmbedderPolicy: false
+}));
+app.use(compression()); // Gzip compression
+app.use(morgan('combined')); // Better logging
+app.use(cookieParser()); // Parse strictly-for-HTTP cookies
+
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+    message: { error: 'Too many requests from this IP, please try again later.' }
+});
+app.use(limiter);
 
 // Middlewares
 app.use(cors({
@@ -41,16 +63,21 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// SERVE FRONTEND (Critical Fix)
+// SERVE FRONTEND - PRODUCTION QUALITY
+const staticOptions = {
+    maxAge: '1d', // Cache static assets for 1 day
+    etag: true
+};
+
 // 1. Try serving from 'public' (For Deployment)
 const publicPath = path.join(__dirname, 'public');
-app.use(express.static(publicPath));
-app.use('/EVENTHUB', express.static(publicPath));
+app.use(express.static(publicPath, staticOptions));
+app.use('/EVENTHUB', express.static(publicPath, staticOptions));
 
 // 2. Fallback to Dev Path (For Local Dev)
 const devPath = path.join(__dirname, '../../EVENTHUB');
-app.use(express.static(devPath));
-app.use('/EVENTHUB', express.static(devPath));
+app.use(express.static(devPath, staticOptions));
+app.use('/EVENTHUB', express.static(devPath, staticOptions));
 app.use(express.json());
 
 // Session configuration
@@ -100,14 +127,8 @@ app.use((req, res) => {
     });
 });
 
-// Error Handler
-app.use((err, req, res, next) => {
-    console.error("Server Error:", err);
-    res.status(500).json({
-        message: "Internal server error",
-        error: process.env.NODE_ENV === 'development' ? err.message : undefined
-    });
-});
+// Centralized Error Handler Middleware
+app.use(errorHandler);
 
 app.get('/api/test-email', async (req, res) => {
     try {
