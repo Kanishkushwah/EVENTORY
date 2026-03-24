@@ -487,12 +487,23 @@
     <header
         class="relative text-white py-32 md:py-48 overflow-hidden transition-all duration-700 w-full rounded-b-[2rem] shadow-2xl mb-12 flex items-center justify-start bg-black border-b-4 border-purple-600">
         <!-- Cinematic Background Image -->
-        <div class="absolute inset-0 z-0 group animate-fade-in">
+        <div class="absolute inset-0 z-0 group animate-fade-in overflow-hidden flex items-center justify-center">
+            <!-- YouTube Trailer Background overlay -->
+            <div id="heroVideoContainer"
+                class="w-[300%] md:w-[150%] h-[300%] md:h-[150%] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none hidden z-0 opacity-70">
+                <iframe id="heroVideo" class="w-full h-full" frameborder="0" allow="autoplay; encrypted-media"
+                    src=""></iframe>
+            </div>
+
+            <!-- Fallback Image -->
             <img id="heroImage"
                 src="https://images.unsplash.com/photo-1682695796497-31a44224d6d6?q=80&w=2600&auto=format&fit=crop"
-                class="w-full h-full object-cover opacity-50 transform scale-105 transition-transform duration-[20s] ease-linear group-hover:scale-110" />
-            <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent"></div>
+                class="w-full h-full object-cover opacity-50 transform scale-105 transition-transform duration-[20s] ease-linear group-hover:scale-110 relative z-0" />
+
+            <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent z-10"></div>
+            <div
+                class="absolute inset-0 bg-gradient-to-t from-black/100 via-black/40 to-transparent z-10 pb-20 mt-auto">
+            </div>
         </div>
 
         <div class="container mx-auto px-8 md:px-16 relative z-10 reveal">
@@ -521,9 +532,9 @@
             </div>
 
             <div class="flex flex-wrap items-center gap-5">
-                <button onclick="document.getElementById('searchInput').focus()"
-                    class="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3.5 rounded-full font-extrabold transition shadow-lg shadow-purple-600/40 flex items-center gap-2 transform hover:scale-105 md:text-lg">
-                    <span class="material-icons-outlined">theaters</span> Book Movies
+                <button id="heroBookBtn" onclick="document.getElementById('searchInput').focus()"
+                    class="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3.5 rounded-full font-extrabold transition shadow-lg shadow-purple-600/40 flex items-center gap-2 transform hover:scale-105 md:text-lg lg:text-xl ring-2 ring-purple-500 ring-offset-2 ring-offset-black">
+                    <span class="material-icons-outlined">theaters</span> Book Tickets Now
                 </button>
                 <button id="heroTrailerBtn"
                     onclick="window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank')"
@@ -1128,8 +1139,37 @@
                     if (config.hero) {
                         document.getElementById("heroTitle").textContent = config.hero.title || "Spiderman: Brand New Day";
                         document.getElementById("heroDesc").textContent = config.hero.description;
-                        document.getElementById("heroImage").src = config.hero.image;
                         document.getElementById("heroTrailerBtn").setAttribute("onclick", `window.open('${config.hero.trailerUrl}', '_blank')`);
+
+                        // Parse Youtube Link for Background Autoplay
+                        if (config.hero.trailerUrl && config.hero.trailerUrl.includes('youtube.com')) {
+                            try {
+                                const urlObj = new URL(config.hero.trailerUrl);
+                                const ytId = urlObj.searchParams.get('v');
+                                if (ytId) {
+                                    document.getElementById("heroVideo").src = `https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${ytId}&modestbranding=1&rel=0`;
+                                    document.getElementById("heroVideoContainer").classList.remove('hidden');
+                                    document.getElementById("heroImage").classList.add('hidden');
+                                } else {
+                                    document.getElementById("heroImage").src = config.hero.image;
+                                }
+                            } catch (e) { document.getElementById("heroImage").src = config.hero.image; }
+                        } else {
+                            document.getElementById("heroImage").src = config.hero.image;
+                        }
+
+                        // Attach Book Button to target Event dynamically based on Title matching
+                        const targetTitle = (config.hero.title || "").toLowerCase();
+                        let allEvs = [];
+                        if (eventsRes.ok) { let js = await eventsRes.json(); allEvs = Array.isArray(js) ? js : (js.data || []); }
+                        const match = allEvs.find(e => e.title.toLowerCase().includes(targetTitle) || targetTitle.includes(e.title.toLowerCase()));
+
+                        if (match && match.id) {
+                            document.getElementById("heroBookBtn").setAttribute("onclick", `bookEvent('${match.id}')`);
+                        } else {
+                            // Focus search if not found
+                            document.getElementById("heroBookBtn").setAttribute("onclick", `document.getElementById('searchInput').focus(); document.getElementById('searchInput').value = '${config.hero.title}'; searchEvents();`);
+                        }
                     }
                 }
 
@@ -1386,13 +1426,16 @@
             // 1. UI Updates (Buttons & Banner)
             try {
                 document.querySelectorAll('.category-btn').forEach(btn => {
-                    const isActive = btn.onclick && btn.onclick.toString().includes(`'${category}'`);
+                    // Reset all buttons cleanly
+                    btn.classList.add('bg-white', 'text-gray-600');
+                    btn.classList.remove('bg-purple-600', 'text-white', 'scale-105', 'ring-2', 'ring-purple-200', 'hover:scale-105');
+
+                    // Selected state
+                    const onclickAttr = btn.getAttribute('onclick') || '';
+                    const isActive = onclickAttr.includes(`'${category}'`);
                     if (isActive) {
-                        btn.classList.remove('bg-white', 'text-primary');
-                        btn.classList.add('bg-white/20', 'text-white', 'border-white/30');
-                    } else {
-                        btn.classList.add('bg-white', 'text-primary');
-                        btn.classList.remove('bg-white/20', 'text-white', 'border-white/30');
+                        btn.classList.remove('bg-white', 'text-gray-600');
+                        btn.classList.add('bg-purple-600', 'text-white', 'scale-105', 'ring-2', 'ring-purple-200');
                     }
                 });
 
