@@ -493,7 +493,7 @@
                 class="w-[300%] md:w-[150%] h-[300%] md:h-[150%] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none hidden z-0 opacity-70">
                 <iframe id="heroVideo" class="w-full h-full" frameborder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowfullscreen src=""></iframe>
+                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen src=""></iframe>
             </div>
 
             <!-- Fallback Image -->
@@ -672,7 +672,7 @@
                 <div class="relative h-72 overflow-hidden">
                     <img alt="Pushpa 2"
                         class="w-full self-stretch object-cover group-hover:scale-105 transition-transform duration-500"
-                        src="https://assets-in.bmscdn.com/discovery-catalog/events/tr:w-400,h-600,bg-CCCCCC:w-400.0,h-660.0,cm-pad_resize,bg-000000,fo-top:l-image,i-discovery-catalog@@icons@@star-icon-202203010609.png,lx-24,ly-615,w-29,l-end:l-text,ie-OC42LzEwICAzNjlLIFZvdGVz,fs-29,co-FFFFFF,ly-612,lx-70,pa-8_0_0_0,l-end/et00356724-jruwpnhzdg-portrait.jpg" />
+                        src="https://assets-in.bmscdn.com/discovery-catalog/events/tr:w-400,h-600,bg-CCCCCC:w-400.0,h-660.0,cm-pad_resize,bg-000000,fo-top:l-image,i-discovery-catalog@@icons@@star-icon-202203010609.png,lx-24,ly-615,w-29,l-end:l-text,ie-OC44LzEwICAzNjlLIFZvdGVz,fs-29,co-FFFFFF,ly-612,lx-70,pa-8_0_0_0,l-end/et00356724-jruwpnhzdg-portrait.jpg" />
                     <div
                         class="absolute top-3 right-3 bg-red-600 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm">
                         MOVIE
@@ -830,7 +830,7 @@
                 <div class="relative h-48 overflow-hidden">
                     <img alt="Music festival lights and fireworks"
                         class="w-full self-stretch object-cover group-hover:scale-105 transition-transform duration-500"
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-5rHDZ8M5GGVzvclyI4laXZPhS4nAfnTsmdmu5FE6gwLC6-rXBTyrlHbywyCjJRfk-sNgPoH_2PMsqVSH0ODBpSiuXuwOCp5rnfiaCxNA6NI_hLTxYRhOFeU1EyJEbLpLZNdo5Jhr-g1NHL10lgRgA-FnhtU_edUXup1CGq3luKsJX3HwC9R-lfq-GR63BzRMqjhCbzlV3AH7T5nnAVuVh36F2KHALadRMkVauwmeQ1x1gDCv5KGwX53UACgYZwWkKrhFWRxxoJ4" />
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-5rHDZ8M5GGVzvclyI4laXZPhS4nAfnTsmdmu5FE6gwLC6-rXBTyrlHbywyCjJRfk-sNgPoH_2PMsqVSH0ODBpSiuXuwOCp5rnfiaCxNA6NI_hLTxYRhOFeU1EyJEbLpLZNdo5Jhr-g1NHL10lgRgA-FnhtU_edUXup1CGq3luKsJX3HwC9R-lfq-GR63BzRMqjhCbzlV3AH7T5nnAVV_Vh36F2KHALadRMkVauwmeQ1x1gDCv5KGwX53UACgYZwWkKrhFWRxxoJ4" />
                     <div
                         class="absolute top-3 right-3 bg-white/90 dark:bg-black/70 backdrop-blur-sm px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide text-primary shadow-sm">
                         Music
@@ -1150,8 +1150,8 @@
                                 const ytId = (match && match[7].length === 11) ? match[7] : null;
 
                                 if (ytId) {
-                                    // origin parameter helps prevent some embed errors
-                                    const embedUrl = `https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${ytId}&modestbranding=1&rel=0&playsinline=1&enablejsapi=1&origin=${window.location.origin}`;
+                                    // Removed experimental parameters to match standard oEmbed strictly
+                                    const embedUrl = `https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${ytId}&playsinline=1`;
                                     document.getElementById("heroVideo").src = embedUrl;
                                     document.getElementById("heroVideoContainer").classList.remove('hidden');
                                     document.getElementById("heroImage").classList.add('hidden');
