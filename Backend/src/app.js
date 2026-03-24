@@ -14,6 +14,7 @@ import authRoutes from "./routes/auth.routes.js";
 import cinemaRoutes from "./routes/cinema.routes.js";
 import showtimeRoutes from "./routes/showtime.routes.js";
 import cancellationRoutes from "./routes/cancellation.routes.js";
+import configRoutes from "./routes/config.routes.js";
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { ReminderService } from './services/reminder.service.js';
@@ -118,6 +119,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/cinemas", cinemaRoutes);
 app.use("/api/showtimes", showtimeRoutes);
 app.use("/api/bookings", cancellationRoutes);
+app.use("/api/config", configRoutes);
 
 // 404 Handler
 app.use((req, res) => {
