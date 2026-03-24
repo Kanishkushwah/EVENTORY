@@ -66,8 +66,16 @@ app.use(cors({
 
 // SERVE FRONTEND - PRODUCTION QUALITY
 const staticOptions = {
-    maxAge: '1d', // Cache static assets for 1 day
-    etag: true
+    etag: true,
+    setHeaders: (res, path) => {
+        if (path.endsWith('.html')) {
+            // Never cache HTML so users always see the latest UI updates
+            res.setHeader('Cache-Control', 'no-cache');
+        } else {
+            // Cache assets (JS, CSS, images) for better performance
+            res.setHeader('Cache-Control', 'public, max-age=86400');
+        }
+    }
 };
 
 // 1. Try serving from 'public' (For Deployment)
