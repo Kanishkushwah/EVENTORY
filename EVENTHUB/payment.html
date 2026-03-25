@@ -1169,7 +1169,11 @@
             btn.innerHTML = '<span class="material-icons animate-spin">sync</span> Setting up Razorpay...';
 
             try {
-                // 1. Create order on backend
+                // 1. Fetch public config (key_id)
+                const configRes = await fetch("/api/payments/razorpay/config");
+                const { keyId } = await configRes.json();
+
+                // 2. Create order on backend
                 const orderRes = await fetch("/api/payments/razorpay/order", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -1179,9 +1183,9 @@
                 const { order } = await orderRes.json();
                 if (!order) throw new Error("Could not initialize Razorpay order");
 
-                // 2. Open Razorpay Checkout
+                // 3. Open Razorpay Checkout
                 const options = {
-                    key: "rzp_test_YOUR_KEY_ID", // This will be overriden by env if handled correctly, but script needs it
+                    key: keyId, // Use fetched key
                     amount: order.amount,
                     currency: order.currency,
                     name: "Eventory 🎬",

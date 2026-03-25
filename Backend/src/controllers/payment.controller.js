@@ -86,25 +86,22 @@ export const PaymentController = {
     async createPaymentIntent(req, res) {
         try {
             const { amount, reference } = req.body;
+            if (!amount || !reference) return res.status(400).json({ message: "Amount and reference are required" });
 
-            if (!amount || !reference) {
-                return res.status(400).json({ message: "Amount and reference are required" });
-            }
-
-            // Create a PaymentIntent with the order amount and currency
             const paymentIntent = await stripe.paymentIntents.create({
-                amount: Math.round(amount * 100), // convert to paisa / cents
+                amount: Math.round(amount * 100),
                 currency: "inr",
                 metadata: { booking_reference: reference }
             });
-
-            res.send({
-                clientSecret: paymentIntent.client_secret,
-            });
+            res.send({ clientSecret: paymentIntent.client_secret });
         } catch (error) {
-            console.error("Stripe Intent Error:", error);
             res.status(500).json({ message: "Failed to initialize payment", error: error.message });
         }
+    },
+
+    // RAZORPAY: Get Public Config
+    async getRazorpayConfig(req, res) {
+        res.json({ keyId: process.env.RAZORPAY_KEY_ID || 'rzp_test_YOUR_KEY_ID' });
     },
 
     // RAZORPAY: Create Order

@@ -10,6 +10,7 @@ router.post("/confirm", PaymentController.confirmPayment);
 router.post("/create-intent", PaymentController.createPaymentIntent);
 
 // RAZORPAY ENDPOINTS
+router.get("/razorpay/config", PaymentController.getRazorpayConfig);
 router.post("/razorpay/order", PaymentController.createRazorpayOrder);
 router.post("/razorpay/verify", PaymentController.verifyRazorpayPayment);
 
