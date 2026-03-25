@@ -1430,10 +1430,10 @@
                     chatHistory.push({ role: "user", parts: [{ text: message }] });
                     chatHistory.push({ role: "model", parts: [{ text: data.response }] });
                 } else {
-                    addChatMessage("Eve", "I'm sorry, I'm having trouble connecting right now. Please try again soon!", 'bot');
+                    addChatMessage("Eve", data.message || "I'm sorry, I'm having trouble connecting right now. Please try again soon!", 'bot');
                 }
             } catch (err) {
-                document.getElementById(typingId).remove();
+                if (document.getElementById(typingId)) document.getElementById(typingId).remove();
                 addChatMessage("Eve", "Oops! Something went wrong. Check your connection or try again later.", 'bot');
             }
         }

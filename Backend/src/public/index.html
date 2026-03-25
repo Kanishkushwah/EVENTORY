@@ -2184,7 +2184,7 @@
                     chatHistory.push({ role: "user", parts: [{ text: msg }] });
                     chatHistory.push({ role: "model", parts: [{ text: data.response }] });
                 } else {
-                    addChatMessage("Eve", "I'm sorry, I'm having trouble connecting. Please try again later!", 'bot');
+                    addChatMessage("Eve", data.message || "I'm sorry, I'm having trouble connecting. Please try again later!", 'bot');
                 }
             } catch (err) {
                 if (document.getElementById(typingId)) document.getElementById(typingId).remove();
