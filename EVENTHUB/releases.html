@@ -5,9 +5,11 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Eventory - Upcoming Releases</title>
+    <meta name="description"
+        content="Coming soon to theaters - Upcoming movie releases on Eventory. Get notified before tickets open!" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
     <link
-        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Pacifico&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap"
         rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet" />
     <script>
@@ -15,30 +17,21 @@
             darkMode: "class",
             theme: {
                 extend: {
-                    colors: {
-                        primary: "#6B46C1",
-                        secondary: "#805AD5",
-                        "background-light": "#F7FAFC",
-                        "background-dark": "#1A202C",
-                        "surface-light": "#FFFFFF",
-                        "surface-dark": "#2D3748",
-                    },
-                    fontFamily: {
-                        body: ['"Plus Jakarta Sans"', 'sans-serif'],
-                    },
+                    colors: { primary: "#6B46C1", secondary: "#805AD5" },
+                    fontFamily: { body: ['"Plus Jakarta Sans"', 'sans-serif'] },
                 },
             },
         };
     </script>
     <style>
-        .page-enter {
-            animation: fadeIn 0.4s ease-out;
+        * {
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
-        @keyframes fadeIn {
+        @keyframes fadeUp {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translateY(24px);
             }
 
             to {
@@ -46,108 +39,206 @@
                 transform: translateY(0);
             }
         }
+
+        .fade-up {
+            animation: fadeUp 0.5s ease-out both;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -400px 0;
+            }
+
+            100% {
+                background-position: 400px 0;
+            }
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, #e2e8f0 25%, #edf2f7 50%, #e2e8f0 75%);
+            background-size: 800px 100%;
+            animation: shimmer 1.4s infinite linear;
+            border-radius: 1rem;
+        }
+
+        .dark .skeleton {
+            background: linear-gradient(90deg, #2d3748 25%, #374151 50%, #2d3748 75%);
+            background-size: 800px 100%;
+        }
+
+        /* Ensure full poster always visible — no crops */
+        .poster-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            transition: transform 0.5s ease;
+        }
+
+        .poster-wrap:hover .poster-img {
+            transform: scale(1.04);
+        }
+
+        .notify-btn {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(8px);
+            opacity: 0;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+        }
+
+        .poster-wrap:hover .notify-btn {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .notify-btn.notified {
+            opacity: 1 !important;
+            transform: translateX(-50%) translateY(0) !important;
+        }
     </style>
 </head>
 
-<body
-    class="bg-background-light dark:bg-background-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col font-body page-enter">
+<body class="bg-gray-50 dark:bg-gray-950 text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
 
-    <!-- NAVBAR (Same structure as index.html simplified) -->
-    <nav class="bg-surface-light dark:bg-surface-dark shadow-sm py-4 sticky top-0 z-50">
+    <!-- NAVBAR -->
+    <nav
+        class="bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 py-4 sticky top-0 z-50 shadow-sm">
         <div class="container mx-auto px-4 md:px-8 flex items-center justify-between">
-            <a class="text-2xl font-bold text-primary tracking-tight flex items-center gap-2"
-                href="index.html">Eventory</a>
-            <div class="hidden md:flex items-center space-x-6 text-sm font-medium text-gray-600 dark:text-gray-300">
-                <a class="flex items-center hover:text-primary transition-colors gap-1" href="index.html"><span
-                        class="material-icons text-lg">home</span> Browse Events</a>
-                <a class="text-primary border-b-2 border-primary pb-1 flex items-center gap-1"
-                    href="releases.html"><span class="material-icons text-lg">new_releases</span> Releases</a>
-                <a class="flex items-center hover:text-primary transition-colors gap-1" href="user-profile.html"><span
-                        class="material-icons text-lg">confirmation_number</span> My Bookings</a>
+            <a class="text-2xl font-black text-primary tracking-tight" href="index.html">Eventory</a>
+            <div class="hidden md:flex items-center gap-6 text-sm font-semibold text-gray-500 dark:text-gray-400">
+                <a class="flex items-center gap-1 hover:text-primary transition-colors" href="index.html">
+                    <span class="material-icons text-lg">home</span> Browse Events
+                </a>
+                <a class="flex items-center gap-1 text-primary border-b-2 border-primary pb-0.5" href="releases.html">
+                    <span class="material-icons text-lg">new_releases</span> Releases
+                </a>
+                <a class="flex items-center gap-1 hover:text-primary transition-colors" href="booking.html">
+                    <span class="material-icons text-lg">confirmation_number</span> My Bookings
+                </a>
             </div>
-            <div class="hidden md:flex items-center space-x-4">
-                <a href="login.html" class="text-gray-600 dark:text-gray-300 hover:text-primary">Login</a>
+            <div class="hidden md:flex items-center gap-3">
+                <a href="login.html"
+                    class="text-gray-600 dark:text-gray-300 hover:text-primary font-semibold text-sm">Login</a>
                 <a href="register.html"
-                    class="bg-primary hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-bold">Register</a>
+                    class="bg-primary hover:bg-purple-700 text-white px-5 py-2 rounded-full font-bold text-sm transition-all">Register</a>
             </div>
-            <button class="md:hidden text-gray-800 dark:text-white"
-                onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
-                <span class="material-icons">menu</span>
+            <button class="md:hidden" onclick="document.getElementById('mob-menu').classList.toggle('hidden')">
+                <span class="material-icons text-2xl">menu</span>
             </button>
+        </div>
+        <div id="mob-menu" class="hidden md:hidden bg-white dark:bg-gray-900 border-t px-4 py-3 space-y-2">
+            <a href="index.html" class="block py-2 text-sm font-semibold hover:text-primary">Browse Events</a>
+            <a href="releases.html" class="block py-2 text-sm font-bold text-primary">Releases</a>
+            <a href="login.html" class="block py-2 text-sm font-semibold">Login</a>
         </div>
     </nav>
 
-    <!-- Mobile Menu -->
-    <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-gray-900 border-b p-4">
-        <a href="index.html" class="block py-2">Home</a>
-        <a href="releases.html" class="block py-2 text-primary font-bold">Releases</a>
-        <a href="login.html" class="block py-2">Login</a>
+    <!-- HERO HEADER -->
+    <div class="bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 text-white py-16 px-4 text-center">
+        <span
+            class="inline-block bg-white/10 backdrop-blur border border-white/20 text-purple-200 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest mb-5">Coming
+            Soon</span>
+        <h1 class="text-4xl md:text-5xl font-black tracking-tight mb-4">Upcoming Releases</h1>
+        <p class="text-purple-200 font-medium text-lg max-w-xl mx-auto leading-relaxed">The biggest blockbusters heading
+            to theaters. Set a notification and be first in line!</p>
     </div>
 
-    <!-- MAIN RELEASES CONTENT -->
-    <main class="flex-grow container mx-auto px-4 py-16 max-w-7xl">
-        <div class="text-center mb-16">
-            <h1 class="text-4xl md:text-5xl font-black text-gray-900 dark:text-white mb-4 tracking-tight">Coming Soon To
-                Theaters</h1>
-            <p class="text-gray-500 dark:text-gray-400 font-medium text-lg max-w-2xl mx-auto">Get hyped for the biggest
-                upcoming blockbusters. Set notifications so you don't miss opening day tickets!</p>
-        </div>
-
-        <!-- RELEASES GRID -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8"
-            id="releasesGrid">
-            <!-- Loading Skeleton -->
-            <div class="animate-pulse bg-gray-200 dark:bg-gray-800 rounded-2xl h-80 w-full mb-4"></div>
-            <div class="animate-pulse bg-gray-200 dark:bg-gray-800 rounded-2xl h-80 w-full mb-4 hidden sm:block"></div>
-            <div class="animate-pulse bg-gray-200 dark:bg-gray-800 rounded-2xl h-80 w-full mb-4 hidden md:block"></div>
+    <!-- RELEASES GRID -->
+    <main class="flex-grow container mx-auto px-4 md:px-8 py-14 max-w-7xl">
+        <div id="releasesGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 md:gap-8">
+            <!-- Skeletons while loading -->
+            <div class="skeleton h-80 w-full"></div>
+            <div class="skeleton h-80 w-full hidden sm:block"></div>
+            <div class="skeleton h-80 w-full hidden md:block"></div>
+            <div class="skeleton h-80 w-full hidden lg:block"></div>
+            <div class="skeleton h-80 w-full hidden lg:block"></div>
         </div>
     </main>
 
     <!-- FOOTER -->
-    <footer class="bg-gray-900 text-white py-8 text-center mt-auto">
+    <footer class="bg-gray-900 text-white py-8 text-center">
         <p class="text-sm text-gray-400">© 2026 Eventory. All rights reserved.</p>
     </footer>
 
     <script>
+        const notified = new Set(JSON.parse(localStorage.getItem('notifiedReleases') || '[]'));
+
+        function toggleNotify(id, title, btn) {
+            if (notified.has(id)) {
+                notified.delete(id);
+                btn.innerHTML = '<span class="material-icons-outlined text-[16px]">notifications_active</span> Notify Me';
+                btn.classList.remove('bg-purple-600', 'notified');
+                btn.classList.add('bg-white/20');
+            } else {
+                notified.add(id);
+                btn.innerHTML = '<span class="material-icons text-[16px]">notifications_active</span> Notified ✓';
+                btn.classList.add('bg-purple-600', 'notified');
+                btn.classList.remove('bg-white/20');
+                btn.animate([{ transform: 'translateX(-50%) scale(1)' }, { transform: 'translateX(-50%) scale(1.12)' }, { transform: 'translateX(-50%) scale(1)' }], { duration: 250 });
+            }
+            localStorage.setItem('notifiedReleases', JSON.stringify([...notified]));
+        }
+
         async function loadReleases() {
             const grid = document.getElementById("releasesGrid");
             try {
-                // Fetch dynamic releases config from Admin Setting
-                const res = await fetch('/api/config');
-                if (!res.ok) throw new Error("Failed to fetch");
+                const res = await fetch('/api/config?v=' + Date.now());
+                if (!res.ok) throw new Error("Failed to fetch config");
                 const config = await res.json();
                 const releases = config.releases || [];
 
                 grid.innerHTML = "";
 
                 if (releases.length === 0) {
-                    grid.innerHTML = `<div class="col-span-full text-center py-20"><p class="text-gray-500">No upcoming releases at the moment.</p></div>`;
+                    grid.innerHTML = `<div class="col-span-full flex flex-col items-center py-24 gap-4 text-gray-400">
+                        <span class="material-icons text-6xl opacity-30">movie</span>
+                        <p class="text-lg font-semibold">No upcoming releases at the moment.</p>
+                    </div>`;
                     return;
                 }
 
                 releases.forEach((r, index) => {
-                    const animDelay = index * 100;
-                    grid.innerHTML += `
-                        <div class="group cursor-pointer flex flex-col" style="animation: fadeIn 0.5s ease-out ${animDelay}ms both;">
-                            <!-- Premium Aspect Ratio Poster -->
-                            <div class="overflow-hidden rounded-2xl shadow-xl shadow-purple-900/10 mb-5 relative aspect-[2/3] w-full">
-                                <img src="${r.image}" class="w-full h-full object-cover transform duration-700 ease-out group-hover:scale-110" onerror="this.src='https://via.placeholder.com/400x600?text=Poster+Unavailable'"/>
-                                <!-- Glassmorphic Overlay -->
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end items-center pb-6">
-                                    <button class="bg-white/20 hover:bg-white text-white hover:text-primary backdrop-blur-md border border-white/40 font-bold px-6 py-2.5 rounded-full text-sm transition-all transform hover:scale-105 flex items-center gap-2 shadow-[0_0_15px_rgba(255,255,255,0.3)]">
-                                        <span class="material-icons-outlined text-[18px]">notifications_active</span> Notify Me
-                                    </button>
-                                </div>
-                            </div>
-                            <!-- Details -->
-                            <h3 class="text-center font-bold text-gray-900 dark:text-white text-lg tracking-tight mb-1 group-hover:text-primary transition-colors">${r.title}</h3>
-                            <p class="text-center text-sm font-medium text-purple-600 dark:text-purple-400 uppercase tracking-widest text-[11px]">${r.genre}</p>
+                    const isNotified = notified.has(String(r.id));
+                    const card = document.createElement('div');
+                    card.className = 'fade-up group cursor-pointer flex flex-col';
+                    card.style.animationDelay = (index * 80) + 'ms';
+                    card.innerHTML = `
+                        <div class="poster-wrap relative rounded-2xl overflow-hidden shadow-lg bg-gray-900 dark:bg-gray-950 mb-4" style="aspect-ratio: 2/3;">
+                            <img
+                                src="${r.image}"
+                                alt="${r.title}"
+                                class="poster-img"
+                                loading="lazy"
+                                onerror="this.src='https://placehold.co/400x600/1a1a2e/9f7aea?text=${encodeURIComponent(r.title)}'"
+                            />
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
+                            <button
+                                id="notify-${r.id}"
+                                onclick="event.stopPropagation(); toggleNotify('${r.id}', '${r.title.replace(/'/g, "\\'")}', this)"
+                                class="notify-btn ${isNotified ? 'bg-purple-600 notified' : 'bg-white/20'} text-white backdrop-blur border border-white/30 font-bold px-5 py-2 rounded-full text-xs transition-all flex items-center gap-1.5 shadow-lg"
+                            >
+                                <span class="material-icons${isNotified ? '' : '-outlined'} text-[15px]">notifications_active</span>
+                                ${isNotified ? 'Notified ✓' : 'Notify Me'}
+                            </button>
+                        </div>
+                        <div class="px-1">
+                            <h3 class="font-bold text-gray-900 dark:text-white text-sm md:text-base leading-tight mb-1 group-hover:text-primary transition-colors line-clamp-2 text-center">${r.title}</h3>
+                            <p class="text-center text-[11px] font-bold text-purple-500 dark:text-purple-400 uppercase tracking-widest">${r.genre || ''}</p>
                         </div>
                     `;
+                    grid.appendChild(card);
                 });
+
             } catch (e) {
                 console.error("Failed to load releases", e);
-                grid.innerHTML = `<div class="col-span-full text-center py-20 text-red-500">Failed to load releases.</div>`;
+                grid.innerHTML = `<div class="col-span-full text-center py-20">
+                    <span class="material-icons text-5xl text-red-300 mb-4 block">error_outline</span>
+                    <p class="text-red-500 font-bold">Failed to load releases.</p>
+                    <button onclick="loadReleases()" class="mt-4 bg-primary text-white px-6 py-2 rounded-full text-sm font-bold">Retry</button>
+                </div>`;
             }
         }
 
