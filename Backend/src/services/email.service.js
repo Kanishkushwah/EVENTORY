@@ -38,6 +38,26 @@ export const EmailService = {
     },
 
     /**
+     * Generic send email for reminders and reviews
+     */
+    async sendEmail({ to, subject, html, attachments = [] }) {
+        try {
+            const mailOptions = {
+                from: `"Eventory" <${process.env.SMTP_EMAIL || "eventorytickets@gmail.com"}>`,
+                to,
+                subject,
+                html,
+                attachments
+            };
+            const info = await transporter.sendMail(mailOptions);
+            return { success: true, messageId: info.messageId };
+        } catch (error) {
+            console.error("❌ Generic Email Error:", error);
+            throw error;
+        }
+    },
+
+    /**
      * Legacy method - kept for backward compatibility
      */
     async sendTicket({ to, subject, attachment }) {

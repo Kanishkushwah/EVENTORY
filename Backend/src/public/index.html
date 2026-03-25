@@ -601,6 +601,36 @@
             </button>
         </div>
 
+        <!-- NEW: SMART PERSONALIZED SECTION -->
+        <div id="personalizedSection" class="hidden mb-16 animate-fade-in reveal">
+            <div class="flex items-center justify-between mb-10">
+                <div>
+                    <div class="flex items-center gap-3 mb-2">
+                        <span
+                            class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-[10px] uppercase font-black tracking-widest px-3 py-1 rounded-full shadow-lg shadow-purple-600/20">FOR
+                            YOU</span>
+                        <h2 class="text-3xl md:text-5xl font-black text-gray-900 dark:text-white tracking-tight">
+                            Recommended Deals</h2>
+                    </div>
+                    <p class="text-gray-500 dark:text-gray-400 font-medium text-lg ml-1">Curated based on your interests
+                        & past bookings</p>
+                </div>
+                <div class="hidden md:flex gap-3">
+                    <button id="prevRec"
+                        class="w-14 h-14 rounded-full border-2 border-gray-100 dark:border-gray-800 flex items-center justify-center text-gray-400 hover:text-primary hover:border-primary transition-all backdrop-blur-sm bg-white/50 dark:bg-gray-900/50">
+                        <span class="material-icons text-3xl">chevron_left</span>
+                    </button>
+                    <button id="nextRec"
+                        class="w-14 h-14 rounded-full border-2 border-gray-100 dark:border-gray-800 flex items-center justify-center text-gray-400 hover:text-primary hover:border-primary transition-all backdrop-blur-sm bg-white/50 dark:bg-gray-900/50">
+                        <span class="material-icons text-3xl">chevron_right</span>
+                    </button>
+                </div>
+            </div>
+            <div id="recommendationGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Recommended items will be injected here -->
+            </div>
+        </div>
+
         <!-- CATEGORY FILTER TABS - scrollable on mobile -->
         <div class="mt-6 md:mt-10 mb-10 reveal">
             <!-- Mobile: horizontal scroll strip -->
@@ -1207,7 +1237,6 @@
 
                 if (!eventsRes.ok) throw new Error('Failed to fetch events');
 
-                // Parse ONCE - response stream can only be read once!
                 const json = await eventsRes.json();
                 allEvents = Array.isArray(json) ? json : (json.data || []);
 
@@ -1238,33 +1267,64 @@
                             if (config.hero.image) document.getElementById("heroImage").src = config.hero.image;
                         }
 
-                        // Attach Book Button - reuse allEvents already parsed above
+                        // Attach Book Button
                         const targetTitle = (config.hero.title || "").toLowerCase();
                         const heroMatch = allEvents.find(e => e.title.toLowerCase().includes(targetTitle) || targetTitle.includes(e.title.toLowerCase()));
                         if (heroMatch && heroMatch.id) {
                             document.getElementById("heroBookBtn").setAttribute("onclick", `bookEvent('${heroMatch.id}')`);
-                        } else {
-                            document.getElementById("heroBookBtn").setAttribute("onclick", `document.getElementById('searchInput').focus(); document.getElementById('searchInput').value='${config.hero.title}'; searchEvents();`);
                         }
                     }
                 }
 
-                // Use the filter logic to handle grouping immediately
-                filterCategory('all');
+                // NEW: Show personalized recommendations
+                displayRecommendations();
 
+                filterCategory('all');
             } catch (err) {
                 console.error('Failed to load events:', err);
-
-                // Keep skeletons instead of "Unable to connect" text as requested, or add a subtle refresh overlay
                 if (eventGrid) {
                     eventGrid.innerHTML = Array(6).fill().map(() => `
-                                        <div class="skeleton w-[85vw] max-w-[340px] md:max-w-none h-96 flex-none snap-center self-stretch relative opacity-50" >
-                                            <div class="absolute inset-0 flex items-center justify-center">
-                                                <button onclick="loadEvents()" class="bg-primary/80 text-white px-4 py-2 rounded-lg backdrop-blur text-sm font-medium">Retry</button>
-                                            </div>
-                        </div>
-                                        `).join('');
+                        <div class="skeleton w-[85vw] max-w-[340px] md:max-w-none h-96 flex-none snap-center self-stretch relative opacity-50">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <button onclick="loadEvents()" class="bg-primary/80 text-white px-4 py-2 rounded-lg backdrop-blur text-sm font-medium">Retry</button>
+                            </div>
+                        </div>`).join('');
                 }
+            }
+        }
+
+        function displayRecommendations() {
+            const section = document.getElementById('personalizedSection');
+            const grid = document.getElementById('recommendationGrid');
+            if (!section || !grid) return;
+
+            // Simple recommendation engine: 
+            // 1. Get user's last booked category
+            // 2. Or just show highest rated / trending events
+            const bookings = JSON.parse(localStorage.getItem('userBookings') || '[]');
+            const favoriteCategory = bookings.length > 0 ? bookings[0].event_type : (localStorage.getItem('preferredCategory') || 'movies');
+
+            const recommendations = allEvents
+                .filter(e => e.category?.toLowerCase() === favoriteCategory.toLowerCase() || (e.available_seats < 20 && e.available_seats > 0))
+                .slice(0, 4);
+
+            if (recommendations.length > 0) {
+                section.classList.remove('hidden');
+                grid.innerHTML = recommendations.map(event => `
+                    <div class="glass-panel group relative overflow-hidden rounded-3xl border border-white/20 dark:border-gray-800/50 shadow-2xl transition-all duration-500 hover:scale-[1.03] cursor-pointer" onclick="bookEvent('${event.id}')">
+                        <div class="relative h-64 overflow-hidden">
+                            <img src="${event.image_url}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="${event.title}">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
+                            <div class="absolute top-4 left-4">
+                                <span class="bg-white/20 backdrop-blur-md text-white text-[10px] font-black px-3 py-1 rounded-full border border-white/30 uppercase tracking-tighter">RECOMMENDED</span>
+                            </div>
+                            <div class="absolute bottom-4 left-4 right-4 text-white">
+                                <h4 class="text-xl font-black mb-1 drop-shadow-lg">${event.title}</h4>
+                                <p class="text-[11px] text-gray-300 font-bold uppercase tracking-wider">${event.venue}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
             }
         }
 
