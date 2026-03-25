@@ -451,40 +451,70 @@
                 </button>
             </div>
         </div>
-        <div class="flex-1 overflow-y-auto py-6 px-6 space-y-6">
-            <div class="space-y-4">
-                <a href="index.html"
-                    class="flex items-center gap-3 text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-primary transition-colors p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
-                    <span class="material-icons">home</span> Browse Events
-                </a>
-                <a href="user-dashboard.html"
-                    class="flex items-center gap-3 text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-primary transition-colors p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
-                    <span class="material-icons">confirmation_number</span> My Bookings
-                </a>
-                <a href="#search"
-                    class="flex items-center gap-3 text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-primary transition-colors p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
-                    onclick="toggleMobileMenu()">
-                    <span class="material-icons">search</span> Search Booking
-                </a>
+        <div class="flex-1 overflow-y-auto py-6 px-6 space-y-2">
+            <!-- Navigation Links -->
+            <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Navigation</p>
+            <a href="index.html"
+                class="flex items-center gap-3 text-base font-semibold text-gray-700 dark:text-gray-200 hover:text-primary transition-colors p-3 rounded-xl hover:bg-purple-50 dark:hover:bg-gray-800">
+                <span class="material-icons text-purple-500">home</span> Browse Events
+            </a>
+            <a href="releases.html"
+                class="flex items-center gap-3 text-base font-semibold text-gray-700 dark:text-gray-200 hover:text-primary transition-colors p-3 rounded-xl hover:bg-purple-50 dark:hover:bg-gray-800">
+                <span class="material-icons text-purple-500">new_releases</span> Releases
+            </a>
+            <a href="booking.html"
+                class="flex items-center gap-3 text-base font-semibold text-gray-700 dark:text-gray-200 hover:text-primary transition-colors p-3 rounded-xl hover:bg-purple-50 dark:hover:bg-gray-800">
+                <span class="material-icons text-purple-500">confirmation_number</span> My Bookings
+            </a>
+            <a href="#search"
+                class="flex items-center gap-3 text-base font-semibold text-gray-700 dark:text-gray-200 hover:text-primary transition-colors p-3 rounded-xl hover:bg-purple-50 dark:hover:bg-gray-800"
+                onclick="toggleMobileMenu()">
+                <span class="material-icons text-purple-500">search</span> Search Booking
+            </a>
+
+            <!-- Quick Category Filter inside mobile menu -->
+            <div class="border-t border-gray-100 dark:border-gray-800 pt-4 mt-4">
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Browse by Category</p>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="filterCategory('all'); toggleMobileMenu()"
+                        class="flex items-center gap-2 p-3 rounded-xl bg-purple-50 dark:bg-gray-800 text-purple-700 dark:text-purple-300 font-semibold text-sm">
+                        <span class="material-icons text-base">grid_view</span> All Events
+                    </button>
+                    <button onclick="filterCategory('movies'); toggleMobileMenu()"
+                        class="flex items-center gap-2 p-3 rounded-xl bg-red-50 dark:bg-gray-800 text-red-600 dark:text-red-400 font-semibold text-sm">
+                        <span class="material-icons text-base">movie</span> Movies
+                    </button>
+                    <button onclick="filterCategory('music'); toggleMobileMenu()"
+                        class="flex items-center gap-2 p-3 rounded-xl bg-purple-50 dark:bg-gray-800 text-purple-600 dark:text-purple-400 font-semibold text-sm">
+                        <span class="material-icons text-base">music_note</span> Music
+                    </button>
+                    <button onclick="filterCategory('sports'); toggleMobileMenu()"
+                        class="flex items-center gap-2 p-3 rounded-xl bg-blue-50 dark:bg-gray-800 text-blue-600 dark:text-blue-400 font-semibold text-sm">
+                        <span class="material-icons text-base">sports_soccer</span> Sports
+                    </button>
+                    <button onclick="filterCategory('business'); toggleMobileMenu()"
+                        class="flex items-center gap-2 p-3 rounded-xl bg-amber-50 dark:bg-gray-800 text-amber-600 dark:text-amber-400 font-semibold text-sm">
+                        <span class="material-icons text-base">business_center</span> Business
+                    </button>
+                </div>
             </div>
 
-            <div class="border-t border-gray-100 dark:border-gray-800 pt-6 space-y-4">
-                <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Account</p>
-                <!-- These will be dynamically updated by checkLoginState if needed -->
+            <div class="border-t border-gray-100 dark:border-gray-800 pt-4 mt-2 space-y-2">
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Account</p>
                 <a href="login.html"
-                    class="flex items-center gap-3 text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-primary transition-colors p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
-                    <span class="material-icons">login</span> Login
+                    class="flex items-center gap-3 text-base font-semibold text-gray-700 dark:text-gray-200 hover:text-primary transition-colors p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800">
+                    <span class="material-icons text-gray-400">login</span> Login
                 </a>
                 <a href="register.html"
-                    class="flex items-center gap-3 text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-primary transition-colors p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
-                    <span class="material-icons">person_add</span> Register
+                    class="flex items-center justify-center gap-2 text-base font-bold bg-primary text-white p-3 rounded-xl hover:bg-purple-700 transition-colors">
+                    <span class="material-icons">person_add</span> Create Account
                 </a>
             </div>
         </div>
     </div>
 
     <header
-        class="relative text-white py-32 md:py-48 overflow-hidden transition-all duration-700 w-full rounded-b-[2rem] shadow-2xl mb-12 flex items-center justify-start bg-black border-b-4 border-purple-600">
+        class="relative text-white py-20 md:py-44 overflow-hidden transition-all duration-700 w-full rounded-b-[2rem] shadow-2xl mb-12 flex items-center justify-start bg-black border-b-4 border-purple-600">
         <!-- Cinematic Background Image -->
         <div class="absolute inset-0 z-0 group animate-fade-in overflow-hidden flex items-center justify-center">
             <!-- YouTube Trailer Background overlay -->
@@ -532,14 +562,14 @@
                     Drama</span>
             </div>
 
-            <div class="flex flex-wrap items-center gap-5">
+            <div class="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-3">
                 <button id="heroBookBtn" onclick="document.getElementById('searchInput').focus()"
-                    class="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3.5 rounded-full font-extrabold transition shadow-lg shadow-purple-600/40 flex items-center gap-2 transform hover:scale-105 md:text-lg lg:text-xl ring-2 ring-purple-500 ring-offset-2 ring-offset-black">
+                    class="w-full sm:w-auto bg-purple-600 hover:bg-purple-700 text-white px-7 py-3.5 rounded-full font-extrabold transition shadow-lg shadow-purple-600/40 flex items-center justify-center gap-2 transform hover:scale-105 text-base lg:text-xl ring-2 ring-purple-500 ring-offset-2 ring-offset-black">
                     <span class="material-icons-outlined">theaters</span> Book Tickets Now
                 </button>
                 <button id="heroTrailerBtn"
                     onclick="window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank')"
-                    class="bg-transparent border-2 border-white/60 hover:bg-white/10 hover:border-white text-white px-8 py-3.5 rounded-full font-bold transition flex items-center gap-2 backdrop-blur-sm transform hover:scale-105 md:text-lg">
+                    class="w-full sm:w-auto bg-transparent border-2 border-white/60 hover:bg-white/10 hover:border-white text-white px-7 py-3.5 rounded-full font-bold transition flex items-center justify-center gap-2 backdrop-blur-sm transform hover:scale-105 text-base">
                     <span class="material-icons-outlined text-white">play_circle</span> Watch Trailer
                 </button>
             </div>
@@ -562,33 +592,66 @@
             </button>
         </div>
 
-        <!-- CATEGORY FILTER TABS -->
-        <div class="mt-8 md:mt-10 flex flex-wrap justify-center gap-2 md:gap-3 max-w-5xl mx-auto mb-10 reveal">
-            <button data-category="all"
-                class="category-btn px-5 py-2 md:px-6 md:py-2.5 rounded-full text-sm font-bold transition-all flex items-center gap-2 bg-purple-600 text-white ring-2 ring-purple-300"
-                onclick="filterCategory('all')">
-                <span class="material-icons text-base">grid_view</span> All
-            </button>
-            <button data-category="movies"
-                class="category-btn px-5 py-2 md:px-6 md:py-2.5 rounded-full text-sm font-bold transition-all flex items-center gap-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-sm"
-                onclick="filterCategory('movies')">
-                <span class="material-icons text-base text-red-500">movie</span> Movies
-            </button>
-            <button data-category="music"
-                class="category-btn px-5 py-2 md:px-6 md:py-2.5 rounded-full text-sm font-bold transition-all flex items-center gap-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-sm"
-                onclick="filterCategory('music')">
-                <span class="material-icons text-base text-purple-500">music_note</span> Music
-            </button>
-            <button data-category="sports"
-                class="category-btn px-5 py-2 md:px-6 md:py-2.5 rounded-full text-sm font-bold transition-all flex items-center gap-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-sm"
-                onclick="filterCategory('sports')">
-                <span class="material-icons text-base text-blue-500">sports_soccer</span> Sports
-            </button>
-            <button data-category="business"
-                class="category-btn px-5 py-2 md:px-6 md:py-2.5 rounded-full text-sm font-bold transition-all flex items-center gap-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-sm"
-                onclick="filterCategory('business')">
-                <span class="material-icons text-base text-amber-500">business_center</span> Business
-            </button>
+        <!-- CATEGORY FILTER TABS - scrollable on mobile -->
+        <div class="mt-6 md:mt-10 mb-10 reveal">
+            <!-- Mobile: horizontal scroll strip -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-2 px-1 md:hidden scrollbar-hide"
+                style="-webkit-overflow-scrolling: touch; scrollbar-width: none; -ms-overflow-style: none;">
+                <button data-category="all"
+                    class="category-btn flex-shrink-0 px-4 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-1.5 bg-purple-600 text-white ring-2 ring-purple-300 whitespace-nowrap"
+                    onclick="filterCategory('all')">
+                    <span class="material-icons text-sm">grid_view</span> All
+                </button>
+                <button data-category="movies"
+                    class="category-btn flex-shrink-0 px-4 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-1.5 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-sm whitespace-nowrap"
+                    onclick="filterCategory('movies')">
+                    <span class="material-icons text-sm text-red-500">movie</span> Movies
+                </button>
+                <button data-category="music"
+                    class="category-btn flex-shrink-0 px-4 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-1.5 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-sm whitespace-nowrap"
+                    onclick="filterCategory('music')">
+                    <span class="material-icons text-sm text-purple-500">music_note</span> Music
+                </button>
+                <button data-category="sports"
+                    class="category-btn flex-shrink-0 px-4 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-1.5 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-sm whitespace-nowrap"
+                    onclick="filterCategory('sports')">
+                    <span class="material-icons text-sm text-blue-500">sports_soccer</span> Sports
+                </button>
+                <button data-category="business"
+                    class="category-btn flex-shrink-0 px-4 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-1.5 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-sm whitespace-nowrap"
+                    onclick="filterCategory('business')">
+                    <span class="material-icons text-sm text-amber-500">business_center</span> Business
+                </button>
+            </div>
+
+            <!-- Desktop: centered wrap layout -->
+            <div class="hidden md:flex flex-wrap justify-center gap-3 max-w-5xl mx-auto">
+                <button data-category="all"
+                    class="category-btn px-6 py-2.5 rounded-full text-sm font-bold transition-all flex items-center gap-2 bg-purple-600 text-white ring-2 ring-purple-300"
+                    onclick="filterCategory('all')">
+                    <span class="material-icons text-base">grid_view</span> All
+                </button>
+                <button data-category="movies"
+                    class="category-btn px-6 py-2.5 rounded-full text-sm font-bold transition-all flex items-center gap-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-sm"
+                    onclick="filterCategory('movies')">
+                    <span class="material-icons text-base text-red-500">movie</span> Movies
+                </button>
+                <button data-category="music"
+                    class="category-btn px-6 py-2.5 rounded-full text-sm font-bold transition-all flex items-center gap-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-sm"
+                    onclick="filterCategory('music')">
+                    <span class="material-icons text-base text-purple-500">music_note</span> Music
+                </button>
+                <button data-category="sports"
+                    class="category-btn px-6 py-2.5 rounded-full text-sm font-bold transition-all flex items-center gap-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-sm"
+                    onclick="filterCategory('sports')">
+                    <span class="material-icons text-base text-blue-500">sports_soccer</span> Sports
+                </button>
+                <button data-category="business"
+                    class="category-btn px-6 py-2.5 rounded-full text-sm font-bold transition-all flex items-center gap-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-sm"
+                    onclick="filterCategory('business')">
+                    <span class="material-icons text-base text-amber-500">business_center</span> Business
+                </button>
+            </div>
         </div>
 
         <!-- FEATURED: WORLD CUP BANNER -->
