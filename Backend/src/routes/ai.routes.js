@@ -11,7 +11,7 @@ const getModel = () => {
     }
     const genAI = new GoogleGenerativeAI(apiKey);
     return genAI.getGenerativeModel({
-        model: "gemini-1.5-flash",
+        model: "gemini-2.5-flash", // Verified working version with active quota for this API key
         systemInstruction: `
             You are "Eve", the official AI Support Agent for Eventory. 
             Goal: Help users with bookings, technical issues, and info.
