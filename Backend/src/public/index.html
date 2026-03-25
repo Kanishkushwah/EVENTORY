@@ -1321,60 +1321,83 @@
                 const savedEvents = JSON.parse(localStorage.getItem('savedEvents') || '[]');
                 const isSaved = savedEvents.some(e => e.id === event.id);
 
-                // Add Trending/Fast Filling Badge
-                const badgeIndex = (event.id || 0) % 3;
-                let badgeHTML = '';
-                if (badgeIndex === 0) badgeHTML = `<div class="absolute top-3 right-3 bg-orange-500 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm z-10 flex items-center gap-1" > <span>🔥</span> Trending</div> `;
-                else if (badgeIndex === 1) badgeHTML = `<div class="absolute top-3 right-3 bg-rose-500 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm z-10 flex items-center gap-1" > <span>⚡</span> Fast Filling</div> `;
-                else badgeHTML = `<div class="absolute top-3 right-3 bg-amber-500 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm z-10 flex items-center gap-1" > <span>⭐</span> Recommended</div> `;
+                // Seat availability logic
+                const totalSeats = event.available_seats ?? event.capacity ?? null;
+                const seatsLeft = totalSeats !== null ? Number(totalSeats) : null;
+                const isSoldOut = seatsLeft !== null && seatsLeft <= 0;
+                const isLow = seatsLeft !== null && seatsLeft > 0 && seatsLeft <= 10;
+
+                let seatBadge = '';
+                if (isSoldOut) {
+                    seatBadge = `<div class="absolute top-3 right-3 bg-gray-900/90 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm z-10">🚫 Sold Out</div>`;
+                } else if (isLow) {
+                    seatBadge = `<div class="absolute top-3 right-3 bg-red-600 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm z-10 animate-pulse">🔥 Only ${seatsLeft} left!</div>`;
+                } else {
+                    seatBadge = badgeHTML;
+                }
+
+                const bookButton = isSoldOut
+                    ? `<button onclick="openWaitlistModal(${event.id}, '${event.title.replace(/'/g, "\\'")}')"
+                           class="text-white bg-gray-700 hover:bg-gray-800 font-medium text-sm px-4 py-1.5 rounded-lg transition-colors flex items-center gap-1">
+                           <span class="material-icons text-sm">notifications</span> Join Waitlist
+                       </button>`
+                    : `<button onclick="bookEvent(${event.id})" class="text-white bg-red-600 hover:bg-red-700 font-medium text-sm px-4 py-1.5 rounded-lg transition-colors">
+                           Book Tickets
+                       </button>`;
 
                 return `
-                                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col self-stretch border border-gray-100 dark:border-gray-700 animate-fade-in w-[85vw] max-w-[340px] flex-none snap-center md:max-w-none md:w-auto"
-                                    data-id="${event.id}"
-                                    data-category="${normCat}"
-                                    data-title="${event.title.toLowerCase()}" >
-                                        <div class="relative h-72 overflow-hidden">
-                                            <img alt="${event.title}" class="w-full self-stretch object-cover group-hover:scale-105 transition-transform duration-500" src="${event.image_url}" onerror="this.src='https://via.placeholder.com/400x600'" />
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col self-stretch border border-gray-100 dark:border-gray-700 animate-fade-in w-[85vw] max-w-[340px] flex-none snap-center md:max-w-none md:w-auto"
+                        data-id="${event.id}"
+                        data-category="${normCat}"
+                        data-title="${event.title.toLowerCase()}">
+                        <div class="relative h-72 overflow-hidden">
+                            <img alt="${event.title}" class="w-full self-stretch object-cover group-hover:scale-105 transition-transform duration-500" src="${event.image_url}" onerror="this.src='https://via.placeholder.com/400x600'" />
 
-                                            <!-- Category / Trending Badge -->
-                                            ${badgeHTML}
+                            <!-- Seat Badge (sold out / low / trending) -->
+                            ${seatBadge}
 
-                                            <div class="absolute bottom-3 right-3 bg-red-600/90 backdrop-blur-sm text-white px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wide shadow-sm z-10">
-                                                ${event.category}
-                                            </div>
+                            <div class="absolute bottom-3 right-3 bg-red-600/90 backdrop-blur-sm text-white px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wide shadow-sm z-10">
+                                ${event.category}
+                            </div>
 
-                                            <!-- Heart Button (Emoji) -->
-                                            <button onclick="event.stopPropagation(); toggleSaveEvent('${event.id}', '${event.title.replace(/'/g, "\\'")}', '${event.image_url}', '${formatDate(event.date)}')"
-                                            class="absolute top-3 left-3 bg-white/90 p-2 rounded-full shadow-md z-20 hover:scale-110 transition-transform group/heart flex items-center justify-center w-10 h-10"
-                                            title="${isSaved ? 'Remove from Saved' : 'Save Event'}">
-                                            <span class="text-2xl leading-none" id="heart-${event.id}">
-                                                ${isSaved ? '❤️' : '🤍'}
-                                            </span>
-                                        </button>
+                            <!-- Heart Button -->
+                            <button onclick="event.stopPropagation(); toggleSaveEvent('${event.id}', '${event.title.replace(/'/g, "\\'")}',' ${event.image_url}', '${formatDate(event.date)}')"
+                            class="absolute top-3 left-3 bg-white/90 p-2 rounded-full shadow-md z-20 hover:scale-110 transition-transform group/heart flex items-center justify-center w-10 h-10"
+                            title="${isSaved ? 'Remove from Saved' : 'Save Event'}">
+                            <span class="text-2xl leading-none" id="heart-${event.id}">
+                                ${isSaved ? '❤️' : '🤍'}
+                            </span>
+                        </button>
+                        </div>
+                        <div class="p-5 flex flex-col flex-grow">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/30 px-2 py-1 rounded">${formatDate(event.date)}</span>
+                                <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"><span class="material-icons text-sm">location_on</span> ${event.venue}</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-1 line-clamp-2">${event.title}</h3>
+
+                            <!-- Live viewers + seats left -->
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="text-[10px] text-purple-600 dark:text-purple-400 font-bold flex items-center gap-1 bg-purple-50 dark:bg-purple-900/30 w-fit px-2 py-0.5 rounded-full">
+                                    <span class="material-icons text-[12px] animate-pulse">visibility</span>
+                                    <span id="view-count-${event.id}" class="view-counter" data-base="${Math.floor(Math.random() * 80) + 15}">${Math.floor(Math.random() * 80) + 15}</span> viewing
+                                </div>
+                                ${isLow && !isSoldOut ? `<div class="text-[10px] text-red-600 font-bold flex items-center gap-1 bg-red-50 dark:bg-red-900/20 px-2 py-0.5 rounded-full animate-pulse"><span class="material-icons text-[12px]">event_seat</span> ${seatsLeft} seats left</div>` : ''}
+                                ${isSoldOut ? `<div class="text-[10px] text-gray-500 font-bold flex items-center gap-1 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded-full"><span class="material-icons text-[12px]">block</span> Sold Out</div>` : ''}
+                            </div>
+
+                            <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow line-clamp-3">
+                                ${event.description || 'No description available'}
+                            </p>
+                            <div class="pt-4 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center mt-auto">
+                                <div class="text-sm font-medium text-gray-900 dark:text-white">${isSoldOut ? '<span class="text-gray-400 line-through">Sold Out</span>' : 'From ₹' + event.price}</div>
+                                ${bookButton}
+                            </div>
+                        </div>
                     </div>
-                                        <div class="p-5 flex flex-col flex-grow">
-                                            <div class="flex justify-between items-start mb-2">
-                                                <span class="text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/30 px-2 py-1 rounded">${formatDate(event.date)}</span>
-                                                <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"><span class="material-icons text-sm">location_on</span> ${event.venue}</span>
-                                            </div>
-                                            <h3 class="text-xl font-bold text-gray-900 dark:text-white dark:text-white mb-1 line-clamp-2">${event.title}</h3>
-                                            <div class="text-[10px] text-purple-600 dark:text-purple-400 font-bold flex items-center gap-1 mb-2 bg-purple-50 dark:bg-purple-900/30 w-fit px-2 py-0.5 rounded-full transition-opacity">
-                                                <span class="material-icons text-[12px] animate-pulse">visibility</span>
-                                                <span id="view-count-${event.id}" class="view-counter" data-base="${Math.floor(Math.random() * 80) + 15}">${Math.floor(Math.random() * 80) + 15}</span> viewing right now
-                                            </div>
-                                            <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow line-clamp-3">
-                                                ${event.description || 'No description available'}
-                                            </p>
-                                            <div class="pt-4 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center mt-auto">
-                                                <div class="text-sm font-medium text-gray-900 dark:text-white">From ₹${event.price}</div>
-                                                <button onclick="bookEvent(${event.id})" class="text-white bg-red-600 hover:bg-red-700 font-medium text-sm px-4 py-1.5 rounded-lg transition-colors">
-                                                    Book Tickets
-                                                </button>
-                                            </div>
-                                        </div>
-                </div>
-                                        `;
+                `;
             }).join('');
+
 
             // Re-initialize live counters if they don't exist
             if (!window.liveCounterInterval) {
@@ -1966,6 +1989,118 @@
         });
     </script>
 
+    <!-- ═══ WAITLIST MODAL ═══ -->
+    <div id="waitlistModal" class="fixed inset-0 z-[999] hidden items-center justify-center p-4"
+        style="background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);">
+        <div class="bg-white dark:bg-gray-900 rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-gray-800 to-gray-900 p-6 text-white text-center relative">
+                <button onclick="closeWaitlistModal()"
+                    class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors">
+                    <span class="material-icons text-sm">close</span>
+                </button>
+                <div class="text-4xl mb-2">🎫</div>
+                <h2 class="text-xl font-black">Join the Waitlist</h2>
+                <p class="text-gray-300 text-sm mt-1">Be first when a seat opens up!</p>
+            </div>
+            <!-- Body -->
+            <div class="p-6">
+                <div
+                    class="bg-purple-50 dark:bg-purple-900/20 rounded-2xl p-4 mb-5 border border-purple-100 dark:border-purple-800">
+                    <p class="text-xs text-gray-400 uppercase tracking-widest font-bold mb-1">Sold Out Event</p>
+                    <h3 id="waitlistEventTitle" class="font-black text-gray-900 dark:text-white text-base"></h3>
+                </div>
+                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Your Email</label>
+                <input id="waitlistEmail" type="email" placeholder="you@example.com"
+                    class="w-full border-2 border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-800 dark:text-white dark:bg-gray-800 focus:border-purple-500 outline-none text-sm font-medium mb-2"
+                    onkeypress="if(event.key==='Enter') submitWaitlist()" />
+                <p id="waitlistError" class="text-red-500 text-xs mb-3 hidden"></p>
+                <div class="flex gap-3">
+                    <button onclick="closeWaitlistModal()"
+                        class="flex-1 border-2 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 py-3 rounded-xl font-bold text-sm">Cancel</button>
+                    <button id="waitlistSubmitBtn" onclick="submitWaitlist()"
+                        class="flex-grow-[2] bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2">
+                        <span class="material-icons text-[18px]">notifications_active</span> Notify Me
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let _waitlistEvent = null;
+
+        function openWaitlistModal(eventId, eventTitle) {
+            _waitlistEvent = { id: eventId, title: eventTitle };
+            document.getElementById('waitlistEventTitle').textContent = eventTitle;
+            document.getElementById('waitlistEmail').value = localStorage.getItem('userEmail') || '';
+            document.getElementById('waitlistError').classList.add('hidden');
+            const btn = document.getElementById('waitlistSubmitBtn');
+            btn.disabled = false;
+            btn.className = 'flex-grow-[2] bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2';
+            btn.innerHTML = '<span class="material-icons text-[18px]">notifications_active</span> Notify Me';
+            const modal = document.getElementById('waitlistModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => document.getElementById('waitlistEmail').focus(), 100);
+        }
+
+        function closeWaitlistModal() {
+            const modal = document.getElementById('waitlistModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            _waitlistEvent = null;
+        }
+
+        document.getElementById('waitlistModal').addEventListener('click', function (e) {
+            if (e.target === this) closeWaitlistModal();
+        });
+
+        async function submitWaitlist() {
+            const email = document.getElementById('waitlistEmail').value.trim();
+            const errEl = document.getElementById('waitlistError');
+            const btn = document.getElementById('waitlistSubmitBtn');
+
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                errEl.textContent = 'Please enter a valid email.';
+                errEl.classList.remove('hidden');
+                return;
+            }
+            errEl.classList.add('hidden');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="material-icons text-[18px] animate-spin">refresh</span> Joining...';
+
+            try {
+                const res = await fetch('/api/waitlist', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, eventId: String(_waitlistEvent.id), eventTitle: _waitlistEvent.title })
+                });
+                const data = await res.json();
+
+                if (data.success || res.ok) {
+                    localStorage.setItem('userEmail', email);
+                    btn.className = 'flex-grow-[2] bg-gradient-to-r from-green-500 to-emerald-500 text-white py-3 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2';
+                    btn.innerHTML = '<span class="material-icons text-[18px]">check_circle</span> You\'re on the list!';
+
+                    const toast = document.createElement('div');
+                    toast.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 z-[1000] bg-green-600 text-white px-6 py-3 rounded-2xl font-bold text-sm shadow-2xl text-center max-w-xs';
+                    toast.textContent = `✅ You're on the waitlist! We'll email you when a seat opens.`;
+                    document.body.appendChild(toast);
+                    setTimeout(() => { toast.remove(); closeWaitlistModal(); }, 3500);
+                } else {
+                    throw new Error(data.message || 'Failed');
+                }
+            } catch (err) {
+                btn.disabled = false;
+                btn.innerHTML = '<span class="material-icons text-[18px]">notifications_active</span> Notify Me';
+                errEl.textContent = err.message || 'Something went wrong. Try again.';
+                errEl.classList.remove('hidden');
+            }
+        }
+    </script>
+
 </body>
+
 
 </html>
