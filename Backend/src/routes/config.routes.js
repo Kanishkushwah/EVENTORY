@@ -1,15 +1,10 @@
 import express from "express";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import { supabase } from "../config/supabase.js";
 
 const router = express.Router();
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const configFile = path.join(__dirname, "../data/config.json");
 
-// Define a default config in case the file doesn't exist
-const defaultConfig = {
+// ─── Fallback (only used if DB has NO row yet — first-ever launch) ────────────
+const SEED_CONFIG = {
     hero: {
         title: "Spider-Man: Brand New Day",
         description: "Witness the spectacular return of the web-slinger in his most thrilling adventure yet. Book your tickets now!",
@@ -17,52 +12,60 @@ const defaultConfig = {
         trailerUrl: "https://youtu.be/BwntXFBNfOA"
     },
     releases: [
-        {
-            id: Date.now() + 1,
-            title: "Spider-Man: Brand New Day",
-            genre: "Action / Sci-Fi",
-            image: "https://images.unsplash.com/photo-1635805737707-575885ab0820?q=80&w=1000&auto=format&fit=crop"
-        },
-        {
-            id: Date.now() + 2,
-            title: "Avatar: Fire and Ash",
-            genre: "Sci-Fi / Adventure",
-            image: "https://m.media-amazon.com/images/M/MV5BZWUwZDFjMDMtZWU2Yy00ZGZhLWI2MGEtODYxOTcxMWRiNTViXkEyXkFqcGc@._V1_.jpg"
-        },
-        {
-            id: Date.now() + 3,
-            title: "Jolly LLB 3",
-            genre: "Comedy / Drama",
-            image: "https://m.media-amazon.com/images/M/MV5BMjA5OTEyMjUtMTE5MC00MzhhLTk2MmUtNmM3YjBlNjRjMTkzXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
-        }
+        { id: 1, title: "Spider-Man: Brand New Day", genre: "Action / Sci-Fi", releaseDate: "2026-07-31", image: "https://image.tmdb.org/t/p/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg" },
+        { id: 2, title: "Avatar: Fire and Ash", genre: "Sci-Fi / Adventure", releaseDate: "2025-12-19", image: "https://image.tmdb.org/t/p/w500/yDHYTfA3R0jFYba16jBB1ef8oIt.jpg" },
+        { id: 3, title: "Jolly LLB 3", genre: "Comedy / Drama", releaseDate: "2025-09-19", image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?q=80&w=500&auto=format&fit=crop" },
+        { id: 4, title: "Border 2", genre: "Action / War", releaseDate: "2026-06-05", image: "https://images.unsplash.com/photo-1516339901601-2e1b62dc0c45?q=80&w=500&auto=format&fit=crop" },
+        { id: 5, title: "Toxic", genre: "Thriller / Action", releaseDate: "2026-04-10", image: "https://image.tmdb.org/t/p/w500/iiZZdoQBEYBv6id8su7ImL0oCbD.jpg" }
     ]
 };
 
-// Guarantee data folder exists
-if (!fs.existsSync(path.join(__dirname, "../data"))) {
-    fs.mkdirSync(path.join(__dirname, "../data"));
-}
-
-router.get("/", (req, res) => {
+// ─── GET /api/config  ─ reads from Supabase, never from local file ─────────────
+router.get("/", async (req, res) => {
     try {
-        if (!fs.existsSync(configFile)) {
-            return res.json(defaultConfig);
+        const { data, error } = await supabase
+            .from("site_config")
+            .select("config")
+            .eq("id", 1)
+            .single();
+
+        if (error || !data) {
+            // First time: no row exists yet — seed it and return seed
+            console.log("ℹ️ No site_config row found, seeding defaults...");
+            await supabase.from("site_config").upsert({ id: 1, config: SEED_CONFIG }, { onConflict: "id" });
+            return res.json(SEED_CONFIG);
         }
-        const data = fs.readFileSync(configFile, "utf-8");
-        res.json(JSON.parse(data));
-    } catch (error) {
-        console.error("Error reading config", error);
-        res.json(defaultConfig); // Fallback
+
+        return res.json(data.config);
+    } catch (err) {
+        console.error("Config GET error:", err);
+        return res.json(SEED_CONFIG); // Graceful fallback
     }
 });
 
-router.post("/", (req, res) => {
+// ─── POST /api/config  ─ admin saves → written to Supabase only ───────────────
+router.post("/", async (req, res) => {
     try {
-        fs.writeFileSync(configFile, JSON.stringify(req.body, null, 2), "utf-8");
-        res.json({ success: true, message: "Configuration saved successfully" });
-    } catch (error) {
-        console.error("Error saving config", error);
-        res.status(500).json({ success: false, message: "Server error overriding config setup." });
+        const newConfig = req.body;
+
+        if (!newConfig || !newConfig.hero) {
+            return res.status(400).json({ success: false, message: "Invalid config payload" });
+        }
+
+        const { error } = await supabase
+            .from("site_config")
+            .upsert({ id: 1, config: newConfig, updated_at: new Date().toISOString() }, { onConflict: "id" });
+
+        if (error) {
+            console.error("Config save error:", error);
+            return res.status(500).json({ success: false, message: "Failed to save config to database." });
+        }
+
+        console.log("✅ Site config saved to Supabase by admin.");
+        return res.json({ success: true, message: "Configuration saved permanently to database. Changes will never be lost!" });
+    } catch (err) {
+        console.error("Config POST error:", err);
+        return res.status(500).json({ success: false, message: "Server error" });
     }
 });
 
