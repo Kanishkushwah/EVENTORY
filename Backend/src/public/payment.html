@@ -298,12 +298,15 @@
                 <a href="index.html" class="text-gray-600 hover:text-primary text-sm font-medium">Browse Events</a>
                 <a href="user-dashboard.html" class="text-gray-600 hover:text-primary text-sm font-medium">My
                     Tickets</a>
-                <a href="#" class="text-gray-600 hover:text-primary text-sm font-medium">Support</a>
+                <button onclick="openSupportModal()"
+                    class="text-gray-600 hover:text-primary text-sm font-medium flex items-center gap-1 transition-all">
+                    <span class="material-icons-outlined text-lg">help_outline</span> Support
+                </button>
 
                 <button class="material-icons-outlined text-gray-600 hover:text-primary">notifications</button>
                 <a href="user-profile.html"
-                    class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center hover:bg-purple-200 transition-colors">
-                    <span class="material-icons-outlined text-primary text-lg">person</span>
+                    class="w-9 h-9 rounded-full bg-purple-100 flex items-center justify-center hover:bg-purple-200 transition-all border-2 border-primary/20">
+                    <span class="material-icons-outlined text-primary text-xl">person</span>
                 </a>
             </div>
 
@@ -347,6 +350,10 @@
                     class="flex items-center gap-3 text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-purple-600 dark:hover:text-purple-400 transition-colors p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
                     <span class="material-icons">person</span> My Profile
                 </a>
+                <button onclick="openSupportModal(); toggleMobileMenu()"
+                    class="flex items-center gap-3 w-full text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-purple-600 dark:hover:text-purple-400 transition-colors p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
+                    <span class="material-icons">support_agent</span> Get Support
+                </button>
             </div>
 
             <div class="border-t border-gray-100 pt-6 space-y-4">
@@ -1331,6 +1338,124 @@
         });
     </script>
 
+    <script>
+        // --- SUPPORT MODAL LOGIC ---
+        function openSupportModal() {
+            const modal = document.getElementById('supportModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => {
+                document.getElementById('supportContent').classList.add('scale-100', 'opacity-100');
+                document.getElementById('supportContent').classList.remove('scale-95', 'opacity-0');
+            }, 10);
+        }
+
+        function closeSupportModal() {
+            const modal = document.getElementById('supportModal');
+            document.getElementById('supportContent').classList.remove('scale-100', 'opacity-100');
+            document.getElementById('supportContent').classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.style.overflow = '';
+            }, 300);
+        }
+
+        // Add event listener only if element exists
+        document.addEventListener('DOMContentLoaded', () => {
+            const supportModal = document.getElementById('supportModal');
+            if (supportModal) {
+                supportModal.addEventListener('click', function (e) {
+                    if (e.target === this) closeSupportModal();
+                });
+            }
+        });
+    </script>
+
+    <!-- Support Modal HTML -->
+    <div id="supportModal"
+        class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-all duration-300">
+        <div id="supportContent"
+            class="bg-white dark:bg-gray-900 w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl transform transition-all duration-300 scale-95 opacity-0">
+
+            <div class="relative bg-gradient-to-br from-purple-700 to-indigo-800 p-8 text-white overflow-hidden">
+                <!-- Abstract blobs -->
+                <div class="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+                <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-purple-500/20 rounded-full blur-3xl"></div>
+
+                <div class="relative flex justify-between items-start">
+                    <div>
+                        <h2 class="text-3xl font-black mb-2 tracking-tight">Need Help?</h2>
+                        <p class="text-purple-100/80 font-medium text-sm">Our team is ready to assist you 24/7</p>
+                    </div>
+                    <button onclick="closeSupportModal()"
+                        class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all">
+                        <span class="material-icons-outlined">close</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-8 space-y-6">
+                <!-- Contact Options Grid -->
+                <div class="grid grid-cols-2 gap-4">
+                    <button
+                        class="p-5 border-2 border-gray-100 dark:border-gray-800 rounded-2xl hover:border-primary hover:bg-purple-50 dark:hover:bg-purple-900/10 transition-all text-left group">
+                        <div
+                            class="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform">
+                            <span class="material-icons-outlined text-2xl">chat</span>
+                        </div>
+                        <h4 class="font-bold text-gray-900 dark:text-white mb-1">Live Chat</h4>
+                        <p class="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-black">Response &lt; 2m
+                        </p>
+                    </button>
+
+                    <button
+                        class="p-5 border-2 border-gray-100 dark:border-gray-800 rounded-2xl hover:border-primary hover:bg-purple-50 dark:hover:bg-purple-900/10 transition-all text-left group">
+                        <div
+                            class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 mb-4 group-hover:scale-110 transition-transform">
+                            <span class="material-icons-outlined text-2xl">mail</span>
+                        </div>
+                        <h4 class="font-bold text-gray-900 dark:text-white mb-1">Email Us</h4>
+                        <p class="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-black">Response &lt; 1h
+                        </p>
+                    </button>
+                </div>
+
+                <!-- Call Support -->
+                <button
+                    class="w-full p-5 flex items-center gap-5 border-2 border-gray-100 dark:border-gray-800 rounded-2xl hover:border-primary hover:bg-purple-50 dark:hover:bg-purple-900/10 transition-all group">
+                    <div
+                        class="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 group-hover:rotate-12 transition-transform">
+                        <span class="material-icons-outlined text-2xl">call</span>
+                    </div>
+                    <div class="text-left flex-1">
+                        <h4 class="font-bold text-gray-900 dark:text-white">Phone Support</h4>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">9AM - 6PM IST · Mon to Sat</p>
+                    </div>
+                    <div
+                        class="w-10 h-10 rounded-full border border-gray-100 dark:border-gray-800 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
+                        <span class="material-icons-outlined text-sm">arrow_forward</span>
+                    </div>
+                </button>
+
+                <!-- Help Center / FAQs -->
+                <div class="pt-2">
+                    <button
+                        class="w-full py-4 text-center text-primary font-black hover:bg-purple-50 dark:hover:bg-purple-900/10 rounded-xl transition-all border border-transparent hover:border-purple-200 decoration-none">
+                        Browse FAQ & Help Center
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-800/50 p-6 flex items-center justify-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                <p class="text-[10px] font-black text-gray-600 dark:text-gray-400 uppercase tracking-widest">Global
+                    Support Team Online</p>
+            </div>
+        </div>
+    </div>
 </body>
+
 
 </html>
