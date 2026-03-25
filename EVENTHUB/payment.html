@@ -773,23 +773,33 @@
             if (isCouponApplied) return alert("A discount is already applied to this order!");
 
             const code = document.getElementById("couponInput").value.trim().toUpperCase();
-            if (code === "95OFF") {
+            const msg = document.getElementById("couponMsg");
+
+            // Promo code definitions: code → { label, multiplier (what user pays) }
+            const PROMO_CODES = {
+                "99OFF": { label: "🎉 99% Mega Discount Applied!", multiplier: 0.01 },
+                "95OFF": { label: "✅ 95% Discount Applied!", multiplier: 0.05 },
+                "EVENTORY20": { label: "✅ 20% Off Applied!", multiplier: 0.80 },
+            };
+
+            const promo = PROMO_CODES[code];
+            if (promo) {
                 isCouponApplied = true;
-                const msg = document.getElementById("couponMsg");
-                msg.textContent = "✅ Boom! 95% Discount Applied";
-                msg.className = "text-xs font-bold text-green-600 mt-2 block animate-pulse";
+                msg.textContent = promo.label;
+                msg.className = "text-xs font-bold text-green-600 mt-2 block";
                 document.getElementById("btnApplyCoupon").disabled = true;
+                document.getElementById("couponInput").disabled = true;
                 document.getElementById("btnApplyCoupon").classList.add("opacity-50", "cursor-not-allowed");
 
                 originalTotal = parseFloat(localStorage.getItem("totalAmount") || "0");
-                const discountedTotal = (originalTotal * 0.05).toFixed(2); // 95% off
+                const discountedTotal = Math.max(1, (originalTotal * promo.multiplier)).toFixed(2);
 
-                // Update Local Storage globally
+                // Update Local Storage
                 localStorage.setItem("totalAmount", discountedTotal);
 
-                // Update DOM elements intelligently
+                // Update DOM
                 const summTotal = document.getElementById("summaryTotal");
-                if (summTotal) summTotal.innerHTML = `<span class="line-through text-gray-400 text-sm font-normal mr-2">₹${originalTotal}</span>₹${discountedTotal}`;
+                if (summTotal) summTotal.innerHTML = `<span class="line-through text-gray-400 text-sm font-normal mr-2">₹${originalTotal}</span><span class="text-green-600 font-black">₹${discountedTotal}</span>`;
 
                 const cardAmt = document.getElementById("cardPaymentAmount");
                 if (cardAmt) cardAmt.textContent = "₹" + discountedTotal;
@@ -797,16 +807,23 @@
                 const qrAmt = document.getElementById("qrAmount");
                 if (qrAmt) qrAmt.textContent = "Amount: ₹" + discountedTotal;
 
-                // Re-initialize dynamic payment engines with new amount
+                // Show savings badge
+                const savings = (originalTotal - discountedTotal).toFixed(2);
+                const promoBox = document.querySelector('#couponInput').closest('div.mb-5, div.border-dashed') || document.querySelector('#couponInput').closest('div');
+                const savingsBadge = document.createElement('p');
+                savingsBadge.className = 'text-xs font-bold text-purple-700 bg-purple-50 rounded-lg px-3 py-1.5 mt-2 text-center';
+                savingsBadge.textContent = `🎊 You saved ₹${savings}!`;
+                msg.after(savingsBadge);
+
                 if (method === "upi") generateUPIQR();
-                initializeStripe(); // Needs to fetch new intent with lower amount
+                initializeStripe();
 
             } else {
-                const msg = document.getElementById("couponMsg");
-                msg.textContent = "❌ Invalid Promo Code";
-                msg.className = "text-xs font-bold text-red-600 mt-2 block animate-shake";
+                msg.textContent = "❌ Invalid Promo Code. Try: 99OFF";
+                msg.className = "text-xs font-bold text-red-600 mt-2 block";
             }
         }
+
 
         function switchPaymentMethod(m) {
             method = m;
