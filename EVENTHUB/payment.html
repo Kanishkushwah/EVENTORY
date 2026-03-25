@@ -1339,12 +1339,18 @@
     </script>
 
     <script>
-        // --- SUPPORT MODAL LOGIC ---
+        // --- SUPPORT & AI CHATBOT LOGIC ---
+        let chatHistory = [];
+
         function openSupportModal() {
             const modal = document.getElementById('supportModal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
             document.body.style.overflow = 'hidden';
+
+            // Reset to Menu View by default
+            showSupportMenu();
+
             setTimeout(() => {
                 document.getElementById('supportContent').classList.add('scale-100', 'opacity-100');
                 document.getElementById('supportContent').classList.remove('scale-95', 'opacity-0');
@@ -1362,12 +1368,102 @@
             }, 300);
         }
 
-        // Add event listener only if element exists
+        function showSupportMenu() {
+            document.getElementById('supportMenuView').classList.remove('hidden');
+            document.getElementById('supportChatView').classList.add('hidden');
+            document.getElementById('supportHeaderTitle').textContent = "Need Help?";
+            document.getElementById('supportHeaderDesc').textContent = "Our team is ready to assist you 24/7";
+        }
+
+        function openAIChat() {
+            document.getElementById('supportMenuView').classList.add('hidden');
+            document.getElementById('supportChatView').classList.remove('hidden');
+            document.getElementById('supportHeaderTitle').textContent = "Chat with Eve";
+            document.getElementById('supportHeaderDesc').textContent = "AI Support Agent · Online";
+
+            // Initial greeting if empty
+            const messagesContainer = document.getElementById('chatMessages');
+            if (messagesContainer.children.length === 0) {
+                addChatMessage("Eve", "Hello! I'm Eve, your Eventory assistant. 🎬 How can I help you today? Whether it's about your booking, promo codes, or event details, I've got you covered!", 'bot');
+            }
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
+
+            // Clear input
+            input.value = '';
+
+            // Add user message to UI
+            addChatMessage("You", message, 'user');
+
+            // Show typing indicator
+            const typingId = 'typing-' + Date.now();
+            const typingHTML = `
+                <div id="${typingId}" class="flex flex-col items-start gap-1">
+                    <div class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 p-3 rounded-2xl rounded-bl-none text-sm font-medium flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></span>
+                        <span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
+                        <span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.4s"></span>
+                    </div>
+                </div>
+            `;
+            document.getElementById('chatMessages').insertAdjacentHTML('beforeend', typingHTML);
+            scrollChatToBottom();
+
+            try {
+                const response = await fetch('/api/ai/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message, history: chatHistory })
+                });
+                const data = await response.json();
+
+                // Remove typing indicator
+                document.getElementById(typingId).remove();
+
+                if (data.success) {
+                    addChatMessage("Eve", data.response, 'bot');
+                    // Store in history
+                    chatHistory.push({ role: "user", parts: [{ text: message }] });
+                    chatHistory.push({ role: "model", parts: [{ text: data.response }] });
+                } else {
+                    addChatMessage("Eve", "I'm sorry, I'm having trouble connecting right now. Please try again soon!", 'bot');
+                }
+            } catch (err) {
+                document.getElementById(typingId).remove();
+                addChatMessage("Eve", "Oops! Something went wrong. Check your connection or try again later.", 'bot');
+            }
+        }
+
+        function addChatMessage(sender, text, type) {
+            const container = document.getElementById('chatMessages');
+            const isBot = type === 'bot';
+
+            const msgHTML = `
+                <div class="flex flex-col ${isBot ? 'items-start' : 'items-end'} gap-1 mb-4 animate-fade-in">
+                    <div class="${isBot ? 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200' : 'bg-primary text-white'} p-4 rounded-2xl ${isBot ? 'rounded-bl-none' : 'rounded-br-none'} text-sm font-medium shadow-sm max-w-[85%]">
+                        ${text}
+                    </div>
+                    <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider px-1">${isBot ? 'Eve agent' : 'Customer'}</span>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', msgHTML);
+            scrollChatToBottom();
+        }
+
+        function scrollChatToBottom() {
+            const container = document.getElementById('chatMessages');
+            container.scrollTop = container.scrollHeight;
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const supportModal = document.getElementById('supportModal');
             if (supportModal) {
-                supportModal.addEventListener('click', function (e) {
-                    if (e.target === this) closeSupportModal();
+                supportModal.addEventListener('click', (e) => {
+                    if (e.target === supportModal) closeSupportModal();
                 });
             }
         });
@@ -1377,17 +1473,22 @@
     <div id="supportModal"
         class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-all duration-300">
         <div id="supportContent"
-            class="bg-white dark:bg-gray-900 w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl transform transition-all duration-300 scale-95 opacity-0">
+            class="bg-white dark:bg-gray-900 w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl transform transition-all duration-300 scale-95 opacity-0 flex flex-col max-h-[90vh]">
 
-            <div class="relative bg-gradient-to-br from-purple-700 to-indigo-800 p-8 text-white overflow-hidden">
+            <div
+                class="relative bg-gradient-to-br from-purple-700 to-indigo-800 p-8 text-white overflow-hidden flex-shrink-0">
                 <!-- Abstract blobs -->
                 <div class="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
                 <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-purple-500/20 rounded-full blur-3xl"></div>
 
                 <div class="relative flex justify-between items-start">
                     <div>
-                        <h2 class="text-3xl font-black mb-2 tracking-tight">Need Help?</h2>
-                        <p class="text-purple-100/80 font-medium text-sm">Our team is ready to assist you 24/7</p>
+                        <h2 id="supportHeaderTitle" class="text-3xl font-black mb-2 tracking-tight">Need Help?</h2>
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                            <p id="supportHeaderDesc" class="text-purple-100/80 font-medium text-sm">Our team is ready
+                                to assist you 24/7</p>
+                        </div>
                     </div>
                     <button onclick="closeSupportModal()"
                         class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all">
@@ -1396,22 +1497,22 @@
                 </div>
             </div>
 
-            <div class="p-8 space-y-6">
-                <!-- Contact Options Grid -->
+            <!-- VIEW 1: Main Menu -->
+            <div id="supportMenuView" class="p-8 space-y-6 overflow-y-auto">
                 <div class="grid grid-cols-2 gap-4">
-                    <button
+                    <button onclick="openAIChat()"
                         class="p-5 border-2 border-gray-100 dark:border-gray-800 rounded-2xl hover:border-primary hover:bg-purple-50 dark:hover:bg-purple-900/10 transition-all text-left group">
                         <div
                             class="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform">
-                            <span class="material-icons-outlined text-2xl">chat</span>
+                            <span class="material-icons-outlined text-2xl">smart_toy</span>
                         </div>
-                        <h4 class="font-bold text-gray-900 dark:text-white mb-1">Live Chat</h4>
-                        <p class="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-black">Response &lt; 2m
-                        </p>
+                        <h4 class="font-bold text-gray-900 dark:text-white mb-1">AI Chatbot</h4>
+                        <p class="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-black">Response &lt;
+                            Instant</p>
                     </button>
 
-                    <button
-                        class="p-5 border-2 border-gray-100 dark:border-gray-800 rounded-2xl hover:border-primary hover:bg-purple-50 dark:hover:bg-purple-900/10 transition-all text-left group">
+                    <a href="mailto:eventorytickets@gmail.com"
+                        class="p-5 border-2 border-gray-100 dark:border-gray-800 rounded-2xl hover:border-primary hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-all text-left group block">
                         <div
                             class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 mb-4 group-hover:scale-110 transition-transform">
                             <span class="material-icons-outlined text-2xl">mail</span>
@@ -1419,11 +1520,10 @@
                         <h4 class="font-bold text-gray-900 dark:text-white mb-1">Email Us</h4>
                         <p class="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-black">Response &lt; 1h
                         </p>
-                    </button>
+                    </a>
                 </div>
 
-                <!-- Call Support -->
-                <button
+                <a href="tel:8511812332"
                     class="w-full p-5 flex items-center gap-5 border-2 border-gray-100 dark:border-gray-800 rounded-2xl hover:border-primary hover:bg-purple-50 dark:hover:bg-purple-900/10 transition-all group">
                     <div
                         class="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 group-hover:rotate-12 transition-transform">
@@ -1431,31 +1531,51 @@
                     </div>
                     <div class="text-left flex-1">
                         <h4 class="font-bold text-gray-900 dark:text-white">Phone Support</h4>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">9AM - 6PM IST · Mon to Sat</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Call +91 85118 12332 · 9AM - 6PM</p>
                     </div>
                     <div
                         class="w-10 h-10 rounded-full border border-gray-100 dark:border-gray-800 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
                         <span class="material-icons-outlined text-sm">arrow_forward</span>
                     </div>
-                </button>
+                </a>
 
-                <!-- Help Center / FAQs -->
                 <div class="pt-2">
                     <button
                         class="w-full py-4 text-center text-primary font-black hover:bg-purple-50 dark:hover:bg-purple-900/10 rounded-xl transition-all border border-transparent hover:border-purple-200 decoration-none">
                         Browse FAQ & Help Center
                     </button>
+                    <p class="text-center text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-4">Safe &
+                        Secure Booking Support</p>
                 </div>
             </div>
 
-            <div class="bg-gray-50 dark:bg-gray-800/50 p-6 flex items-center justify-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                <p class="text-[10px] font-black text-gray-600 dark:text-gray-400 uppercase tracking-widest">Global
-                    Support Team Online</p>
+            <!-- VIEW 2: AI Chat -->
+            <div id="supportChatView"
+                class="hidden flex-1 flex flex-col overflow-hidden bg-gray-50/50 dark:bg-gray-800/20">
+                <div id="chatMessages" class="flex-1 overflow-y-auto p-6 flex flex-col scroll-smooth h-[400px]">
+                    <!-- Messages will appear here -->
+                </div>
+
+                <!-- Input Area -->
+                <div class="p-6 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 flex-shrink-0">
+                    <div class="relative flex items-center">
+                        <input id="chatInput" type="text" placeholder="Tell Eve your problem..."
+                            class="w-full pl-5 pr-14 py-4 bg-gray-50 dark:bg-gray-800 border-2 border-transparent focus:border-primary rounded-2xl outline-none text-sm font-medium transition-all"
+                            onkeypress="if(event.key === 'Enter') sendChatMessage()">
+                        <button onclick="sendChatMessage()"
+                            class="absolute right-2 w-10 h-10 bg-primary text-white rounded-xl flex items-center justify-center hover:scale-105 transition-transform shadow-lg shadow-primary/20">
+                            <span class="material-icons">send</span>
+                        </button>
+                    </div>
+                    <button onclick="showSupportMenu()"
+                        class="text-[10px] font-bold text-gray-400 hover:text-primary transition-colors mt-3 uppercase tracking-widest flex items-center gap-1">
+                        <span class="material-icons text-xs">arrow_back</span> Back to other options
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 </body>
 
-
 </html>
+```
