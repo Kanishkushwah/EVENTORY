@@ -387,8 +387,7 @@
                     <span class="material-icons text-lg">home</span>
                     Browse Events
                 </a>
-                <a class="nav-link flex items-center hover:text-primary transition-colors gap-1"
-                    href="#releases-section">
+                <a class="nav-link flex items-center hover:text-primary transition-colors gap-1" href="releases.html">
                     <span class="material-icons text-lg">new_releases</span>
                     Releases
                 </a>
@@ -561,33 +560,32 @@
             </button>
         </div>
 
-        <!-- RELEASES REMOVED - MOVED TO releases.html -->
-        <!-- CATEGORIES FILTER -->
+        <!-- CATEGORY FILTER TABS -->
         <div class="mt-8 md:mt-10 flex flex-wrap justify-center gap-2 md:gap-3 max-w-5xl mx-auto mb-10 reveal">
-            <button
-                class="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-5 py-2 md:px-6 md:py-2.5 rounded-full text-sm font-bold transition-all flex items-center gap-2 category-btn active-category hover:bg-gray-200"
+            <button data-category="all"
+                class="category-btn px-5 py-2 md:px-6 md:py-2.5 rounded-full text-sm font-bold transition-all flex items-center gap-2 bg-purple-600 text-white ring-2 ring-purple-300"
                 onclick="filterCategory('all')">
                 <span class="material-icons text-base">grid_view</span> All
             </button>
-            <button
-                class="bg-white text-purple-600 px-5 py-2 md:px-6 md:py-2.5 rounded-full text-sm font-bold shadow-md transition-all hover:scale-105 flex items-center gap-2 category-btn"
+            <button data-category="movies"
+                class="category-btn px-5 py-2 md:px-6 md:py-2.5 rounded-full text-sm font-bold transition-all flex items-center gap-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-sm"
                 onclick="filterCategory('movies')">
-                <span class="material-icons text-base">movie</span> Movies
+                <span class="material-icons text-base text-red-500">movie</span> Movies
             </button>
-            <button
-                class="bg-white text-purple-600 px-5 py-2 md:px-6 md:py-2.5 rounded-full text-sm font-bold shadow-md transition-all hover:scale-105 flex items-center gap-2 category-btn"
+            <button data-category="music"
+                class="category-btn px-5 py-2 md:px-6 md:py-2.5 rounded-full text-sm font-bold transition-all flex items-center gap-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-sm"
                 onclick="filterCategory('music')">
-                <span class="material-icons text-base">music_note</span> Music
+                <span class="material-icons text-base text-purple-500">music_note</span> Music
             </button>
-            <button
-                class="bg-white text-blue-600 px-5 py-2 md:px-6 md:py-2.5 rounded-full text-sm font-bold shadow-md transition-all hover:scale-105 flex items-center gap-2 category-btn"
+            <button data-category="sports"
+                class="category-btn px-5 py-2 md:px-6 md:py-2.5 rounded-full text-sm font-bold transition-all flex items-center gap-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-sm"
                 onclick="filterCategory('sports')">
-                <span class="material-icons text-base">sports_soccer</span> Sports
+                <span class="material-icons text-base text-blue-500">sports_soccer</span> Sports
             </button>
-            <button
-                class="bg-white text-green-600 px-5 py-2 md:px-6 md:py-2.5 rounded-full text-sm font-bold shadow-md transition-all hover:scale-105 flex items-center gap-2 category-btn"
+            <button data-category="business"
+                class="category-btn px-5 py-2 md:px-6 md:py-2.5 rounded-full text-sm font-bold transition-all flex items-center gap-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-sm"
                 onclick="filterCategory('business')">
-                <span class="material-icons text-base">business_center</span> Business
+                <span class="material-icons text-base text-amber-500">business_center</span> Business
             </button>
         </div>
 
@@ -1423,17 +1421,16 @@
             // 1. UI Updates (Buttons & Banner)
             try {
                 document.querySelectorAll('.category-btn').forEach(btn => {
-                    // Reset all buttons cleanly
-                    btn.classList.add('bg-white', 'text-gray-600');
-                    btn.classList.remove('bg-purple-600', 'text-white', 'scale-105', 'ring-2', 'ring-purple-200', 'hover:scale-105');
-
-                    // Selected state
-                    const onclickAttr = btn.getAttribute('onclick') || '';
-                    const isActive = onclickAttr.includes(`'${category}'`);
-                    if (isActive) {
-                        btn.classList.remove('bg-white', 'text-gray-600');
-                        btn.classList.add('bg-purple-600', 'text-white', 'scale-105', 'ring-2', 'ring-purple-200');
+                    const btnCategory = btn.getAttribute('data-category');
+                    if (btnCategory === category) {
+                        // ACTIVE state — solid purple, always visible
+                        btn.className = 'category-btn px-5 py-2 md:px-6 md:py-2.5 rounded-full text-sm font-bold transition-all flex items-center gap-2 bg-purple-600 text-white ring-2 ring-purple-300 scale-105';
+                    } else {
+                        // INACTIVE state — clean white/dark chip
+                        btn.className = 'category-btn px-5 py-2 md:px-6 md:py-2.5 rounded-full text-sm font-bold transition-all flex items-center gap-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-sm hover:shadow-md';
                     }
+                    // Restore the icon inside regardless
+                    // Icons are inside separate <span> so class overwrite won't kill them
                 });
 
                 const wcBanner = document.getElementById('wcBanner');

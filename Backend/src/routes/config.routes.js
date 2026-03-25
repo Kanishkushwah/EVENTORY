@@ -14,7 +14,7 @@ const defaultConfig = {
         title: "Spider-Man: Brand New Day",
         description: "Witness the spectacular return of the web-slinger in his most thrilling adventure yet. Book your tickets now!",
         image: "https://images.unsplash.com/photo-1635805737707-575885ab0820?q=80&w=2600&auto=format&fit=crop",
-        trailerUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+        trailerUrl: "https://youtu.be/BwntXFBNfOA"
     },
     releases: [
         {
