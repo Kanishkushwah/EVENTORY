@@ -599,8 +599,31 @@
                             <span>Booking Fee (10%)</span>
                             <span id="bookingFee">₹0</span>
                         </div>
-                        <div class="flex justify-between font-bold text-lg border-t pt-2">
-                            <span>Total</span>
+
+                        <!-- PROMO CODE SECTION -->
+                        <div class="mt-4 pt-4 border-t border-dashed">
+                            <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-2">Have
+                                a Promo Code?</label>
+                            <div class="flex gap-2">
+                                <div class="relative flex-grow">
+                                    <span
+                                        class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">confirmation_number</span>
+                                    <input id="promoInput" type="text" placeholder="EVENTORY20"
+                                        class="w-full bg-gray-50 border-2 border-transparent focus:border-purple-500 rounded-lg pl-9 pr-3 py-2 text-sm font-bold uppercase tracking-wider outline-none transition-all placeholder:text-gray-300 placeholder:normal-case">
+                                </div>
+                                <button onclick="applyPromoCode()" id="btnApplyPromo"
+                                    class="bg-gray-100 hover:bg-purple-100 text-gray-700 hover:text-purple-700 px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-1 border border-transparent hover:border-purple-200">
+                                    Apply
+                                </button>
+                            </div>
+                            <div id="promoFeedback"
+                                class="hidden mt-2 p-2 rounded-lg text-[11px] font-medium flex items-center gap-2">
+                            </div>
+                        </div>
+
+                        <div
+                            class="flex justify-between font-bold text-lg pt-4 border-t border-purple-100 text-purple-900 mt-4 bg-purple-50/50 p-3 rounded-xl">
+                            <span>Total Payable</span>
                             <span id="totalAmount">₹0</span>
                         </div>
                     </div>
@@ -741,7 +764,10 @@
         let selectedSeats = [];
         let socket;
         try {
-            socket = io(window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:8000' : 'https://eventory-backend.onrender.com'); // Match your backend domain
+            const socketUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+                ? 'http://localhost:8000'
+                : window.location.origin; // Dynamically use the current origin in production
+            socket = io(socketUrl);
         } catch (e) { console.error("Socket IO failed to load"); }
 
         if (socket) {
@@ -1144,62 +1170,41 @@
                 return;
             }
 
-            // MOVIE LAYOUT - handles both "movie" and "movies"
+            // MOVIE LAYOUT - 3D Perspective Edition
             if (eventCategory === "movies" || eventCategory === "movie") {
                 const seatPrice = selectedShowtime ? selectedShowtime.price : currentEvent.price;
 
                 const rows = [
-                    { name: 'A', seats: 12, price: seatPrice, label: 'Standard', occupied: [5, 6] },
-                    { name: 'B', seats: 12, price: seatPrice, label: 'Standard', occupied: [1, 2] },
-                    { name: 'C', seats: 12, price: seatPrice, label: 'Standard', occupied: [] },
-                    { name: 'D', seats: 12, price: seatPrice, label: 'Standard', occupied: [] },
-                    { name: 'E', seats: 12, price: seatPrice, label: 'Standard', occupied: [] },
-                    { name: 'F', seats: 12, price: seatPrice + 100, label: 'Premium', occupied: [3, 8] },
-                    { name: 'G', seats: 12, price: seatPrice + 100, label: 'Premium', occupied: [] }
+                    { name: 'A', seats: 12, price: seatPrice, label: 'Standard', scale: 1.15, offset: 0 },
+                    { name: 'B', seats: 12, price: seatPrice, label: 'Standard', scale: 1.10, offset: 5 },
+                    { name: 'C', seats: 12, price: seatPrice, label: 'Standard', scale: 1.05, offset: 10 },
+                    { name: 'D', seats: 14, price: seatPrice, label: 'Standard', scale: 1.00, offset: 15 },
+                    { name: 'E', seats: 14, price: seatPrice, label: 'Standard', scale: 0.95, offset: 20 },
+                    { name: 'F', seats: 16, price: seatPrice + 100, label: 'Premium', scale: 0.90, offset: 25 },
+                    { name: 'G', seats: 16, price: seatPrice + 100, label: 'Premium', scale: 0.85, offset: 30 }
                 ];
 
-                // Surge Pricing Logic (Simulation based on occupancy)
-                // Let's pretend row A and B are occupied + random ones, if > 30% full, increase price
-                let currentOccupiedCount = rows.reduce((acc, r) => acc + r.occupied.length, 0);
-                let totalSeatsCount = rows.reduce((acc, r) => acc + r.seats, 0);
-
-                if (currentOccupiedCount / totalSeatsCount > 0.15) { // Just for demo, trigger early
-                    document.getElementById("surgePricingBadge").classList.remove("hidden");
-                    // Add 10%
-                    rows.forEach(r => r.price = Math.round(r.price * 1.10));
-                }
-
-                document.getElementById("smartRecBtn").classList.remove("hidden");
-
-                document.getElementById("smartRecBtn").classList.remove("hidden");
-
                 layout.innerHTML = `
-                    <div class="w-full flex justify-center mb-8">
-                        <div class="relative w-3/4 max-w-md">
-                            <div class="h-2 bg-gradient-to-b from-gray-300 to-transparent rounded-t-[100%] shadow-[0_15px_30px_-5px_rgba(139,92,246,0.3)]"></div>
-                            <span class="block text-center text-[10px] text-gray-400 mt-2 font-bold tracking-[0.3em]">CINEMA SCREEN</span>
+                    <div class="theater-stage mb-20 text-center">
+                        <div class="mx-auto w-full max-w-[600px] relative">
+                            <!-- Glowing Curved Screen -->
+                            <div class="h-3 bg-gradient-to-b from-purple-400 to-transparent rounded-[100%/100%] shadow-[0_20px_50px_rgba(139,92,246,0.6)] animate-pulse"></div>
+                            <div class="mt-4 text-[10px] font-black tracking-[0.6em] text-gray-400 uppercase opacity-60">IMAX 4K LASER SCREEN</div>
+                            
+                            <!-- Perspective Ground Glow -->
+                            <div class="absolute -bottom-10 left-1/2 -translate-x-1/2 w-[80%] h-20 bg-purple-500/10 blur-[40px] rounded-full pointer-events-none"></div>
                         </div>
-                    </div>
-                    
-                    <div class="flex justify-center gap-6 mb-6 text-sm">
-                        <div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-white border-2 border-gray-300"></div> <span class="text-gray-600">Available</span></div>
-                        <div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-[#10b981] shadow"></div> <span class="text-gray-600 font-medium">Selected</span></div>
-                        <div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-gray-300 border-2 border-gray-400"></div> <span class="text-gray-600">Occupied</span></div>
                     </div>
                 `;
-
                 rows.forEach(r => {
                     const rowDiv = document.createElement("div");
-                    rowDiv.className = "mb-4";
+                    rowDiv.className = "flex flex-col items-center mb-6";
+                    rowDiv.style.transform = `scale(${r.scale})`;
+                    rowDiv.style.marginTop = `${r.offset}px`;
+
                     rowDiv.innerHTML = `
-                        <div class="flex justify-between px-2 mb-2 items-center">
-                            <span class="text-sm font-bold flex items-center gap-2">
-                                Row ${r.name} 
-                                <span class="text-[10px] font-normal text-gray-500 uppercase tracking-wide border border-gray-200 px-1.5 py-0.5 rounded">${r.label || 'Standard'}</span>
-                            </span>
-                            <span class="text-xs font-medium px-3 py-1 rounded-full bg-purple-100 text-purple-700">₹${r.price}</span>
-                        </div>
-                        <div id="row-${r.name}" class="flex gap-2 justify-center"></div>
+                        <div class="text-[10px] font-bold text-gray-400 mb-2 tracking-widest uppercase">Row ${r.name}</div>
+                        <div id="row-${r.name}" class="flex gap-1.5 sm:gap-2 justify-center perspective-seats"></div>
                     `;
                     layout.appendChild(rowDiv);
 
@@ -1208,14 +1213,12 @@
                         seat.className = "seat border-2 bg-white border-gray-300";
                         const id = `${r.name}${i}`;
 
-                        if (r.occupied.includes(i) || liveOccupied.includes(id)) {
+                        if (liveOccupied.includes(id)) {
                             seat.classList.add("occupied");
                         } else if (liveLocked.includes(id) && liveLockedBy[id] !== window.userSessionId) {
                             seat.classList.add("locked");
-                            seat.style.backgroundColor = "#FCD34D"; // Yellow
-                            seat.style.border = "2px solid #D97706";
-                            seat.style.cursor = "not-allowed";
-                            seat.title = "Currently being booked by someone else (Locked for 5m)";
+                            seat.style.backgroundColor = "#FCD34D";
+                            seat.title = "Locked by someone else";
                         } else {
                             if (liveLocked.includes(id) && liveLockedBy[id] === window.userSessionId) {
                                 seat.classList.add("selected");
@@ -1223,8 +1226,7 @@
                             }
                             seat.onclick = () => toggleSeat(id, seat, r.price);
                         }
-
-                        document.getElementById(`row-${r.name}`).appendChild(seat);
+                        rowDiv.querySelector('.perspective-seats').appendChild(seat);
                     }
                 });
             }
@@ -2116,13 +2118,16 @@
 
             const snacksDisplayRow = document.getElementById('snacksDisplayRow');
             if (snacksTotal > 0) {
-                snacksDisplayRow.classList.remove('hidden');
+                if (snacksDisplayRow) snacksDisplayRow.classList.remove('hidden');
                 document.getElementById('snacksDisplay').textContent = `₹${snacksTotal}`;
             } else {
                 if (snacksDisplayRow) snacksDisplayRow.classList.add('hidden');
             }
 
-            const total = subtotal + fee + snacksTotal;
+            // PROMO LOGIC
+            const promoAmount = window.currentPromoDiscount || 0;
+            const totalBeforePromo = subtotal + fee + snacksTotal;
+            const total = Math.max(0, totalBeforePromo - promoAmount);
 
             document.getElementById("ticketCount").textContent = selectedSeats.length;
             document.getElementById("subtotalAmount").textContent = `₹${subtotal}`;
@@ -2164,6 +2169,60 @@
             }
         }
 
+        window.currentPromoDiscount = 0;
+        window.appliedPromoCode = null;
+
+        async function applyPromoCode() {
+            const code = document.getElementById('promoInput').value.trim();
+            const feedback = document.getElementById('promoFeedback');
+            const btn = document.getElementById('btnApplyPromo');
+            const totalBeforeDiscount = selectedSeats.reduce((s, x) => s + x.price, 0) + Math.round(selectedSeats.reduce((s, x) => s + x.price, 0) * 0.10);
+
+            if (!code) return;
+            if (selectedSeats.length === 0) return alert("Select seats first!");
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="material-icons animate-spin text-sm">sync</span>';
+            feedback.classList.add('hidden');
+
+            try {
+                const response = await fetch('/api/promo/validate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code, amount: totalBeforeDiscount })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    window.currentPromoDiscount = data.discountAmount;
+                    window.appliedPromoCode = data.code;
+
+                    feedback.className = "mt-2 p-2 rounded-lg text-[11px] font-bold flex items-center gap-2 bg-green-50 text-green-700 border border-green-200 animate-bounce";
+                    feedback.innerHTML = `<span class="material-icons text-sm">check_circle</span> Code "${data.code}" applied! ₹${data.discountAmount} saved.`;
+                    feedback.classList.remove('hidden');
+
+                    btn.className = "bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-1";
+                    btn.innerHTML = '<span class="material-icons text-sm">done</span> Applied';
+
+                    updateSummary();
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (err) {
+                window.currentPromoDiscount = 0;
+                window.appliedPromoCode = null;
+
+                feedback.className = "mt-2 p-2 rounded-lg text-[11px] font-bold flex items-center gap-2 bg-red-50 text-red-700 border border-red-200";
+                feedback.innerHTML = `<span class="material-icons text-sm">error_outline</span> ${err.message || "Failed to apply code"}`;
+                feedback.classList.remove('hidden');
+
+                btn.disabled = false;
+                btn.innerHTML = 'Apply';
+                updateSummary();
+            }
+        }
+
         /** PROCEED TO PAYMENT **/
         async function proceedToPayment() {
             if (selectedSeats.length === 0) return alert("Please select at least one seat.");
@@ -2176,7 +2235,16 @@
 
             const subtotal = selectedSeats.reduce((s, x) => s + x.price, 0);
             const bookingFee = Math.round(subtotal * 0.10);
-            const total = subtotal + bookingFee;
+
+            // Recalculate snacks
+            let snacksTotal = 0;
+            const popcornCb = document.getElementById('addPopcorn');
+            const cokeCb = document.getElementById('addCoke');
+            if (popcornCb && popcornCb.checked) snacksTotal += 250;
+            if (cokeCb && cokeCb.checked) snacksTotal += 150;
+
+            const promoAmount = window.currentPromoDiscount || 0;
+            const total = Math.max(0, (subtotal + bookingFee + snacksTotal) - promoAmount);
 
             const bookingData = {
                 event_id: currentEvent.id,
@@ -2187,6 +2255,8 @@
                 user_email: user.email,
                 seats: selectedSeats.map(s => s.id),
                 amount_paid: total,
+                promo_code: window.appliedPromoCode || null,
+                discount_amount: promoAmount,
                 event_type: currentEvent.category,
                 snacks: {
                     popcorn: document.getElementById('addPopcorn') ? document.getElementById('addPopcorn').checked : false,

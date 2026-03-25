@@ -16,4 +16,7 @@ router.get("/:reference", BookingController.getBookingByReference);
 router.post("/lock-seat", BookingController.lockSeat);
 router.post("/unlock-seat", BookingController.unlockSeat);
 
+// Resend Email confirmation
+router.post("/resend-email", BookingController.resendEmail);
+
 export default router;

@@ -1,4 +1,7 @@
 import { BookingService } from "../services/booking.service.js";
+import { EmailService } from "../services/email.service.js";
+import { PdfService } from "../services/pdf.service.js";
+import { QRService } from "../services/qr.service.js";
 
 export const BookingController = {
 
@@ -102,6 +105,31 @@ export const BookingController = {
             return res.json({ success: true, message: "Seat unlocked" });
         } catch (err) {
             return res.status(500).json({ message: "Internal Server Error" });
+        }
+    },
+
+    // 6️⃣ RESEND EMAIL
+    async resendEmail(req, res) {
+        try {
+            const { reference } = req.body;
+            if (!reference) return res.status(400).json({ message: "Reference is required" });
+
+            const booking = await BookingService.getBookingByReference(reference);
+            if (!booking) return res.status(404).json({ message: "Booking not found" });
+
+            if (booking.payment_status !== 'completed') {
+                return res.status(400).json({ message: "Email can only be sent for completed bookings" });
+            }
+
+            const qrDataUrl = await QRService.generateQR(reference);
+            const pdfBuffer = await PdfService.generateTicketPDF(booking, qrDataUrl);
+
+            await EmailService.sendBookingEmail(booking.user_email, booking, pdfBuffer);
+
+            return res.json({ success: true, message: "Email resent successfully!" });
+        } catch (err) {
+            console.error("Resend Email Error:", err);
+            return res.status(500).json({ message: "Failed to resend email: " + err.message });
         }
     }
 };

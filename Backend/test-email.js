@@ -1,4 +1,3 @@
-import './src/config/index.js'; // Assuming dotenv is loaded here or similar
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -8,8 +7,10 @@ import { QRService } from './src/services/qr.service.js';
 import { EmailService } from './src/services/email.service.js';
 
 async function test() {
+  const reference = process.argv[2] || 'EVT-20260325-LUSYL0';
+  console.log(`Testing with reference: ${reference}`);
   try {
-    const { data: booking, error } = await supabase.from('bookings').select('*').eq('reference', 'EVT-20260225-X48AW8').single();
+    const { data: booking, error } = await supabase.from('bookings').select('*').eq('reference', reference).single();
     if (error) { console.error('Supabase error:', error); return; }
 
     console.log("Generating QR...");

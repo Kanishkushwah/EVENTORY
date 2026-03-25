@@ -12,6 +12,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="events-data.js"></script>
 
     <style>
@@ -379,13 +380,19 @@
                         <button id="cardTab" onclick="switchPaymentMethod('card')"
                             class="flex items-center gap-2 px-4 py-3 text-primary border-b-2 border-primary font-semibold transition">
                             <span class="material-icons-outlined">credit_card</span>
-                            Credit/Debit Card
+                            Stripe (Global)
+                        </button>
+
+                        <button id="razorpayTab" onclick="switchPaymentMethod('razorpay')"
+                            class="flex items-center gap-2 px-4 py-3 text-gray-500 hover:text-primary font-medium transition border-b-2 border-transparent">
+                            <span class="material-icons-outlined">payments</span>
+                            Razorpay (UPI/India)
                         </button>
 
                         <button id="upiTab" onclick="switchPaymentMethod('upi')"
                             class="flex items-center gap-2 px-4 py-3 text-gray-500 hover:text-primary font-medium transition border-b-2 border-transparent">
-                            <span class="material-icons-outlined">account_balance_wallet</span>
-                            UPI
+                            <span class="material-icons-outlined">qr_code_2</span>
+                            Manual UPI
                         </button>
                     </div>
 
@@ -405,6 +412,26 @@
                                 Pay <span id="cardPaymentAmount">₹0.00</span>
                             </button>
                         </form>
+                    </div>
+
+                    <!-- RAZORPAY -->
+                    <div id="razorpayPayment" class="hidden space-y-6">
+                        <div class="bg-blue-50 border border-blue-100 rounded-xl p-6 text-center">
+                            <img src="https://razorpay.com/assets/razorpay-glyph.svg"
+                                class="h-10 mx-auto mb-4 opacity-80" alt="Razorpay">
+                            <h3 class="text-lg font-bold text-blue-900 mb-2">Secure Checkout by Razorpay</h3>
+                            <p class="text-sm text-blue-700 leading-relaxed max-w-sm mx-auto">Pay using UPI, Cards,
+                                Netbanking, or Wallets tailored for the Indian region.</p>
+                        </div>
+
+                        <button onclick="startRazorpayPayment()" id="btnPayRazorpay"
+                            class="w-full bg-[#3395ff] hover:bg-[#207edf] text-white font-black py-4 rounded-xl shadow-lg shadow-blue-500/20 text-lg transition-all transform hover:scale-[1.02] flex items-center justify-center gap-3">
+                            <span class="material-icons">shield</span>
+                            PAY <span id="razorpayAmountDisplay">₹0.00</span>
+                        </button>
+
+                        <p class="text-[10px] text-gray-400 text-center uppercase font-bold tracking-widest">Secured by
+                            256-bit encryption</p>
                     </div>
 
                     <!-- UPI -->
@@ -536,6 +563,67 @@
                 </p>
             </div>
 
+            <!-- BOOKING STATUS STEPPER (Zomato Style) -->
+            <div class="max-w-3xl mx-auto mb-12 relative px-4 reveal">
+                <!-- Background Line -->
+                <div class="absolute top-5 left-10 right-10 h-1 bg-gray-200 dark:bg-gray-800 z-0"></div>
+                <!-- Progress Line (Filled) -->
+                <div
+                    class="absolute top-5 left-10 w-2/3 h-1 bg-gradient-to-r from-green-500 to-primary z-0 transition-all duration-1000 ease-out">
+                </div>
+
+                <div class="relative flex justify-between items-start z-10">
+                    <!-- Step 1 -->
+                    <div class="flex flex-col items-center gap-2">
+                        <div
+                            class="w-10 h-10 rounded-full bg-green-500 text-white flex items-center justify-center shadow-lg shadow-green-500/20 ring-4 ring-white dark:ring-gray-900 animate-fade-in">
+                            <span class="material-icons text-[20px]">check</span>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-[11px] font-black text-gray-900 dark:text-white uppercase tracking-tighter">
+                                Booked</p>
+                            <p class="text-[9px] text-gray-400 font-bold uppercase">Today</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="flex flex-col items-center gap-2">
+                        <div
+                            class="w-10 h-10 rounded-full bg-green-500 text-white flex items-center justify-center shadow-lg shadow-green-500/20 ring-4 ring-white dark:ring-gray-900">
+                            <span class="material-icons text-[20px]">payments</span>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-[11px] font-black text-green-600 uppercase tracking-tighter">Confirmed</p>
+                            <p class="text-[9px] text-gray-400 font-bold uppercase">Received</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="flex flex-col items-center gap-2">
+                        <div
+                            class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/30 ring-4 ring-white dark:ring-gray-900 animate-pulse">
+                            <span class="material-icons-outlined text-[20px]">qr_code_2</span>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-[11px] font-black text-primary uppercase tracking-tighter">Issued</p>
+                            <p class="text-[9px] text-gray-400 font-bold uppercase italic">Processing</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="flex flex-col items-center gap-2 opacity-50">
+                        <div
+                            class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-800 text-gray-400 flex items-center justify-center ring-4 ring-white dark:ring-gray-900">
+                            <span class="material-icons-outlined text-[20px]">door_front</span>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-[11px] font-black text-gray-400 uppercase tracking-tighter">Ready</p>
+                            <p class="text-[9px] text-gray-400 font-bold uppercase font-mono">Event Day</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Ticket Card -->
             <div class="bg-white rounded-2xl shadow-2xl overflow-hidden ticket-shadow">
 
@@ -637,22 +725,65 @@
                 </button>
             </div>
 
+            <!-- Ticket Story Sharing Modal -->
+            <div id="shareModal"
+                class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-all duration-300">
+                <div id="shareContent"
+                    class="bg-white dark:bg-gray-900 rounded-3xl overflow-hidden max-w-sm w-full transform scale-95 opacity-0 transition-all duration-300">
+                    <div class="p-6 flex items-center justify-between border-b dark:border-gray-800">
+                        <h3 class="text-xl font-bold dark:text-white">Share Your Ticket</h3>
+                        <button onclick="closeShareModal()" class="text-gray-500 hover:text-red-500 transition-colors">
+                            <span class="material-icons text-2xl">close</span>
+                        </button>
+                    </div>
+
+                    <div class="p-4 bg-gray-50 dark:bg-gray-800/50">
+                        <div id="storyPreview"
+                            class="relative aspect-[9/16] w-full rounded-2xl overflow-hidden shadow-2xl mx-auto border cursor-zoom-in group">
+                            <!-- Story image will be rendered here via canvas -->
+                            <canvas id="storyCanvas" width="1080" height="1920"
+                                class="w-full h-full object-contain bg-white"></canvas>
+                            <div
+                                class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                                <span class="material-icons text-white text-4xl">download</span>
+                            </div>
+                        </div>
+                        <p class="text-center text-xs text-gray-500 mt-4 font-medium italic">
+                            ✨ Generated a custom story for you to share!
+                        </p>
+                    </div>
+
+                    <div class="p-6 space-y-3">
+                        <button id="downloadStoryBtn"
+                            class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg active:scale-95">
+                            <span class="material-icons text-[20px]">save_alt</span>
+                            Download Image
+                        </button>
+                        <p class="text-[10px] text-gray-400 text-center uppercase tracking-widest font-bold">Ready for
+                            Instagram & WhatsApp</p>
+                    </div>
+                </div>
+            </div>
+
             <!-- Help Section -->
             <div class="mt-12 text-center border-t pt-8">
                 <p class="text-sm text-gray-600 mb-4">Need help with your booking?</p>
-                <div class="flex justify-center gap-6 text-sm">
-                    <a href="#" class="text-primary hover:underline font-semibold flex items-center gap-1">
-                        <span class="material-icons-outlined text-sm">help</span>
-                        Support Center
-                    </a>
-                    <a href="#" class="text-primary hover:underline font-semibold flex items-center gap-1">
-                        <span class="material-icons-outlined text-sm">email</span>
-                        Contact Organizer
-                    </a>
-                    <a href="#" class="text-primary hover:underline font-semibold flex items-center gap-1">
-                        <span class="material-icons-outlined text-sm">replay</span>
-                        Refund Policy
-                    </a>
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-8 text-sm">
+                    <button onclick="resendBookingEmail()"
+                        class="text-primary hover:underline font-bold flex items-center gap-1.5 px-4 py-2 rounded-lg bg-purple-50 hover:bg-purple-100 transition-all">
+                        <span class="material-icons-outlined text-sm">mark_email_read</span>
+                        Haven't received email? Resend Ticket
+                    </button>
+                    <div class="flex gap-6 items-center">
+                        <a href="#" class="text-primary hover:underline font-semibold flex items-center gap-1">
+                            <span class="material-icons-outlined text-sm">help</span>
+                            Support Center
+                        </a>
+                        <a href="#" class="text-primary hover:underline font-semibold flex items-center gap-1">
+                            <span class="material-icons-outlined text-sm">email</span>
+                            Contact Organizer
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -811,6 +942,9 @@
                 const cardAmt = document.getElementById("cardPaymentAmount");
                 if (cardAmt) cardAmt.textContent = "₹" + discountedTotal;
 
+                const razAmt = document.getElementById("razorpayAmountDisplay");
+                if (razAmt) razAmt.textContent = "₹" + discountedTotal;
+
                 const qrAmt = document.getElementById("qrAmount");
                 if (qrAmt) qrAmt.textContent = "Amount: ₹" + discountedTotal;
 
@@ -835,18 +969,24 @@
         function switchPaymentMethod(m) {
             method = m;
             document.getElementById("cardPayment").classList.toggle("hidden", m !== "card");
+            document.getElementById("razorpayPayment").classList.toggle("hidden", m !== "razorpay");
             document.getElementById("upiPayment").classList.toggle("hidden", m !== "upi");
 
             // Update tab styles
-            document.getElementById("cardTab").classList.toggle("text-primary", m === "card");
-            document.getElementById("cardTab").classList.toggle("border-primary", m === "card");
-            document.getElementById("cardTab").classList.toggle("text-gray-500", m !== "card");
-            document.getElementById("cardTab").classList.toggle("border-transparent", m !== "card");
+            const tabs = {
+                'card': document.getElementById("cardTab"),
+                'razorpay': document.getElementById("razorpayTab"),
+                'upi': document.getElementById("upiTab")
+            };
 
-            document.getElementById("upiTab").classList.toggle("text-primary", m === "upi");
-            document.getElementById("upiTab").classList.toggle("border-primary", m === "upi");
-            document.getElementById("upiTab").classList.toggle("text-gray-500", m !== "upi");
-            document.getElementById("upiTab").classList.toggle("border-transparent", m !== "upi");
+            Object.entries(tabs).forEach(([key, tab]) => {
+                if (!tab) return;
+                const active = key === m;
+                tab.classList.toggle("text-primary", active);
+                tab.classList.toggle("border-primary", active);
+                tab.classList.toggle("text-gray-500", !active);
+                tab.classList.toggle("border-transparent", !active);
+            });
 
             // Generate QR code for UPI
             if (m === "upi") {
@@ -976,6 +1116,126 @@
             } else if (paymentIntent && paymentIntent.status === 'succeeded') {
                 // Success - hit our system to update DB and send email
                 completePayment("CARD");
+            }
+        }
+
+        function switchPaymentMethod(method) {
+            const cardTab = document.getElementById("cardTab");
+            const razorpayTab = document.getElementById("razorpayTab");
+            const upiTab = document.getElementById("upiTab");
+
+            const cardSection = document.getElementById("cardPayment");
+            const razorpaySection = document.getElementById("razorpayPayment");
+            const upiSection = document.getElementById("upiPayment");
+
+            // Reset all tabs
+            [cardTab, razorpayTab, upiTab].forEach(tab => {
+                if (tab) {
+                    tab.classList.remove("text-primary", "border-primary", "font-semibold");
+                    tab.classList.add("text-gray-500", "border-transparent", "font-medium");
+                }
+            });
+
+            // Hide all sections
+            [cardSection, razorpaySection, upiSection].forEach(sec => {
+                if (sec) sec.classList.add("hidden");
+            });
+
+            // Activate specific
+            if (method === 'card') {
+                cardTab.classList.add("text-primary", "border-primary", "font-semibold");
+                cardTab.classList.remove("text-gray-500", "border-transparent", "font-medium");
+                cardSection.classList.remove("hidden");
+            } else if (method === 'razorpay') {
+                razorpayTab.classList.add("text-primary", "border-primary", "font-semibold");
+                razorpayTab.classList.remove("text-gray-500", "border-transparent", "font-medium");
+                razorpaySection.classList.remove("hidden");
+            } else if (method === 'upi') {
+                upiTab.classList.add("text-primary", "border-primary", "font-semibold");
+                upiTab.classList.remove("text-gray-500", "border-transparent", "font-medium");
+                upiSection.classList.remove("hidden");
+            }
+        }
+
+        async function startRazorpayPayment() {
+            const amount = parseFloat(localStorage.getItem("totalAmount") || "0");
+            const reference = localStorage.getItem("bookingReference");
+            const user = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+
+            if (!amount || !reference) return alert("Booking data missing. Please restart booking.");
+
+            const btn = document.getElementById("btnPayRazorpay");
+            btn.disabled = true;
+            btn.innerHTML = '<span class="material-icons animate-spin">sync</span> Setting up Razorpay...';
+
+            try {
+                // 1. Create order on backend
+                const orderRes = await fetch("/api/payments/razorpay/order", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ amount, reference })
+                });
+
+                const { order } = await orderRes.json();
+                if (!order) throw new Error("Could not initialize Razorpay order");
+
+                // 2. Open Razorpay Checkout
+                const options = {
+                    key: "rzp_test_YOUR_KEY_ID", // This will be overriden by env if handled correctly, but script needs it
+                    amount: order.amount,
+                    currency: order.currency,
+                    name: "Eventory 🎬",
+                    description: `Booking for ${reference}`,
+                    image: "https://razorpay.com/assets/razorpay-glyph.svg",
+                    order_id: order.id,
+                    handler: async function (response) {
+                        // 3. Verify on backend
+                        btn.innerHTML = '<span class="material-icons animate-spin">verified_user</span> Verifying Signature...';
+
+                        const verifyRes = await fetch("/api/payments/razorpay/verify", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_signature: response.razorpay_signature,
+                                reference: reference
+                            })
+                        });
+
+                        const result = await verifyRes.json();
+                        if (result.success) {
+                            completePayment("RAZORPAY");
+                        } else {
+                            alert("Verification failed: " + result.message);
+                            btn.disabled = false;
+                            btn.innerHTML = 'Retry Payment';
+                        }
+                    },
+                    prefill: {
+                        name: user.name || "",
+                        email: user.email || "",
+                        contact: user.phone || ""
+                    },
+                    theme: { color: "#6B46C1" }
+                };
+
+                const rzp = new Razorpay(options);
+                rzp.on('payment.failed', function (response) {
+                    alert("Payment Failed: " + response.error.description);
+                    btn.disabled = false;
+                    btn.innerHTML = 'Retry Payment';
+                });
+
+                rzp.open();
+                btn.disabled = false;
+                btn.innerHTML = `PAY <span id="razorpayAmountDisplay">₹${amount}</span>`;
+
+            } catch (err) {
+                console.error("Razorpay Error:", err);
+                alert("Razorpay initialization failed. Please check your connection or try Stripe.");
+                btn.disabled = false;
+                btn.innerHTML = 'Retry Payment';
             }
         }
 
@@ -1459,11 +1719,252 @@
             container.scrollTop = container.scrollHeight;
         }
 
+        async function resendBookingEmail() {
+            const reference = document.getElementById('bookingRef').textContent;
+            if (!reference) return;
+
+            const btn = event.currentTarget;
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<span class="material-icons-outlined animate-spin text-sm">sync</span> Resending...`;
+
+            try {
+                const res = await fetch('/api/bookings/resend-email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ reference })
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    alert("✅ Ticket has been resent to your email!");
+                } else {
+                    alert("❌ Failed: " + data.message);
+                }
+            } catch (err) {
+                alert("❌ Server error while resending. Please try again later.");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        }
+
+        // --- TICKET STORY GENERATOR logic ---
+        async function shareTicket() {
+            // First show modal to let them see it and generate it
+            const modal = document.getElementById('shareModal');
+            const content = document.getElementById('shareContent');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+
+            // Trigger animation
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+
+            await drawStoryCanvas();
+
+            // Native Sharing functionality
+            const canvas = document.getElementById('storyCanvas');
+            const eventTitle = document.getElementById('confTitle').textContent;
+            const bookingRef = document.getElementById('bookingRef').textContent;
+
+            // Attempt to use Native Share API for the image file
+            if (navigator.share && navigator.canShare) {
+                canvas.toBlob(async (blob) => {
+                    const file = new File([blob], `EventoryTicket_${bookingRef}.png`, { type: 'image/png' });
+
+                    if (navigator.canShare({ files: [file] })) {
+                        try {
+                            await navigator.share({
+                                files: [file],
+                                title: `My Ticket for ${eventTitle}`,
+                                text: `Check out my booking for ${eventTitle}! Ref: ${bookingRef}`
+                            });
+                        } catch (err) {
+                            if (err.name !== 'AbortError') console.error('Share failed:', err);
+                        }
+                    } else {
+                        // Fallback: Share link if file share not supported
+                        shareLinkFallback(eventTitle, bookingRef);
+                    }
+                }, 'image/png');
+            } else {
+                // Classic fallback: Copy link
+                shareLinkFallback(eventTitle, bookingRef);
+            }
+        }
+
+        function shareLinkFallback(title, ref) {
+            const shareUrl = window.location.href;
+            const shareText = `🎟️ My booking for ${title}\nBooking Ref: ${ref}\n\nBook yours now at: ${shareUrl}`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: `Eventory: ${title}`,
+                    text: shareText,
+                    url: shareUrl
+                }).catch(err => {
+                    copyToClipboard(shareText);
+                });
+            } else {
+                copyToClipboard(shareText);
+            }
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert("✅ Booking details copied to clipboard!");
+            });
+        }
+
+        function closeShareModal() {
+            const modal = document.getElementById('shareModal');
+            const content = document.getElementById('shareContent');
+            content.classList.add('scale-95', 'opacity-0');
+            content.classList.remove('scale-100', 'opacity-100');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        }
+
+        async function drawStoryCanvas() {
+            const canvas = document.getElementById('storyCanvas');
+            const ctx = canvas.getContext('2d');
+
+            // 1. Draw Background Gradient
+            const grad = ctx.createLinearGradient(0, 0, 0, 1920);
+            grad.addColorStop(0, '#6B46C1'); // Purple
+            grad.addColorStop(0.5, '#4C309E');
+            grad.addColorStop(1, '#1A1A1A'); // Dark
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 1080, 1920);
+
+            // 2. Draw Event Image (Top Half)
+            const eventImg = document.getElementById('confEventImage');
+            if (eventImg && eventImg.complete && eventImg.src) {
+                // Draw clipped image
+                ctx.save();
+                ctx.globalAlpha = 0.6;
+                // Simple cover fit
+                const aspect = eventImg.naturalWidth / eventImg.naturalHeight;
+                let drawW = 1080;
+                let drawH = 1080 / aspect;
+                if (drawH < 960) {
+                    drawH = 960;
+                    drawW = 960 * aspect;
+                }
+                ctx.drawImage(eventImg, (1080 - drawW) / 2, 0, drawW, drawH);
+                ctx.restore();
+            }
+
+            // 3. Overlay Glassmorphism Card
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+            ctx.lineWidth = 4;
+            // Draw Rounded Rect for Ticket Body
+            roundRect(ctx, 80, 800, 920, 850, 60, true, true);
+
+            // 4. Texts
+            ctx.fillStyle = '#FFFFFF';
+            ctx.textAlign = 'center';
+
+            // Branding
+            ctx.font = '900 40px "Plus Jakarta Sans"';
+            ctx.fillText('EVENTORY PRESENTS', 540, 140);
+
+            // Event Title
+            const title = document.getElementById('confTitle').textContent;
+            ctx.font = '800 100px "Plus Jakarta Sans"';
+            wrapText(ctx, title.toUpperCase(), 540, 950, 800, 110);
+
+            // Details
+            ctx.font = '600 45px "Plus Jakarta Sans"';
+            ctx.fillStyle = 'rgba(255,255,255,0.7)';
+            ctx.fillText('DATE & TIME', 540, 1150);
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = '800 60px "Plus Jakarta Sans"';
+            ctx.fillText(`${document.getElementById('confDate').textContent} • ${document.getElementById('confTime').textContent}`, 540, 1230);
+
+            ctx.font = '600 45px "Plus Jakarta Sans"';
+            ctx.fillStyle = 'rgba(255,255,255,0.7)';
+            ctx.fillText('VENUE', 540, 1330);
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = '800 60px "Plus Jakarta Sans"';
+            ctx.fillText(document.getElementById('confVenue').textContent, 540, 1410);
+
+            // Footer / CTA
+            ctx.font = '900 50px "Plus Jakarta Sans"';
+            ctx.fillStyle = '#A78BFA';
+            ctx.fillText('SEE YOU THERE!', 540, 1850);
+
+            // 5. Draw QR Code from the existing one
+            const qrImg = document.querySelector('#ticketQRCode canvas');
+            if (qrImg) {
+                // Draw background for QR
+                ctx.fillStyle = '#FFFFFF';
+                roundRect(ctx, 415, 1480, 250, 250, 30, true, false);
+                ctx.drawImage(qrImg, 440, 1505, 200, 200);
+            }
+
+            // Set up download button
+            document.getElementById('downloadStoryBtn').onclick = () => {
+                const link = document.createElement('a');
+                link.download = `Eventory_Story_${Date.now()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            };
+        }
+
+        // Helper Canvas Fns
+        function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+            if (fill) ctx.fill();
+            if (stroke) ctx.stroke();
+        }
+
+        function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+            const words = text.split(' ');
+            let line = '';
+            for (let n = 0; n < words.length; n++) {
+                let testLine = line + words[n] + ' ';
+                let metrics = ctx.measureText(testLine);
+                let testWidth = metrics.width;
+                if (testWidth > maxWidth && n > 0) {
+                    ctx.fillText(line, x, y);
+                    line = words[n] + ' ';
+                    y += lineHeight;
+                }
+                else {
+                    line = testLine;
+                }
+            }
+            ctx.fillText(line, x, y);
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const supportModal = document.getElementById('supportModal');
             if (supportModal) {
                 supportModal.addEventListener('click', (e) => {
                     if (e.target === supportModal) closeSupportModal();
+                });
+            }
+            const shareModal = document.getElementById('shareModal');
+            if (shareModal) {
+                shareModal.addEventListener('click', (e) => {
+                    if (e.target === shareModal) closeShareModal();
                 });
             }
         });

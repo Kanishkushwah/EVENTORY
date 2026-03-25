@@ -3,9 +3,17 @@ import { EmailService } from "../services/email.service.js";
 import { PdfService } from "../services/pdf.service.js";
 import { QRService } from "../services/qr.service.js";
 import Stripe from "stripe";
+import Razorpay from "razorpay";
+import crypto from "crypto";
 
 // Use your own Stripe secret key. If it fails, the simulated UI will render securely.
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_YOUR_STRIPE_SECRET_KEY');
+
+// Razorpay Instance
+const razorpay = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_YOUR_KEY_ID',
+    key_secret: process.env.RAZORPAY_KEY_SECRET || 'YOUR_KEY_SECRET'
+});
 
 export const PaymentController = {
     async confirmPayment(req, res) {
@@ -98,4 +106,57 @@ export const PaymentController = {
             res.status(500).json({ message: "Failed to initialize payment", error: error.message });
         }
     },
+
+    // RAZORPAY: Create Order
+    async createRazorpayOrder(req, res) {
+        try {
+            const { amount, reference } = req.body;
+            if (!amount || !reference) {
+                return res.status(400).json({ message: "Amount and reference are required" });
+            }
+
+            const options = {
+                amount: Math.round(amount * 100), // convert to paisa
+                currency: "INR",
+                receipt: `rcpt_${reference}`,
+                notes: { booking_reference: reference }
+            };
+
+            const order = await razorpay.orders.create(options);
+            res.json({ success: true, order });
+        } catch (error) {
+            console.error("Razorpay Order Error:", error);
+            res.status(500).json({ message: "Razorpay initialization failed", error: error.message });
+        }
+    },
+
+    // RAZORPAY: Verify Signature
+    async verifyRazorpayPayment(req, res) {
+        try {
+            const { razorpay_order_id, razorpay_payment_id, razorpay_signature, reference } = req.body;
+
+            // Log for sanity
+            console.log(`🔐 Verifying Razorpay Payment for ${reference}`);
+
+            const secret = process.env.RAZORPAY_KEY_SECRET || 'YOUR_KEY_SECRET';
+            const hmac = crypto.createHmac("sha256", secret);
+            hmac.update(razorpay_order_id + "|" + razorpay_payment_id);
+            const generatedSignature = hmac.digest("hex");
+
+            if (generatedSignature === razorpay_signature) {
+                console.log(`✅ Signature valid! Proceeding to confirm booking: ${reference}`);
+
+                // Reuse our internal confirmPayment logic (MOCK req/res or call service directly)
+                // For simplicity, we'll mimic the internal call to confirm
+                req.body.payment_method = "razorpay";
+                return PaymentController.confirmPayment(req, res);
+            } else {
+                console.warn(`❌ Signature mismatch for booking: ${reference}`);
+                return res.status(400).json({ success: false, message: "Invalid payment signature" });
+            }
+        } catch (error) {
+            console.error("Verification Error:", error);
+            res.status(500).json({ success: false, message: "Verification failed" });
+        }
+    }
 };

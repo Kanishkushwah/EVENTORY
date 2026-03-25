@@ -18,6 +18,7 @@ import configRoutes from "./routes/config.routes.js";
 import notifyRoutes from "./routes/notify.routes.js";
 import waitlistRoutes from "./routes/waitlist.routes.js";
 import aiRoutes from "./routes/ai.routes.js";
+import promoRoutes from "./routes/promo.routes.js";
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { ReminderService } from './services/reminder.service.js';
@@ -134,6 +135,7 @@ app.use("/api/config", configRoutes);
 app.use("/api/notify", notifyRoutes);
 app.use("/api/waitlist", waitlistRoutes);
 app.use("/api/ai", aiRoutes);
+app.use("/api/promo", promoRoutes);
 
 // 404 Handler
 app.use((req, res) => {

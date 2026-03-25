@@ -9,4 +9,8 @@ router.post("/confirm", PaymentController.confirmPayment);
 // STRIPE PAYMENT INTENT ENDPOINT
 router.post("/create-intent", PaymentController.createPaymentIntent);
 
+// RAZORPAY ENDPOINTS
+router.post("/razorpay/order", PaymentController.createRazorpayOrder);
+router.post("/razorpay/verify", PaymentController.verifyRazorpayPayment);
+
 export default router;

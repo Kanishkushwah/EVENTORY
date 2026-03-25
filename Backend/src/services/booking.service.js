@@ -23,6 +23,8 @@ export const BookingService = {
             payment_method: null,
             cinema_id: bookingData.cinema_id || null,
             showtime_id: bookingData.showtime_id || null,
+            promo_code: bookingData.promo_code || null,
+            discount_amount: bookingData.discount_amount || 0,
             created_at: timestamp,
             updated_at: timestamp,
         };
