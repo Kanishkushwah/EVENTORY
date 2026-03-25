@@ -1333,8 +1333,13 @@
                 } else if (isLow) {
                     seatBadge = `<div class="absolute top-3 right-3 bg-red-600 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm z-10 animate-pulse">🔥 Only ${seatsLeft} left!</div>`;
                 } else {
-                    seatBadge = badgeHTML;
+                    // Trending / Fast Filling / Recommended badge
+                    const badgeIndex = (event.id || 0) % 3;
+                    if (badgeIndex === 0) seatBadge = `<div class="absolute top-3 right-3 bg-orange-500 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm z-10">🔥 Trending</div>`;
+                    else if (badgeIndex === 1) seatBadge = `<div class="absolute top-3 right-3 bg-rose-500 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm z-10">⚡ Fast Filling</div>`;
+                    else seatBadge = `<div class="absolute top-3 right-3 bg-amber-500 text-white px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide shadow-sm z-10">⭐ Recommended</div>`;
                 }
+
 
                 const bookButton = isSoldOut
                     ? `<button onclick="openWaitlistModal(${event.id}, '${event.title.replace(/'/g, "\\'")}')"
