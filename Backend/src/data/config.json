@@ -10,36 +10,36 @@
             "id": 1,
             "title": "Spider-Man: Brand New Day",
             "genre": "Action / Sci-Fi",
-            "releaseDate": "2025-07-25",
-            "image": "https://m.media-amazon.com/images/M/MV5BYzZiZDM2YTQtZmY4ZS00YWQ3LTkwNjQtNjc4MDk5MTU3YWZhXkEyXkFqcGc@._V1_.jpg"
+            "releaseDate": "2026-07-31",
+            "image": "https://image.tmdb.org/t/p/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg"
         },
         {
             "id": 2,
             "title": "Avatar: Fire and Ash",
             "genre": "Sci-Fi / Adventure",
             "releaseDate": "2025-12-19",
-            "image": "https://m.media-amazon.com/images/M/MV5BZWUwZDFjMDMtZWU2Yy00ZGZhLWI2MGEtODYxOTcxMWRiNTViXkEyXkFqcGc@._V1_.jpg"
+            "image": "https://image.tmdb.org/t/p/w500/yDHYTfA3R0jFYba16jBB1ef8oIt.jpg"
         },
         {
             "id": 3,
             "title": "Jolly LLB 3",
             "genre": "Comedy / Drama",
-            "releaseDate": "2025-03-14",
-            "image": "https://m.media-amazon.com/images/M/MV5BMjA5OTEyMjUtMTE5MC00MzhhLTk2MmUtNmM3YjBlNjRjMTkzXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+            "releaseDate": "2025-09-19",
+            "image": "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?q=80&w=500&auto=format&fit=crop"
         },
         {
             "id": 4,
             "title": "Border 2",
             "genre": "Action / War",
             "releaseDate": "2026-06-05",
-            "image": "https://m.media-amazon.com/images/M/MV5BMDlhYjIxMzQtMDljNC00MjZlLTllMDMtMzBkYjU5ZTI1NWM0XkEyXkFqcGc@._V1_.jpg"
+            "image": "https://images.unsplash.com/photo-1516339901601-2e1b62dc0c45?q=80&w=500&auto=format&fit=crop"
         },
         {
             "id": 5,
             "title": "Toxic",
             "genre": "Thriller / Action",
             "releaseDate": "2026-04-10",
-            "image": "https://m.media-amazon.com/images/M/MV5BZjlmNzI5NTYtOGIwOS00NzI3LWI4MjktZmI1YTYyMTI2ODUxXkEyXkFqcGc@._V1_.jpg"
+            "image": "https://image.tmdb.org/t/p/w500/iiZZdoQBEYBv6id8su7ImL0oCbD.jpg"
         }
     ]
 }
