@@ -38,6 +38,34 @@ export const EmailService = {
     },
 
     /**
+     * Send an ultra-fast receipt to the user immediately after payment
+     * (Before PDF generation completes)
+     */
+    async sendInstantReceipt(userEmail, booking) {
+        try {
+            const mailOptions = {
+                from: `"Eventory" <${process.env.SMTP_EMAIL || "eventorytickets@gmail.com"}>`,
+                to: userEmail,
+                subject: `✅ Payment Received: Ticket for ${booking.event_title} Coming Soon!`,
+                html: `
+                    <div style="font-family: Arial, sans-serif; padding: 20px;">
+                        <h2 style="color: #7C3AED;">Payment Confirmed! 🎉</h2>
+                        <p>We've received your payment of <b>₹${booking.amount_paid}</b> for "${booking.event_title}".</p>
+                        <p>Your official ticket (PDF + QR) is being generated right now and will arrive in your inbox in less than 60 seconds.</p>
+                        <hr style="border: 0; border-top: 1px solid #eee;" />
+                        <p style="font-size: 12px; color: #666;">Booking Ref: <b>${booking.reference}</b></p>
+                    </div>
+                `,
+            };
+            const info = await transporter.sendMail(mailOptions);
+            return { success: true, messageId: info.messageId };
+        } catch (error) {
+            console.error("❌ Instant Receipt Error:", error);
+            return { success: false };
+        }
+    },
+
+    /**
      * Generic send email for reminders and reviews
      */
     async sendEmail({ to, subject, html, attachments = [] }) {

@@ -42,32 +42,28 @@ export const PaymentController = {
             );
 
             if (updatedBooking.error) {
-                return res.status(400).json({
-                    error: "Failed to update payment status",
-                });
+                return res.status(400).json({ error: "Failed to update payment status" });
             }
 
-            // 3–5) Generate QR, PDF and send email asynchronously
-            try {
-                const qrDataUrl = await QRService.generateQR(reference);
-                const pdfBuffer = await PdfService.generateTicketPDF(
-                    updatedBooking,
-                    qrDataUrl
-                );
+            // 3–5) Perform High-Latency Tasks ASYNCHRONOUSLY
+            // Fast Receipt - No attachments, sends in <1 sec
+            EmailService.sendInstantReceipt(updatedBooking.user_email, updatedBooking);
 
-                // Fire and forget email to avoid hanging the payment confirmation request
-                EmailService.sendBookingEmail(
-                    updatedBooking.user_email,
-                    updatedBooking,
-                    pdfBuffer
-                ).catch((emailErr) => {
-                    console.error("Background Email Error:", emailErr);
-                });
+            // Detailed Ticket - Tasks that are slower (QR generation + PDF rendering + Nodemailer attachment overhead)
+            (async () => {
+                try {
+                    const qrDataUrl = await QRService.generateQR(reference);
+                    const pdfBuffer = await PdfService.generateTicketPDF(updatedBooking, qrDataUrl);
 
-            } catch (pdfOrQrError) {
-                console.error("QR / PDF generation error:", pdfOrQrError);
-                // continue; payment is already marked completed
-            }
+                    await EmailService.sendBookingEmail(
+                        updatedBooking.user_email,
+                        updatedBooking,
+                        pdfBuffer
+                    );
+                } catch (pdfOrQrError) {
+                    console.error("🔥 Detailed Ticket (BG task) error:", pdfOrQrError);
+                }
+            })();
 
             return res.json({
                 success: true,
