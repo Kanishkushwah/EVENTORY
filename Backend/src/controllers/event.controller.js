@@ -82,31 +82,27 @@ export const EventController = {
                     if (cat === "movies" || cat === "movie" || title.includes("movie") || title.includes("film")) score += 10;
                 }
 
-                // 3. Keyword Extraction & Matching (Hard Matches)
-                // ALLOW numbers (like Spiderman 2, Shrek 5) and shorter words (like 'UP')
+                // 3. Greedy Keyword Extraction & Scoring
                 const ignoreWords = ["the", "and", "for", "with", "under", "below", "max", "cheap", "budget", "rs", "inr", "free", "show", "event", "events"];
-                const words = query.replace(/[^\w\s-]/g, "").split(/\s+/).filter(w => w.length > 1 && !ignoreWords.includes(w));
+                // We allow words of length 1 (like '5') to support sequels!
+                const words = query.replace(/[^\w\s]/g, "").split(/\s+/).filter(w => w.length >= 1 && !ignoreWords.includes(w));
 
-                let wordMatchCount = 0;
+                let wordMatched = false;
                 words.forEach(word => {
-                    let matched = false;
-                    if (title.includes(word)) { score += 40; matched = true; } // Boost title matches
-                    else if (desc.includes(word)) { score += 20; matched = true; }
-                    else if (venue.includes(word)) { score += 10; matched = true; }
-                    else if (cat.includes(word)) { score += 10; matched = true; }
-
-                    if (matched) wordMatchCount++;
+                    if (title.includes(word)) { score += 50; wordMatched = true; }
+                    else if (desc.includes(word)) { score += 20; wordMatched = true; }
+                    else if (cat.includes(word)) { score += 10; wordMatched = true; }
                 });
 
-                // Strict Keyword Penalty (Only if multiple words provided)
-                if (words.length > 1 && wordMatchCount === 0) {
-                    score -= 30;
+                // If query is an exact substring of the title, give massive priority
+                if (query.length > 2 && title.includes(query)) {
+                    score += 150;
+                    wordMatched = true;
                 }
 
-                // 4. Exact Phrase Bonus (Very high priority)
-                if (query.length > 2 && (title.includes(query) || desc.includes(query))) {
-                    score += 100; // Found it exactly!
-                }
+                // Fallback: If title contains ANY part of the query (e.g. "Shrek" matches "Shrek 5")
+                // This is handled by the loop above, but we want a base score if anything matched
+                if (wordMatched) score += 10;
 
 
                 return { ...event, _matchScore: score };
