@@ -83,36 +83,31 @@ export const EventController = {
                 }
 
                 // 3. Keyword Extraction & Matching (Hard Matches)
-                // Filter out generic intent words so fallback logic works perfectly for broad categories
-                const ignoreWords = ["the", "and", "for", "with", "under", "below", "max", "cheap", "budget", "rs", "inr", "free", "movie", "movies", "show", "event", "events", "concert", "sport", "sports", "romantic", "romance", "date", "couple", "funny", "laugh", "comedy", "standup", "music", "sing", "dj", "cricket", "match", "film", "cinema"];
-                const words = query.replace(/[^\w\s-]/g, "").split(/\s+/).filter(w => w.length > 2 && !ignoreWords.includes(w) && isNaN(w));
+                // ALLOW numbers (like Spiderman 2, Shrek 5) and shorter words (like 'UP')
+                const ignoreWords = ["the", "and", "for", "with", "under", "below", "max", "cheap", "budget", "rs", "inr", "free", "show", "event", "events"];
+                const words = query.replace(/[^\w\s-]/g, "").split(/\s+/).filter(w => w.length > 1 && !ignoreWords.includes(w));
 
                 let wordMatchCount = 0;
                 words.forEach(word => {
                     let matched = false;
-                    if (title.includes(word)) { score += 30; matched = true; }
-                    else if (desc.includes(word)) { score += 15; matched = true; }
+                    if (title.includes(word)) { score += 40; matched = true; } // Boost title matches
+                    else if (desc.includes(word)) { score += 20; matched = true; }
                     else if (venue.includes(word)) { score += 10; matched = true; }
-                    else if (cat.includes(word)) { score += 5; matched = true; }
+                    else if (cat.includes(word)) { score += 10; matched = true; }
 
                     if (matched) wordMatchCount++;
                 });
 
-                // Strict Keyword Penalty
-                // If user typed specific searchable keywords (like "sci-fi" or "diljit") and they completely failed to match, tank the score.
-                if (words.length > 0 && wordMatchCount === 0) {
-                    score -= 50;
+                // Strict Keyword Penalty (Only if multiple words provided)
+                if (words.length > 1 && wordMatchCount === 0) {
+                    score -= 30;
                 }
 
-                // If the user clearly wanted a romantic or comedy movie, penalize non-matching events extremely hard
-                if ((isRomantic || isFunny) && !intentRequirementMet) {
-                    score -= 100;
+                // 4. Exact Phrase Bonus (Very high priority)
+                if (query.length > 2 && (title.includes(query) || desc.includes(query))) {
+                    score += 100; // Found it exactly!
                 }
 
-                // 4. Exact Phrase Bonus
-                if (query.length > 3 && (title.includes(query) || desc.includes(query))) {
-                    score += 50;
-                }
 
                 return { ...event, _matchScore: score };
             });
