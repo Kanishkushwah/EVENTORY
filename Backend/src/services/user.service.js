@@ -18,7 +18,9 @@ export const UserService = {
             const upcoming = [];
             const past = [];
 
-            data.forEach(booking => {
+            const filteredData = data.filter(booking => booking.payment_status !== 'locked');
+
+            filteredData.forEach(booking => {
                 const eventDate = new Date(booking.event_date);
                 if (eventDate >= now) {
                     upcoming.push(booking);
@@ -28,10 +30,10 @@ export const UserService = {
             });
 
             return {
-                all: data,
+                all: filteredData,
                 upcoming,
                 past,
-                total: data.length
+                total: filteredData.length
             };
 
         } catch (error) {
@@ -50,13 +52,12 @@ export const UserService = {
 
             if (error) throw error;
 
-            const totalSpent = data
-                .filter(b => b.payment_status === 'confirmed')
-                .reduce((sum, b) => sum + (b.amount_paid || 0), 0);
+            const completedBookings = data.filter(b => b.payment_status === 'completed' || b.payment_status === 'confirmed');
+            const totalSpent = completedBookings.reduce((sum, b) => sum + (b.amount_paid || 0), 0);
 
             return {
-                totalBookings: data.length,
-                confirmedBookings: data.filter(b => b.payment_status === 'confirmed').length,
+                totalBookings: data.filter(b => b.payment_status !== 'locked').length,
+                confirmedBookings: completedBookings.length,
                 totalSpent
             };
 

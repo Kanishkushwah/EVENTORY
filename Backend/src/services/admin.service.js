@@ -19,26 +19,27 @@ export const AdminService = {
 
             if (eventsError) throw eventsError;
 
-            // Calculate revenue (only confirmed payments)
-            const confirmedBookings = bookings.filter(b => b.payment_status === 'confirmed');
-            const totalRevenue = confirmedBookings.reduce((sum, b) => sum + (b.amount_paid || 0), 0);
+            const completedBookings = bookings.filter(b => b.payment_status === 'completed' || b.payment_status === 'confirmed');
+            const totalRevenue = completedBookings.reduce((sum, b) => sum + (parseFloat(b.amount_paid) || 0), 0);
 
-            // Get recent bookings (last 10)
+            // Get recent bookings (last 10) - Filter out locked seats
             const { data: recentBookings, error: recentError } = await supabase
                 .from('bookings')
                 .select('*')
+                .neq('payment_status', 'locked')
                 .order('created_at', { ascending: false })
                 .limit(10);
 
             if (recentError) throw recentError;
 
             // Revenue by day (last 7 days)
-            const revenueByDay = this.calculateRevenueByDay(confirmedBookings);
+            const revenueByDay = this.calculateRevenueByDay(completedBookings);
+            const totalValidBookings = bookings.filter(b => b.payment_status !== 'locked');
 
             return {
                 totalRevenue,
-                totalBookings: bookings.length,
-                confirmedBookings: confirmedBookings.length,
+                totalBookings: totalValidBookings.length,
+                confirmedBookings: completedBookings.length,
                 totalEvents: events.length,
                 recentBookings,
                 revenueByDay
@@ -62,7 +63,7 @@ export const AdminService = {
 
             const dayRevenue = bookings
                 .filter(b => b.created_at && b.created_at.startsWith(dateStr))
-                .reduce((sum, b) => sum + (b.amount_paid || 0), 0);
+                .reduce((sum, b) => sum + (parseFloat(b.amount_paid) || 0), 0);
 
             days.push({
                 date: dateStr,

@@ -1527,45 +1527,54 @@
         // --- AUTH UI UPDATE ---
         function updateAuthUI() {
             const user = JSON.parse(localStorage.getItem('loggedInUser'));
-            // Try to find the nav container using the new ID or failover
-            const navContainer = document.getElementById('nav-auth-container') || document.querySelector('nav .flex.items-center.gap-6') || document.querySelector('nav .flex.items-center.space-x-4');
+            const navContainer = document.getElementById('nav-auth-container') || document.querySelector('nav .flex.items-center.space-x-4');
 
             if (user && navContainer) {
-                // Use a profile dropdown instead of simple links
+                const isAdmin = user.role === 'admin' || user.email === 'admin@eventory.com';
+
                 navContainer.innerHTML = `
-                                        <button onclick= "subscribeNewsletter()"
-                                    class="relative w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors focus:outline-none shadow-sm"
-                                    title = "Notifications" >
+                    <button onclick="subscribeNewsletter()" class="relative w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors focus:outline-none shadow-sm" title="Notifications">
                         <span class="material-icons">notifications</span>
                         <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-gray-800"></span>
                     </button>
-                    <button onclick="toggleTheme()"
-                        class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors focus:outline-none shadow-sm"
-                        title="Toggle Dark Mode">
+                    <button onclick="toggleTheme()" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors focus:outline-none shadow-sm" title="Toggle Dark Mode">
                         <span class="material-icons theme-icon">dark_mode</span>
                     </button>
-                    <div class="relative group">
-                        <button class="flex items-center gap-2 text-primary bg-purple-50 dark:bg-purple-900/30 hover:bg-purple-100 dark:hover:bg-purple-900/50 px-4 py-2 rounded-full transition-all font-semibold shadow-sm border border-purple-100 dark:border-purple-800/50">
-                            <span class="material-icons text-lg">person</span>
-                            ${user.name ? user.name.split(' ')[0].toUpperCase() : 'PROFILE'}
+                    
+                    <div class="relative group" id="profileDropdown" style="z-index: 9999;">
+                        <button class="flex items-center gap-2 ${isAdmin ? 'bg-indigo-600 text-white border-2 border-blue-400' : 'bg-purple-50 dark:bg-purple-900/30 text-primary border border-purple-100 dark:border-purple-800/50'} px-5 py-2.5 rounded-full transition-all font-bold shadow-sm hover:scale-[1.02]">
+                            <span class="material-icons text-lg">${isAdmin ? 'admin_panel_settings' : 'group'}</span>
+                            ${isAdmin ? 'ADMINISTRATOR' : (user.name ? user.name.split(' ')[0].toUpperCase() : 'PROFILE')}
                             <span class="material-icons text-sm transition-transform group-hover:rotate-180">expand_more</span>
                         </button>
-                        <div class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 hidden group-hover:block overflow-hidden transition-all z-50">
-                            <a href="user-profile.html" class="block px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-purple-50 dark:hover:bg-gray-700 hover:text-primary transition-colors flex items-center gap-2">
-                                <span class="material-icons text-sm">account_circle</span> My Profile
-                            </a>
-                            <a href="booking.html" class="block px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-purple-50 dark:hover:bg-gray-700 hover:text-primary transition-colors flex items-center gap-2">
-                                <span class="material-icons text-sm">confirmation_number</span> My Bookings
-                            </a>
-                            <div class="border-t border-gray-100 dark:border-gray-700"></div>
-                            <button onclick="logout()" class="w-full text-left px-4 py-3 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-2">
-                                <span class="material-icons text-sm">logout</span> Logout
+                        <div class="absolute right-0 top-full w-full h-3 bg-transparent hidden group-hover:block z-[9998]"></div>
+                        <div class="absolute right-0 top-[calc(100%+8px)] w-56 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700 hidden group-hover:block overflow-hidden transition-all z-[9999] animate-fade-in divide-y divide-gray-50 dark:divide-gray-700">
+                            ${isAdmin ? `
+                                <div class="px-4 py-3 bg-indigo-50/50 dark:bg-indigo-900/10">
+                                    <p class="text-[10px] font-black text-indigo-500 uppercase tracking-tighter">System Authority</p>
+                                    <p class="text-sm font-bold text-gray-900 dark:text-gray-100 truncate">${user.name || 'Admin'}</p>
+                                </div>
+                                <a href="admin-dashboard.html" class="block px-4 py-3.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 hover:text-indigo-600 transition-colors flex items-center gap-3">
+                                    <span class="material-icons text-lg">dashboard</span> Admin Dashboard
+                                </a>
+                                <a href="releases.html" class="block px-4 py-3.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 hover:text-indigo-600 transition-colors flex items-center gap-3">
+                                    <span class="material-icons text-lg">movie</span> Movie Releases
+                                </a>` : `
+                                <a href="user-profile.html" class="block px-4 py-3.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-purple-50 dark:hover:bg-gray-700 hover:text-primary transition-colors flex items-center gap-3">
+                                    <span class="material-icons text-lg">account_circle</span> My Profile
+                                </a>
+                                <a href="booking.html" class="block px-4 py-3.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-purple-50 dark:hover:bg-gray-700 hover:text-primary transition-colors flex items-center gap-3">
+                                    <span class="material-icons text-lg">confirmation_number</span> My Bookings
+                                </a>`}
+                            <button onclick="logout()" class="w-full text-left px-4 py-3.5 text-sm font-bold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-3">
+                                <span class="material-icons text-lg">logout</span> Sign Out
                             </button>
                         </div>
                     </div>
-                                    `;
+                `;
             }
         }
+
 
         function logout() {
             localStorage.removeItem('loggedInUser');
@@ -1692,8 +1701,14 @@
             }
 
             try {
-                const response = await fetch(`/ api / events / smart - search ? q = ${encodeURIComponent(query)} `);
-                const matches = await response.json();
+                const response = await fetch(`/api/events/smart-search?q=${encodeURIComponent(query)}`);
+
+                if (!response.ok) {
+                    throw new Error(`Server returned ${response.status}`);
+                }
+
+                let matches = await response.json();
+                if (!Array.isArray(matches)) matches = [];
 
                 // Structural CSS switch for mobile responsiveness
                 eventGrid.classList.remove('flex', 'flex-row', 'overflow-x-auto', 'snap-x', 'snap-mandatory', 'hide-scrollbar');
@@ -1761,8 +1776,8 @@
                     });
                 }
             } catch (e) {
-                console.error("AI Search Failed:", e);
-                alert("Smart Engine offline. Please try again.");
+                console.error("🔥 AI Search Failed:", e);
+                alert(`Smart Engine offline.\n\nReason: ${e.message || "Unknown error"}\n\nHint: If you just pushed changes, please wait 30 seconds for the server to finish building on Render.`);
             } finally {
                 if (searchBtn) searchBtn.innerHTML = '<span class="material-icons text-sm">auto_awesome</span> Smart Search';
                 if (mobSearchBtn) mobSearchBtn.innerHTML = '<span class="material-icons text-white text-sm">auto_awesome</span>';

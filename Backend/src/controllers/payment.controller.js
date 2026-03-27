@@ -36,6 +36,7 @@ export const PaymentController = {
             }
 
             // 2) UPDATE PAYMENT STATUS
+            // Standardize on 'completed' for newly confirmed payments
             const updatedBooking = await BookingService.updatePaymentStatus(
                 reference,
                 payment_method
@@ -46,20 +47,32 @@ export const PaymentController = {
             }
 
             // 3–5) Perform High-Latency Tasks ASYNCHRONOUSLY
+            // 3–5) Perform High-Latency Tasks
             // Fast Receipt - No attachments, sends in <1 sec
-            EmailService.sendInstantReceipt(updatedBooking.user_email, updatedBooking);
+            console.log(`📧 Sending instant receipt to ${updatedBooking.user_email}...`);
+            await EmailService.sendInstantReceipt(updatedBooking.user_email, updatedBooking);
 
             // Detailed Ticket - Tasks that are slower (QR generation + PDF rendering + Nodemailer attachment overhead)
             (async () => {
+                console.log(`⏱️ Starting background ticket tasks for ${reference}...`);
                 try {
                     const qrDataUrl = await QRService.generateQR(reference);
-                    const pdfBuffer = await PdfService.generateTicketPDF(updatedBooking, qrDataUrl);
+                    console.log(`✅ QR generated for ${reference}`);
 
-                    await EmailService.sendBookingEmail(
+                    const pdfBuffer = await PdfService.generateTicketPDF(updatedBooking, qrDataUrl);
+                    console.log(`✅ PDF generated for ${reference} (Size: ${pdfBuffer.length} bytes)`);
+
+                    const emailResult = await EmailService.sendBookingEmail(
                         updatedBooking.user_email,
                         updatedBooking,
                         pdfBuffer
                     );
+
+                    if (emailResult.success) {
+                        console.log(`📧 Ticket email sent successfully to ${updatedBooking.user_email}`);
+                    } else {
+                        console.error(`❌ Ticket email failed:`, emailResult);
+                    }
                 } catch (pdfOrQrError) {
                     console.error("🔥 Detailed Ticket (BG task) error:", pdfOrQrError);
                 }
@@ -137,15 +150,24 @@ export const PaymentController = {
             const generatedSignature = hmac.digest("hex");
 
             if (generatedSignature === razorpay_signature) {
-                console.log(`✅ Signature valid! Proceeding to confirm booking: ${reference}`);
+                console.log(`✅ Razorpay Signature valid! Confirming booking: ${reference}`);
 
-                // Reuse our internal confirmPayment logic (MOCK req/res or call service directly)
-                // For simplicity, we'll mimic the internal call to confirm
+                // Update the request body to ensure confirmPayment sees the correct method
                 req.body.payment_method = "razorpay";
+
+                // Directly call confirmPayment logic
                 return PaymentController.confirmPayment(req, res);
             } else {
-                console.warn(`❌ Signature mismatch for booking: ${reference}`);
-                return res.status(400).json({ success: false, message: "Invalid payment signature" });
+                console.error(`❌ Razorpay Signature mismatch for booking: ${reference}`);
+                console.error(`   - Expected: ${generatedSignature}`);
+                console.error(`   - Received: ${razorpay_signature}`);
+
+                // Provide a more helpful error for the developer if keys are missing
+                const isPlaceholder = secret === 'YOUR_KEY_SECRET';
+                return res.status(400).json({
+                    success: false,
+                    message: isPlaceholder ? "RAZORPAY_KEY_SECRET is missing in server environment" : "Invalid payment signature"
+                });
             }
         } catch (error) {
             console.error("Verification Error:", error);

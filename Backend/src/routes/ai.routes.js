@@ -37,7 +37,7 @@ const getModel = async () => {
     const genAI = new GoogleGenerativeAI(apiKey);
 
     return genAI.getGenerativeModel({
-        model: "gemini-2.0-flash", // Using latest stable model name
+        model: "gemini-1.5-flash", // Stable model for production fallback
         systemInstruction: `
             You are "Eve", the official AI Support Agent for Eventory (2026 Edition). 
             Goal: Help users with bookings, technical issues, and platform navigation.
@@ -78,12 +78,30 @@ router.post("/chat", async (req, res) => {
     } catch (error) {
         console.error("❌ Gemini Support Error:", error.message);
 
+        // INTELLIGENT FALLBACK (For presentations or high-load)
+        const msg = (message || "").toLowerCase();
+        let fallbackResponse = null;
+
+        if (msg.includes("booking") || msg.includes("ticket") || msg.includes("confirm")) {
+            fallbackResponse = "I can definitely help with your booking! 🎫 Please share your **Booking Reference ID** (like EVT-xxxx), and I'll look it up. You can also find your tickets in the 'My Bookings' section of your profile.";
+        } else if (msg.includes("refund") || msg.includes("cancel") || msg.includes("money")) {
+            fallbackResponse = "Refunds are processed automatically for cancelled events within 5-7 business days. 💳 For manual cancellation, please contact our support at +91 85118 12332.";
+        } else if (msg.includes("promo") || msg.includes("code") || msg.includes("offer") || msg.includes("discount")) {
+            fallbackResponse = "Looking for a deal? 🎁 Try using code **WELCOME50** for your first booking, or **MOVIE60** for flat discounts on cinema tickets!";
+        } else if (msg.includes("location") || msg.includes("where") || msg.includes("venue")) {
+            fallbackResponse = "We have events across major cities! 🍿 Most cinematic events are at Rahul Raj Mall, Inox, or Cinepolis. Check the event details page for the exact Google Maps location.";
+        }
+
+        if (fallbackResponse && (error.message.includes("429") || error.message.includes("quota"))) {
+            return res.json({ success: true, response: fallbackResponse + " (Note: I'm currently in high-demand mode, but happy to help!)" });
+        }
+
         let userMessage = "Eve is taking a quick popcorn break 🍿. Please try again in a moment or contact our human support team!";
 
         if (error.message === "GEMINI_API_KEY_MISSING") {
-            userMessage = "AI Chat is being initialized. Please use phone/email in the meantime.";
+            userMessage = "AI Chat is being initialized. Please use phone/email (8511812332) in the meantime.";
         } else if (error.message.includes("429") || error.message.includes("quota")) {
-            userMessage = "I'm receiving too many requests! Please wait a minute or email us.";
+            userMessage = "I'm receiving too many requests! 🚀 Please wait 30 seconds or reach us at eventorytickets@gmail.com.";
         }
 
         res.status(500).json({
