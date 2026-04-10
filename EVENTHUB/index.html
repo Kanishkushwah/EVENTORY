@@ -556,43 +556,45 @@
             </div>
         </div>
 
-        <div class="container mx-auto px-8 md:px-16 relative z-10 reveal">
-            <h1 id="heroTitle"
-                class="text-5xl md:text-7xl lg:text-8xl mb-4 drop-shadow-2xl text-white font-black tracking-tight"
-                style="font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1.1; padding-bottom: 2rem; text-shadow: 0 2px 20px rgba(0,0,0,0.8);">
-                Spider-Man: Brand New Day
-            </h1>
-            <p id="heroDesc"
-                class="text-base md:text-xl text-gray-200 mb-6 max-w-2xl font-medium leading-relaxed drop-shadow-md"
-                style="font-family: 'Plus Jakarta Sans', sans-serif;">
-                Witness the spectacular return of the web-slinger in his most thrilling adventure yet. Book your tickets
-                now!
-            </p>
+        <div class="container mx-auto px-4 lg:px-8 relative z-10 reveal mr-auto flex flex-col justify-end">
+            <div class="max-w-3xl">
+                <h1 id="heroTitle"
+                    class="text-4xl md:text-5xl lg:text-7xl mb-4 drop-shadow-2xl text-white font-black tracking-tight"
+                    style="font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1.15; text-shadow: 0 2px 20px rgba(0,0,0,0.8);">
+                    Spider-Man: Brand New Day
+                </h1>
+                <p id="heroDesc"
+                    class="text-sm md:text-base lg:text-lg text-gray-200 mb-6 max-w-xl font-medium leading-relaxed drop-shadow-md"
+                    style="font-family: 'Plus Jakarta Sans', sans-serif;">
+                    Witness the spectacular return of the web-slinger in his most thrilling adventure yet. Book your tickets
+                    now!
+                </p>
 
-            <div class="flex items-center gap-3 mb-8 text-sm font-medium">
-                <div class="flex text-yellow-400 drop-shadow">
-                    <span class="material-icons text-xl scale-110">star</span>
-                    <span class="material-icons text-xl scale-110">star</span>
-                    <span class="material-icons text-xl scale-110">star</span>
-                    <span class="material-icons text-xl scale-110">star</span>
-                    <span class="material-icons text-xl scale-110">star_half</span>
+                <div class="flex items-center gap-2 md:gap-3 mb-6 md:mb-8 text-xs md:text-sm font-medium">
+                    <div class="flex text-yellow-400 drop-shadow">
+                        <span class="material-icons text-[16px] md:text-lg scale-110">star</span>
+                        <span class="material-icons text-[16px] md:text-lg scale-110">star</span>
+                        <span class="material-icons text-[16px] md:text-lg scale-110">star</span>
+                        <span class="material-icons text-[16px] md:text-lg scale-110">star</span>
+                        <span class="material-icons text-[16px] md:text-lg scale-110">star_half</span>
+                    </div>
+                    <span class="text-white font-bold ml-1 md:ml-2 text-sm md:text-base drop-shadow">4.8/5</span>
+                    <span class="text-gray-400 mx-1 md:mx-2">•</span>
+                    <span class="text-gray-300 italic font-serif tracking-wide drop-shadow text-xs md:text-sm">Adventure • Fantasy •
+                        Drama</span>
                 </div>
-                <span class="text-white font-bold ml-2 text-lg drop-shadow">4.8/5</span>
-                <span class="text-gray-400 mx-2">•</span>
-                <span class="text-gray-300 italic font-serif text-base tracking-wide drop-shadow">Adventure • Fantasy •
-                    Drama</span>
-            </div>
 
-            <div class="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-3">
-                <button id="heroBookBtn" onclick="document.getElementById('searchInput').focus()"
-                    class="w-full sm:w-auto bg-purple-600 hover:bg-purple-700 text-white px-7 py-3.5 rounded-full font-extrabold transition shadow-lg shadow-purple-600/40 flex items-center justify-center gap-2 transform hover:scale-105 text-base lg:text-xl ring-2 ring-purple-500 ring-offset-2 ring-offset-black">
-                    <span class="material-icons-outlined">theaters</span> Book Tickets Now
-                </button>
-                <button id="heroTrailerBtn"
-                    onclick="window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank')"
-                    class="w-full sm:w-auto bg-transparent border-2 border-white/60 hover:bg-white/10 hover:border-white text-white px-7 py-3.5 rounded-full font-bold transition flex items-center justify-center gap-2 backdrop-blur-sm transform hover:scale-105 text-base">
-                    <span class="material-icons-outlined text-white">play_circle</span> Watch Trailer
-                </button>
+                <div class="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-3">
+                    <button id="heroBookBtn" onclick="document.getElementById('searchInput').focus()"
+                        class="w-full sm:w-auto bg-purple-600 hover:bg-purple-700 text-white px-6 md:px-7 py-3 rounded-full font-extrabold transition shadow-lg shadow-purple-600/40 flex items-center justify-center gap-2 transform hover:scale-105 text-sm md:text-base ring-2 ring-purple-500 ring-offset-2 ring-offset-black">
+                        <span class="material-icons-outlined text-[18px] md:text-[20px]">theaters</span> Book Tickets Now
+                    </button>
+                    <button id="heroTrailerBtn"
+                        onclick="window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank')"
+                        class="w-full sm:w-auto bg-transparent border-2 border-white/60 hover:bg-white/10 hover:border-white text-white px-6 md:px-7 py-3 rounded-full font-bold transition flex items-center justify-center gap-2 backdrop-blur-sm transform hover:scale-105 text-sm md:text-base">
+                        <span class="material-icons-outlined text-white text-[18px] md:text-[20px]">play_circle</span> Watch Trailer
+                    </button>
+                </div>
             </div>
         </div>
     </header>
