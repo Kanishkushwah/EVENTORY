@@ -324,19 +324,20 @@
 <body
     class="bg-background-light dark:bg-background-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col font-body transition-colors duration-200 pb-20 md:pb-0 page">
     <nav class="bg-surface-light dark:bg-surface-dark shadow-sm py-4 sticky top-0 z-50 transition-colors duration-200">
-        <div class="container mx-auto px-4 md:px-8 flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <a class="text-2xl font-bold text-primary tracking-tight flex items-center gap-2" href="index.html">
+        <div class="container mx-auto px-4 lg:px-8 flex items-center justify-between">
+            <!-- LEFT SECTION: Logo, City, Main Links -->
+            <div class="flex items-center gap-4 lg:gap-8 overflow-hidden pr-2">
+                <a class="text-2xl font-bold text-primary tracking-tight flex-shrink-0 flex items-center gap-2" href="index.html">
                     Eventory
                 </a>
 
                 <!-- City Selector Dropdown -->
-                <div class="relative">
+                <div class="relative flex-shrink-0">
                     <button onclick="toggleCityDropdown()" id="citySelectBtn"
-                        class="flex items-center gap-2 text-sm bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900/50 px-4 py-2 rounded-full transition-all border border-purple-100 dark:border-purple-800/50 truncate max-w-[160px] font-medium shadow-sm">
-                        <span class="material-icons text-[18px]">location_on</span>
-                        <span id="currentCityDisplay">Select City</span>
-                        <span class="material-icons text-[18px]">expand_more</span>
+                        class="flex items-center gap-1 text-sm bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900/50 px-3 py-1.5 lg:px-4 lg:py-2 rounded-full transition-all border border-purple-100 dark:border-purple-800/50 truncate max-w-[130px] lg:max-w-[160px] font-medium shadow-sm">
+                        <span class="material-icons text-[16px] lg:text-[18px]">location_on</span>
+                        <span id="currentCityDisplay" class="truncate">Select</span>
+                        <span class="material-icons text-[16px] lg:text-[18px]">expand_more</span>
                     </button>
 
                     <!-- Dropdown Menu -->
@@ -380,60 +381,71 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Main Navigation Links -->
+                <div class="hidden lg:flex items-center space-x-5 xl:space-x-8 text-[13px] xl:text-sm font-semibold text-gray-600 dark:text-gray-300">
+                    <a class="nav-link active flex items-center hover:text-primary transition-colors gap-1.5 py-1 whitespace-nowrap"
+                        href="index.html">
+                        <span class="material-icons text-base xl:text-lg">home</span>
+                        Browse Events
+                    </a>
+                    <a class="nav-link flex items-center hover:text-primary transition-colors gap-1.5 py-1 whitespace-nowrap" href="releases.html">
+                        <span class="material-icons text-base xl:text-lg">new_releases</span>
+                        Releases
+                    </a>
+                    <a class="nav-link flex items-center hover:text-primary transition-colors gap-1.5 py-1 whitespace-nowrap" href="booking.html">
+                        <span class="material-icons text-base xl:text-lg">confirmation_number</span>
+                        My Bookings
+                    </a>
+                    <a class="nav-link flex items-center hover:text-primary transition-colors gap-1.5 py-1 whitespace-nowrap" href="#search">
+                        <span class="material-icons text-base xl:text-lg">search</span>
+                        Search Booking
+                    </a>
+                </div>
             </div>
-            <div class="hidden md:flex items-center space-x-6 text-sm font-medium text-gray-600 dark:text-gray-300">
-                <a class="nav-link active flex items-center hover:text-primary transition-colors gap-1"
-                    href="index.html">
-                    <span class="material-icons text-lg">home</span>
-                    Browse Events
-                </a>
-                <a class="nav-link flex items-center hover:text-primary transition-colors gap-1" href="releases.html">
-                    <span class="material-icons text-lg">new_releases</span>
-                    Releases
-                </a>
-                <a class="nav-link flex items-center hover:text-primary transition-colors gap-1" href="booking.html">
-                    <span class="material-icons text-lg">confirmation_number</span>
-                    My Bookings
-                </a>
-                <a class="nav-link flex items-center hover:text-primary transition-colors gap-1" href="#search">
-                    <span class="material-icons text-lg">search</span>
-                    Search Booking
-                </a>
-            </div>
-            <div id="nav-auth-container" class="hidden md:flex items-center space-x-4 text-sm font-medium">
-                <!-- Notifications Bell -->
-                <button onclick="subscribeNewsletter()"
-                    class="relative w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors focus:outline-none shadow-sm"
-                    title="Notifications">
-                    <span class="material-icons">notifications</span>
-                    <span
-                        class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-gray-800"></span>
+
+            <!-- RIGHT SECTION: Auth, Notifs, Support -->
+            <div class="flex items-center gap-3 lg:gap-5 flex-shrink-0">
+                <div id="nav-auth-container" class="hidden md:flex items-center space-x-3 lg:space-x-4 text-sm font-medium">
+                    <!-- Notifications Bell -->
+                    <button onclick="subscribeNewsletter()"
+                        class="relative w-9 h-9 xl:w-10 xl:h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors focus:outline-none shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)]"
+                        title="Notifications">
+                        <span class="material-icons text-[18px] xl:text-[20px]">notifications</span>
+                        <span
+                            class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-gray-800"></span>
+                    </button>
+                    <!-- Theme Toggle -->
+                    <button onclick="toggleTheme()"
+                        class="w-9 h-9 xl:w-10 xl:h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors focus:outline-none shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)]"
+                        title="Toggle Dark Mode">
+                        <span class="material-icons theme-icon text-[18px] xl:text-[20px]">dark_mode</span>
+                    </button>
+                    
+                    <a class="flex items-center text-gray-600 dark:text-gray-300 hover:text-primary transition-colors gap-1 text-[13px] xl:text-sm font-semibold"
+                        href="login.html">
+                        <span class="material-icons text-[16px] xl:text-[18px]">login</span>
+                        Login
+                    </a>
+                    <a class="flex items-center text-gray-600 dark:text-gray-300 hover:text-primary transition-colors gap-1 text-[13px] xl:text-sm font-semibold bg-gray-50 dark:bg-gray-800 px-3 py-1.5 rounded-lg border border-gray-100 dark:border-gray-700 hover:border-purple-200"
+                        href="register.html">
+                        <span class="material-icons text-[16px] xl:text-[18px]">person_add</span>
+                        Register
+                    </a>
+                </div>
+
+                <button onclick="openSupportModal()"
+                    class="hidden md:flex items-center gap-1 text-gray-600 dark:text-gray-300 hover:text-primary transition-colors text-[13px] xl:text-sm font-semibold border-l pl-3 lg:pl-5 border-gray-200 dark:border-gray-700">
+                    <span class="material-icons-outlined text-[16px] xl:text-[18px]">help_outline</span>
+                    Support
                 </button>
-                <button onclick="toggleTheme()"
-                    class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors focus:outline-none shadow-sm"
-                    title="Toggle Dark Mode">
-                    <span class="material-icons theme-icon">dark_mode</span>
+
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden text-gray-600 dark:text-gray-300 hover:text-primary px-1 focus:outline-none"
+                    onclick="toggleMobileMenu()">
+                    <span class="material-icons text-[26px]">menu</span>
                 </button>
-                <a class="flex items-center text-gray-600 dark:text-gray-300 hover:text-primary transition-colors gap-1"
-                    href="login.html">
-                    <span class="material-icons text-lg">login</span>
-                    Login
-                </a>
-                <a class="flex items-center text-gray-600 dark:text-gray-300 hover:text-primary transition-colors gap-1"
-                    href="register.html">
-                    <span class="material-icons text-lg">person_add</span>
-                    Register
-                </a>
             </div>
-            <button onclick="openSupportModal()"
-                class="flex items-center gap-1 text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
-                <span class="material-icons-outlined text-lg">help_outline</span>
-                Support
-            </button>
-            <button class="md:hidden text-gray-600 dark:text-gray-300 hover:text-primary focus:outline-none"
-                onclick="toggleMobileMenu()">
-                <span class="material-icons">menu</span>
-            </button>
         </div>
     </nav>
 
@@ -1533,19 +1545,19 @@
                 const isAdmin = user.role === 'admin' || user.email === 'admin@eventory.com';
 
                 navContainer.innerHTML = `
-                    <button onclick="subscribeNewsletter()" class="relative w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors focus:outline-none shadow-sm" title="Notifications">
-                        <span class="material-icons">notifications</span>
+                    <button onclick="subscribeNewsletter()" class="relative w-9 h-9 xl:w-10 xl:h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors focus:outline-none shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)]" title="Notifications">
+                        <span class="material-icons text-[18px] xl:text-[20px]">notifications</span>
                         <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-gray-800"></span>
                     </button>
-                    <button onclick="toggleTheme()" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors focus:outline-none shadow-sm" title="Toggle Dark Mode">
-                        <span class="material-icons theme-icon">dark_mode</span>
+                    <button onclick="toggleTheme()" class="w-9 h-9 xl:w-10 xl:h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors focus:outline-none shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)]" title="Toggle Dark Mode">
+                        <span class="material-icons theme-icon text-[18px] xl:text-[20px]">dark_mode</span>
                     </button>
                     
                     <div class="relative group" id="profileDropdown" style="z-index: 9999;">
-                        <button class="flex items-center gap-2 ${isAdmin ? 'bg-indigo-600 text-white border-2 border-blue-400' : 'bg-purple-50 dark:bg-purple-900/30 text-primary border border-purple-100 dark:border-purple-800/50'} px-5 py-2.5 rounded-full transition-all font-bold shadow-sm hover:scale-[1.02]">
-                            <span class="material-icons text-lg">${isAdmin ? 'admin_panel_settings' : 'group'}</span>
-                            ${isAdmin ? 'ADMINISTRATOR' : (user.name ? user.name.split(' ')[0].toUpperCase() : 'PROFILE')}
-                            <span class="material-icons text-sm transition-transform group-hover:rotate-180">expand_more</span>
+                        <button class="flex items-center gap-1.5 ${isAdmin ? 'bg-indigo-600 text-white border-2 border-blue-400' : 'bg-purple-50 dark:bg-purple-900/30 text-primary border border-purple-100 dark:border-purple-800/50'} px-3 py-1.5 xl:px-4 xl:py-2 text-[13px] xl:text-sm font-bold rounded-full transition-all shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] hover:scale-[1.02]">
+                            <span class="material-icons text-[16px] xl:text-[18px]">${isAdmin ? 'admin_panel_settings' : 'group'}</span>
+                            ${isAdmin ? 'ADMIN' : (user.name ? user.name.split(' ')[0].toUpperCase() : 'PROFILE')}
+                            <span class="material-icons text-[16px] xl:text-[18px] transition-transform group-hover:rotate-180">expand_more</span>
                         </button>
                         <div class="absolute right-0 top-full w-full h-3 bg-transparent hidden group-hover:block z-[9998]"></div>
                         <div class="absolute right-0 top-[calc(100%+8px)] w-56 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700 hidden group-hover:block overflow-hidden transition-all z-[9999] animate-fade-in divide-y divide-gray-50 dark:divide-gray-700">
