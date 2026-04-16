@@ -2005,7 +2005,7 @@
                 }
             }, (error) => {
                 console.error("Geolocation error:", error);
-                alert("Permission denied onavailable.");
+                alert("Location permission denied or unavailable. Please select a city manually.");
                 btn.innerHTML = originalText;
             }, {
                 timeout: 10000
