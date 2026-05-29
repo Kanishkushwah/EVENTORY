@@ -8,13 +8,13 @@
   </a>
 </p>
 
----
+
 
 ## 📌 About
 
 Eventory is a full-stack event and movie ticket booking platform inspired by BookMyShow. Users can discover movies, concerts, sports events, and more — filter by city, book tickets, and manage their bookings — all backed by a real Supabase (PostgreSQL) database.
 
----
+
 
 ## ✨ Features
 
@@ -27,7 +27,7 @@ Eventory is a full-stack event and movie ticket booking platform inspired by Boo
 - 🏏 ICC World Cup 2026 section with team filter
 - 📱 Fully responsive design
 
----
+
 
 ## 🛠️ Tech Stack
 
@@ -38,7 +38,7 @@ Eventory is a full-stack event and movie ticket booking platform inspired by Boo
 | Auth | Supabase Auth |
 | Hosting | Render |
 
----
+
 
 ## 🚀 Getting Started
 
@@ -52,7 +52,7 @@ git clone https://github.com/Kanishkushwah/Eventory.git
 
 > ⚠️ You'll need your own Supabase project URL and anon key. Create a `.env` or replace the config values in the JS files.
 
----
+
 
 ## 📁 Project Structure
 
@@ -70,13 +70,13 @@ Eventory/
 └── README.md
 ```
 
----
+
 
 ## 🌐 Live Demo
 
 👉 [https://eventory-cyzy.onrender.com](https://eventory-cyzy.onrender.com)
 
----
+
 
 ## 👨‍💻 Author
 
@@ -84,6 +84,6 @@ Eventory/
 - GitHub: [@Kanishkushwah](https://github.com/Kanishkushwah)
 - LeetCode: [tanishkushwah6644](https://leetcode.com/tanishkushwah6644)
 
----
+
 
 ⭐ If you liked this project, give it a star!
