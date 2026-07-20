@@ -324,24 +324,25 @@
 <body
     class="bg-background-light dark:bg-background-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col font-body transition-colors duration-200 pb-20 md:pb-0 page">
     <nav class="bg-surface-light dark:bg-surface-dark shadow-sm py-4 sticky top-0 z-50 transition-colors duration-200">
-        <div class="container mx-auto px-4 md:px-8 flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <a class="text-2xl font-bold text-primary tracking-tight flex items-center gap-2" href="index.html">
+        <div class="container mx-auto px-4 lg:px-8 flex items-center justify-between">
+            <!-- LEFT SECTION: Logo, City, Main Links -->
+            <div class="flex items-center gap-4 lg:gap-8 pr-2">
+                <a class="text-2xl font-bold text-primary tracking-tight flex-shrink-0 flex items-center gap-2" href="index.html">
                     Eventory
                 </a>
 
                 <!-- City Selector Dropdown -->
-                <div class="relative">
+                <div class="relative flex-shrink-0">
                     <button onclick="toggleCityDropdown()" id="citySelectBtn"
-                        class="flex items-center gap-2 text-sm bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900/50 px-4 py-2 rounded-full transition-all border border-purple-100 dark:border-purple-800/50 truncate max-w-[160px] font-medium shadow-sm">
-                        <span class="material-icons text-[18px]">location_on</span>
-                        <span id="currentCityDisplay">Select City</span>
-                        <span class="material-icons text-[18px]">expand_more</span>
+                        class="flex items-center gap-1 text-sm bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900/50 px-3 py-1.5 lg:px-4 lg:py-2 rounded-full transition-all border border-purple-100 dark:border-purple-800/50 truncate max-w-[130px] lg:max-w-[160px] font-medium shadow-sm">
+                        <span class="material-icons text-[16px] lg:text-[18px]">location_on</span>
+                        <span id="currentCityDisplay" class="truncate">Select</span>
+                        <span class="material-icons text-[16px] lg:text-[18px]">expand_more</span>
                     </button>
 
                     <!-- Dropdown Menu -->
                     <div id="cityDropdown"
-                        class="absolute left-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 hidden z-50 overflow-hidden transform origin-top-left transition-all">
+                        class="absolute left-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 hidden z-[200] overflow-hidden transform origin-top-left transition-all">
                         <div class="p-3 border-b border-gray-100 dark:border-gray-700">
                             <button id="autoDetectBtn" onclick="autoDetectLocation()"
                                 class="w-full flex items-center gap-2 text-sm text-primary hover:bg-purple-50 dark:hover:bg-gray-700 p-2 rounded-lg transition-colors font-medium">
@@ -380,60 +381,71 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Main Navigation Links -->
+                <div class="hidden lg:flex items-center space-x-5 xl:space-x-8 text-[13px] xl:text-sm font-semibold text-gray-600 dark:text-gray-300">
+                    <a class="nav-link active flex items-center hover:text-primary transition-colors gap-1.5 py-1 whitespace-nowrap"
+                        href="index.html">
+                        <span class="material-icons text-base xl:text-lg">home</span>
+                        Browse Events
+                    </a>
+                    <a class="nav-link flex items-center hover:text-primary transition-colors gap-1.5 py-1 whitespace-nowrap" href="releases.html">
+                        <span class="material-icons text-base xl:text-lg">new_releases</span>
+                        Releases
+                    </a>
+                    <a class="nav-link flex items-center hover:text-primary transition-colors gap-1.5 py-1 whitespace-nowrap" href="booking.html">
+                        <span class="material-icons text-base xl:text-lg">confirmation_number</span>
+                        My Bookings
+                    </a>
+                    <a class="nav-link flex items-center hover:text-primary transition-colors gap-1.5 py-1 whitespace-nowrap" href="#search">
+                        <span class="material-icons text-base xl:text-lg">search</span>
+                        Search Booking
+                    </a>
+                </div>
             </div>
-            <div class="hidden md:flex items-center space-x-6 text-sm font-medium text-gray-600 dark:text-gray-300">
-                <a class="nav-link active flex items-center hover:text-primary transition-colors gap-1"
-                    href="index.html">
-                    <span class="material-icons text-lg">home</span>
-                    Browse Events
-                </a>
-                <a class="nav-link flex items-center hover:text-primary transition-colors gap-1" href="releases.html">
-                    <span class="material-icons text-lg">new_releases</span>
-                    Releases
-                </a>
-                <a class="nav-link flex items-center hover:text-primary transition-colors gap-1" href="booking.html">
-                    <span class="material-icons text-lg">confirmation_number</span>
-                    My Bookings
-                </a>
-                <a class="nav-link flex items-center hover:text-primary transition-colors gap-1" href="#search">
-                    <span class="material-icons text-lg">search</span>
-                    Search Booking
-                </a>
-            </div>
-            <div id="nav-auth-container" class="hidden md:flex items-center space-x-4 text-sm font-medium">
-                <!-- Notifications Bell -->
-                <button onclick="subscribeNewsletter()"
-                    class="relative w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors focus:outline-none shadow-sm"
-                    title="Notifications">
-                    <span class="material-icons">notifications</span>
-                    <span
-                        class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-gray-800"></span>
+
+            <!-- RIGHT SECTION: Auth, Notifs, Support -->
+            <div class="flex items-center gap-3 lg:gap-5 flex-shrink-0">
+                <div id="nav-auth-container" class="hidden md:flex items-center space-x-3 lg:space-x-4 text-sm font-medium">
+                    <!-- Notifications Bell -->
+                    <button onclick="subscribeNewsletter()"
+                        class="relative w-9 h-9 xl:w-10 xl:h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors focus:outline-none shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)]"
+                        title="Notifications">
+                        <span class="material-icons text-[18px] xl:text-[20px]">notifications</span>
+                        <span
+                            class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-gray-800"></span>
+                    </button>
+                    <!-- Theme Toggle -->
+                    <button onclick="toggleTheme()"
+                        class="w-9 h-9 xl:w-10 xl:h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors focus:outline-none shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)]"
+                        title="Toggle Dark Mode">
+                        <span class="material-icons theme-icon text-[18px] xl:text-[20px]">dark_mode</span>
+                    </button>
+                    
+                    <a class="flex items-center text-gray-600 dark:text-gray-300 hover:text-primary transition-colors gap-1 text-[13px] xl:text-sm font-semibold"
+                        href="login.html">
+                        <span class="material-icons text-[16px] xl:text-[18px]">login</span>
+                        Login
+                    </a>
+                    <a class="flex items-center text-gray-600 dark:text-gray-300 hover:text-primary transition-colors gap-1 text-[13px] xl:text-sm font-semibold bg-gray-50 dark:bg-gray-800 px-3 py-1.5 rounded-lg border border-gray-100 dark:border-gray-700 hover:border-purple-200"
+                        href="register.html">
+                        <span class="material-icons text-[16px] xl:text-[18px]">person_add</span>
+                        Register
+                    </a>
+                </div>
+
+                <button onclick="openSupportModal()"
+                    class="hidden md:flex items-center gap-1 text-gray-600 dark:text-gray-300 hover:text-primary transition-colors text-[13px] xl:text-sm font-semibold border-l pl-3 lg:pl-5 border-gray-200 dark:border-gray-700">
+                    <span class="material-icons-outlined text-[16px] xl:text-[18px]">help_outline</span>
+                    Support
                 </button>
-                <button onclick="toggleTheme()"
-                    class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors focus:outline-none shadow-sm"
-                    title="Toggle Dark Mode">
-                    <span class="material-icons theme-icon">dark_mode</span>
+
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden text-gray-600 dark:text-gray-300 hover:text-primary px-1 focus:outline-none"
+                    onclick="toggleMobileMenu()">
+                    <span class="material-icons text-[26px]">menu</span>
                 </button>
-                <a class="flex items-center text-gray-600 dark:text-gray-300 hover:text-primary transition-colors gap-1"
-                    href="login.html">
-                    <span class="material-icons text-lg">login</span>
-                    Login
-                </a>
-                <a class="flex items-center text-gray-600 dark:text-gray-300 hover:text-primary transition-colors gap-1"
-                    href="register.html">
-                    <span class="material-icons text-lg">person_add</span>
-                    Register
-                </a>
             </div>
-            <button onclick="openSupportModal()"
-                class="flex items-center gap-1 text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
-                <span class="material-icons-outlined text-lg">help_outline</span>
-                Support
-            </button>
-            <button class="md:hidden text-gray-600 dark:text-gray-300 hover:text-primary focus:outline-none"
-                onclick="toggleMobileMenu()">
-                <span class="material-icons">menu</span>
-            </button>
         </div>
     </nav>
 
@@ -544,43 +556,45 @@
             </div>
         </div>
 
-        <div class="container mx-auto px-8 md:px-16 relative z-10 reveal">
-            <h1 id="heroTitle"
-                class="text-5xl md:text-7xl lg:text-8xl mb-4 drop-shadow-2xl text-white font-black tracking-tight"
-                style="font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1.1; padding-bottom: 2rem; text-shadow: 0 2px 20px rgba(0,0,0,0.8);">
-                Spider-Man: Brand New Day
-            </h1>
-            <p id="heroDesc"
-                class="text-base md:text-xl text-gray-200 mb-6 max-w-2xl font-medium leading-relaxed drop-shadow-md"
-                style="font-family: 'Plus Jakarta Sans', sans-serif;">
-                Witness the spectacular return of the web-slinger in his most thrilling adventure yet. Book your tickets
-                now!
-            </p>
+        <div class="container mx-auto px-4 lg:px-8 relative z-10 reveal mr-auto flex flex-col justify-end">
+            <div class="max-w-3xl">
+                <h1 id="heroTitle"
+                    class="text-4xl md:text-5xl lg:text-7xl mb-4 drop-shadow-2xl text-white font-black tracking-tight"
+                    style="font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1.15; text-shadow: 0 2px 20px rgba(0,0,0,0.8);">
+                    Spider-Man: Brand New Day
+                </h1>
+                <p id="heroDesc"
+                    class="text-sm md:text-base lg:text-lg text-gray-200 mb-6 max-w-xl font-medium leading-relaxed drop-shadow-md"
+                    style="font-family: 'Plus Jakarta Sans', sans-serif;">
+                    Witness the spectacular return of the web-slinger in his most thrilling adventure yet. Book your tickets
+                    now!
+                </p>
 
-            <div class="flex items-center gap-3 mb-8 text-sm font-medium">
-                <div class="flex text-yellow-400 drop-shadow">
-                    <span class="material-icons text-xl scale-110">star</span>
-                    <span class="material-icons text-xl scale-110">star</span>
-                    <span class="material-icons text-xl scale-110">star</span>
-                    <span class="material-icons text-xl scale-110">star</span>
-                    <span class="material-icons text-xl scale-110">star_half</span>
+                <div class="flex items-center gap-2 md:gap-3 mb-6 md:mb-8 text-xs md:text-sm font-medium">
+                    <div class="flex text-yellow-400 drop-shadow">
+                        <span class="material-icons text-[16px] md:text-lg scale-110">star</span>
+                        <span class="material-icons text-[16px] md:text-lg scale-110">star</span>
+                        <span class="material-icons text-[16px] md:text-lg scale-110">star</span>
+                        <span class="material-icons text-[16px] md:text-lg scale-110">star</span>
+                        <span class="material-icons text-[16px] md:text-lg scale-110">star_half</span>
+                    </div>
+                    <span class="text-white font-bold ml-1 md:ml-2 text-sm md:text-base drop-shadow">4.8/5</span>
+                    <span class="text-gray-400 mx-1 md:mx-2">•</span>
+                    <span class="text-gray-300 italic font-serif tracking-wide drop-shadow text-xs md:text-sm">Adventure • Fantasy •
+                        Drama</span>
                 </div>
-                <span class="text-white font-bold ml-2 text-lg drop-shadow">4.8/5</span>
-                <span class="text-gray-400 mx-2">•</span>
-                <span class="text-gray-300 italic font-serif text-base tracking-wide drop-shadow">Adventure • Fantasy •
-                    Drama</span>
-            </div>
 
-            <div class="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-3">
-                <button id="heroBookBtn" onclick="document.getElementById('searchInput').focus()"
-                    class="w-full sm:w-auto bg-purple-600 hover:bg-purple-700 text-white px-7 py-3.5 rounded-full font-extrabold transition shadow-lg shadow-purple-600/40 flex items-center justify-center gap-2 transform hover:scale-105 text-base lg:text-xl ring-2 ring-purple-500 ring-offset-2 ring-offset-black">
-                    <span class="material-icons-outlined">theaters</span> Book Tickets Now
-                </button>
-                <button id="heroTrailerBtn"
-                    onclick="window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank')"
-                    class="w-full sm:w-auto bg-transparent border-2 border-white/60 hover:bg-white/10 hover:border-white text-white px-7 py-3.5 rounded-full font-bold transition flex items-center justify-center gap-2 backdrop-blur-sm transform hover:scale-105 text-base">
-                    <span class="material-icons-outlined text-white">play_circle</span> Watch Trailer
-                </button>
+                <div class="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-3">
+                    <button id="heroBookBtn" onclick="document.getElementById('searchInput').focus()"
+                        class="w-full sm:w-auto bg-purple-600 hover:bg-purple-700 text-white px-6 md:px-7 py-3 rounded-full font-extrabold transition shadow-lg shadow-purple-600/40 flex items-center justify-center gap-2 transform hover:scale-105 text-sm md:text-base ring-2 ring-purple-500 ring-offset-2 ring-offset-black">
+                        <span class="material-icons-outlined text-[18px] md:text-[20px]">theaters</span> Book Tickets Now
+                    </button>
+                    <button id="heroTrailerBtn"
+                        onclick="window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank')"
+                        class="w-full sm:w-auto bg-transparent border-2 border-white/60 hover:bg-white/10 hover:border-white text-white px-6 md:px-7 py-3 rounded-full font-bold transition flex items-center justify-center gap-2 backdrop-blur-sm transform hover:scale-105 text-sm md:text-base">
+                        <span class="material-icons-outlined text-white text-[18px] md:text-[20px]">play_circle</span> Watch Trailer
+                    </button>
+                </div>
             </div>
         </div>
     </header>
@@ -588,14 +602,14 @@
     <main class="flex-grow container mx-auto px-4 py-8 relative z-20">
         <!-- GLOBAL SEARCH BAR INJECTED HERE POST-HERO -->
         <div
-            class="bg-white dark:bg-surface-dark p-2 md:p-3 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] max-w-4xl mx-auto flex items-center transition-colors duration-200 border-2 border-purple-100 dark:border-gray-800 -mt-16 relative z-30 mb-16">
-            <span class="material-icons text-gray-400 ml-4 flex-shrink-0 text-2xl">search</span>
+            class="bg-white/80 dark:bg-surface-dark/80 backdrop-blur-xl p-1.5 md:p-2 rounded-full shadow-[0_8px_30px_rgba(0,0,0,0.16)] max-w-3xl mx-auto flex items-center transition-all duration-300 border border-white/40 dark:border-gray-700/50 -mt-8 md:-mt-12 relative z-30 mb-12 lg:mb-16 hover:shadow-[0_12px_45px_rgba(139,92,246,0.15)] group">
+            <span class="material-icons text-purple-400 dark:text-purple-300 ml-4 flex-shrink-0 text-xl font-bold group-hover:scale-110 transition-transform">search</span>
             <input
-                class="flex-grow bg-transparent border-none focus:ring-0 text-gray-800 dark:text-gray-100 placeholder-gray-400 px-4 py-2 text-lg min-w-0 outline-none"
+                class="flex-grow bg-transparent border-none focus:ring-0 text-gray-800 dark:text-gray-100 placeholder-gray-500/70 px-4 py-2 text-sm xl:text-base min-w-0 outline-none font-medium"
                 placeholder="Search for movies, sports, or concerts..." type="text" id="searchInput"
                 onkeypress="if(event.key === 'Enter') searchEvents()" />
             <button id="searchBtn"
-                class="hidden md:flex items-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800 text-white px-8 py-3.5 rounded-full font-bold transition-all shadow-md"
+                class="hidden md:flex items-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-6 xl:px-8 py-2.5 rounded-full text-sm font-bold transition-all shadow-[0_4px_12px_rgba(139,92,246,0.3)] transform hover:-translate-y-0.5"
                 onclick="searchEvents()">
                 Search
             </button>
@@ -1112,6 +1126,30 @@
                 Load More Events <span class="material-icons text-sm">expand_more</span>
             </button>
         </div>
+
+        <!-- NEW RELEASES SECTION -->
+        <section class="mt-20 mb-8 reveal" id="newReleasesSection">
+            <div class="flex items-center justify-between mb-8 px-1">
+                <div>
+                    <div class="flex items-center gap-3 mb-1">
+                        <span class="bg-gradient-to-r from-red-500 to-pink-600 text-white text-[10px] uppercase font-black tracking-widest px-3 py-1 rounded-full shadow-md">Coming Soon</span>
+                        <h2 class="text-2xl md:text-3xl font-black text-gray-900 dark:text-white tracking-tight">New Releases</h2>
+                    </div>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm font-medium ml-1">Upcoming movies — be first in line!</p>
+                </div>
+                <a href="releases.html" class="flex items-center gap-1 text-primary hover:text-primary/80 font-semibold text-sm transition-colors border border-purple-200 dark:border-purple-800 px-4 py-2 rounded-full hover:bg-purple-50 dark:hover:bg-purple-900/20">
+                    View All <span class="material-icons text-base">arrow_forward</span>
+                </a>
+            </div>
+            <div id="homeReleasesGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-5">
+                <div class="skeleton h-64 rounded-2xl"></div>
+                <div class="skeleton h-64 rounded-2xl hidden sm:block"></div>
+                <div class="skeleton h-64 rounded-2xl hidden md:block"></div>
+                <div class="skeleton h-64 rounded-2xl hidden lg:block"></div>
+                <div class="skeleton h-64 rounded-2xl hidden lg:block"></div>
+                <div class="skeleton h-64 rounded-2xl hidden xl:block"></div>
+            </div>
+        </section>
     </main>
 
     <!-- ULTRA PREMIUM FOOTER -->
@@ -1527,45 +1565,54 @@
         // --- AUTH UI UPDATE ---
         function updateAuthUI() {
             const user = JSON.parse(localStorage.getItem('loggedInUser'));
-            // Try to find the nav container using the new ID or failover
-            const navContainer = document.getElementById('nav-auth-container') || document.querySelector('nav .flex.items-center.gap-6') || document.querySelector('nav .flex.items-center.space-x-4');
+            const navContainer = document.getElementById('nav-auth-container') || document.querySelector('nav .flex.items-center.space-x-4');
 
             if (user && navContainer) {
-                // Use a profile dropdown instead of simple links
+                const isAdmin = user.role === 'admin' || user.email === 'admin@eventory.com';
+
                 navContainer.innerHTML = `
-                                        <button onclick= "subscribeNewsletter()"
-                                    class="relative w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors focus:outline-none shadow-sm"
-                                    title = "Notifications" >
-                        <span class="material-icons">notifications</span>
+                    <button onclick="subscribeNewsletter()" class="relative w-9 h-9 xl:w-10 xl:h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors focus:outline-none shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)]" title="Notifications">
+                        <span class="material-icons text-[18px] xl:text-[20px]">notifications</span>
                         <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-gray-800"></span>
                     </button>
-                    <button onclick="toggleTheme()"
-                        class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors focus:outline-none shadow-sm"
-                        title="Toggle Dark Mode">
-                        <span class="material-icons theme-icon">dark_mode</span>
+                    <button onclick="toggleTheme()" class="w-9 h-9 xl:w-10 xl:h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors focus:outline-none shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)]" title="Toggle Dark Mode">
+                        <span class="material-icons theme-icon text-[18px] xl:text-[20px]">dark_mode</span>
                     </button>
-                    <div class="relative group">
-                        <button class="flex items-center gap-2 text-primary bg-purple-50 dark:bg-purple-900/30 hover:bg-purple-100 dark:hover:bg-purple-900/50 px-4 py-2 rounded-full transition-all font-semibold shadow-sm border border-purple-100 dark:border-purple-800/50">
-                            <span class="material-icons text-lg">person</span>
-                            ${user.name ? user.name.split(' ')[0].toUpperCase() : 'PROFILE'}
-                            <span class="material-icons text-sm transition-transform group-hover:rotate-180">expand_more</span>
+                    
+                    <div class="relative group" id="profileDropdown" style="z-index: 9999;">
+                        <button class="flex items-center gap-1.5 ${isAdmin ? 'bg-indigo-600 text-white border-2 border-blue-400' : 'bg-purple-50 dark:bg-purple-900/30 text-primary border border-purple-100 dark:border-purple-800/50'} px-3 py-1.5 xl:px-4 xl:py-2 text-[13px] xl:text-sm font-bold rounded-full transition-all shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] hover:scale-[1.02]">
+                            <span class="material-icons text-[16px] xl:text-[18px]">${isAdmin ? 'admin_panel_settings' : 'group'}</span>
+                            ${isAdmin ? 'ADMIN' : (user.name ? user.name.split(' ')[0].toUpperCase() : 'PROFILE')}
+                            <span class="material-icons text-[16px] xl:text-[18px] transition-transform group-hover:rotate-180">expand_more</span>
                         </button>
-                        <div class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 hidden group-hover:block overflow-hidden transition-all z-50">
-                            <a href="user-profile.html" class="block px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-purple-50 dark:hover:bg-gray-700 hover:text-primary transition-colors flex items-center gap-2">
-                                <span class="material-icons text-sm">account_circle</span> My Profile
-                            </a>
-                            <a href="booking.html" class="block px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-purple-50 dark:hover:bg-gray-700 hover:text-primary transition-colors flex items-center gap-2">
-                                <span class="material-icons text-sm">confirmation_number</span> My Bookings
-                            </a>
-                            <div class="border-t border-gray-100 dark:border-gray-700"></div>
-                            <button onclick="logout()" class="w-full text-left px-4 py-3 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-2">
-                                <span class="material-icons text-sm">logout</span> Logout
+                        <div class="absolute right-0 top-full w-full h-3 bg-transparent hidden group-hover:block z-[9998]"></div>
+                        <div class="absolute right-0 top-[calc(100%+8px)] w-56 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700 hidden group-hover:block overflow-hidden transition-all z-[9999] animate-fade-in divide-y divide-gray-50 dark:divide-gray-700">
+                            ${isAdmin ? `
+                                <div class="px-4 py-3 bg-indigo-50/50 dark:bg-indigo-900/10">
+                                    <p class="text-[10px] font-black text-indigo-500 uppercase tracking-tighter">System Authority</p>
+                                    <p class="text-sm font-bold text-gray-900 dark:text-gray-100 truncate">${user.name || 'Admin'}</p>
+                                </div>
+                                <a href="admin-dashboard.html" class="block px-4 py-3.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 hover:text-indigo-600 transition-colors flex items-center gap-3">
+                                    <span class="material-icons text-lg">dashboard</span> Admin Dashboard
+                                </a>
+                                <a href="releases.html" class="block px-4 py-3.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 hover:text-indigo-600 transition-colors flex items-center gap-3">
+                                    <span class="material-icons text-lg">movie</span> Movie Releases
+                                </a>` : `
+                                <a href="user-profile.html" class="block px-4 py-3.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-purple-50 dark:hover:bg-gray-700 hover:text-primary transition-colors flex items-center gap-3">
+                                    <span class="material-icons text-lg">account_circle</span> My Profile
+                                </a>
+                                <a href="booking.html" class="block px-4 py-3.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-purple-50 dark:hover:bg-gray-700 hover:text-primary transition-colors flex items-center gap-3">
+                                    <span class="material-icons text-lg">confirmation_number</span> My Bookings
+                                </a>`}
+                            <button onclick="logout()" class="w-full text-left px-4 py-3.5 text-sm font-bold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-3">
+                                <span class="material-icons text-lg">logout</span> Sign Out
                             </button>
                         </div>
                     </div>
-                                    `;
+                `;
             }
         }
+
 
         function logout() {
             localStorage.removeItem('loggedInUser');
@@ -1692,8 +1739,14 @@
             }
 
             try {
-                const response = await fetch(`/ api / events / smart - search ? q = ${encodeURIComponent(query)} `);
-                const matches = await response.json();
+                const response = await fetch(`/api/events/smart-search?q=${encodeURIComponent(query)}`);
+
+                if (!response.ok) {
+                    throw new Error(`Server returned ${response.status}`);
+                }
+
+                let matches = await response.json();
+                if (!Array.isArray(matches)) matches = [];
 
                 // Structural CSS switch for mobile responsiveness
                 eventGrid.classList.remove('flex', 'flex-row', 'overflow-x-auto', 'snap-x', 'snap-mandatory', 'hide-scrollbar');
@@ -1761,8 +1814,8 @@
                     });
                 }
             } catch (e) {
-                console.error("AI Search Failed:", e);
-                alert("Smart Engine offline. Please try again.");
+                console.error("🔥 AI Search Failed:", e);
+                alert(`Smart Engine offline.\n\nReason: ${e.message || "Unknown error"}\n\nHint: If you just pushed changes, please wait 30 seconds for the server to finish building on Render.`);
             } finally {
                 if (searchBtn) searchBtn.innerHTML = '<span class="material-icons text-sm">auto_awesome</span> Smart Search';
                 if (mobSearchBtn) mobSearchBtn.innerHTML = '<span class="material-icons text-white text-sm">auto_awesome</span>';
@@ -1952,7 +2005,7 @@
                 }
             }, (error) => {
                 console.error("Geolocation error:", error);
-                alert("Permission denied onavailable.");
+                alert("Location permission denied or unavailable. Please select a city manually.");
                 btn.innerHTML = originalText;
             }, {
                 timeout: 10000
@@ -1963,7 +2016,7 @@
         document.addEventListener('click', function (event) {
             const citySelectBtn = document.getElementById('citySelectBtn');
             const cityDropdown = document.getElementById('cityDropdown');
-            if (citectBityDropdown) {
+            if (citySelectBtn && cityDropdown) {
                 if (!citySelectBtn.contains(event.target) && !cityDropdown.contains(event.target)) {
                     cityDropdown.classList.add('hidden');
                 }
@@ -1973,7 +2026,68 @@
         // Initialize things on load
         document.addEventListener('DOMContentLoaded', () => {
             loadSavedCity();
+            loadHomeReleases();
         });
+
+        // --- HOME PAGE NEW RELEASES ---
+        async function loadHomeReleases() {
+            const grid = document.getElementById('homeReleasesGrid');
+            if (!grid) return;
+            try {
+                const res = await fetch('/api/config?v=' + Date.now());
+                if (!res.ok) throw new Error('Failed');
+                const config = await res.json();
+                const releases = (config.releases || []).slice(0, 6);
+                if (!releases.length) {
+                    grid.innerHTML = '<div class="col-span-full text-center py-10 text-gray-400 text-sm">No upcoming releases at the moment.</div>';
+                    return;
+                }
+
+                function getDaysUntil(dateStr) {
+                    if (!dateStr) return null;
+                    const today = new Date(); today.setHours(0,0,0,0);
+                    const rel = new Date(dateStr + 'T00:00:00');
+                    return Math.ceil((rel - today) / (1000*60*60*24));
+                }
+
+                function getDateBadge(dateStr) {
+                    if (!dateStr) return '';
+                    const days = getDaysUntil(dateStr);
+                    const badgeClass = 'absolute top-2 left-2 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wide shadow';
+                    if (days <= 0) return `<span class="${badgeClass}" style="background:linear-gradient(135deg,#059669,#10B981)">Now Showing</span>`;
+                    if (days <= 7) return `<span class="${badgeClass}" style="background:linear-gradient(135deg,#6B46C1,#805AD5)">${days}d to go</span>`;
+                    return `<span class="${badgeClass}" style="background:linear-gradient(135deg,#6B46C1,#805AD5)">${days} days</span>`;
+                }
+
+                grid.innerHTML = releases.map(r => {
+                    const days = r.releaseDate ? getDaysUntil(r.releaseDate) : null;
+                    const isReleased = days !== null && days <= 0;
+                    const badge = getDateBadge(r.releaseDate);
+                    const btnLabel = isReleased ? 'Book Now' : 'Notify Me';
+                    const btnIcon = isReleased ? 'theaters' : 'notifications_active';
+                    const btnAction = isReleased ? "window.location='index.html#search'" : `openNotifyModal(${JSON.stringify(JSON.stringify(r))})`;
+                    return `
+                        <div class="group cursor-pointer flex flex-col" onclick="window.location='releases.html'">
+                            <div class="relative rounded-2xl overflow-hidden shadow-lg bg-gray-900 mb-3" style="aspect-ratio:2/3;">
+                                <img src="${r.image}" alt="${r.title}" class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
+                                     onerror="this.src='https://placehold.co/400x600/1a1a2e/9f7aea?text=${encodeURIComponent(r.title)}'" loading="lazy"/>
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
+                                ${badge}
+                                <div class="absolute bottom-0 left-0 right-0 flex justify-center pb-3 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
+                                    <a href="releases.html" onclick="event.stopPropagation()" class="bg-purple-600 hover:bg-purple-700 text-white text-[11px] font-bold px-4 py-1.5 rounded-full flex items-center gap-1 shadow-lg">
+                                        <span class="material-icons text-[13px]">${btnIcon}</span> ${btnLabel}
+                                    </a>
+                                </div>
+                            </div>
+                            <h3 class="font-black text-gray-900 dark:text-white text-xs text-center leading-tight line-clamp-2 group-hover:text-primary transition-colors">${r.title}</h3>
+                            <p class="text-center text-[10px] font-bold text-purple-500 uppercase tracking-widest mt-0.5">${r.genre || ''}</p>
+                        </div>`;
+                }).join('');
+            } catch(e) {
+                console.error('Home releases load error:', e);
+                if (grid) grid.innerHTML = '<div class="col-span-full text-center py-8 text-gray-400 text-sm">Could not load releases.</div>';
+            }
+        }
     </script>
 
     <!-- Scroll Reveal Logic -->

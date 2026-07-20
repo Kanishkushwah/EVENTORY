@@ -23,6 +23,28 @@
             },
         };
     </script>
+    <script>
+        // Apply saved theme immediately to prevent flash
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+                document.querySelectorAll('.theme-icon').forEach(el => el.textContent = 'dark_mode');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+                document.querySelectorAll('.theme-icon').forEach(el => el.textContent = 'light_mode');
+            }
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.theme-icon').forEach(el => el.textContent = document.documentElement.classList.contains('dark') ? 'light_mode' : 'dark_mode');
+        });
+    </script>
     <style>
         * {
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -147,6 +169,10 @@
                 </a>
             </div>
             <div class="hidden md:flex items-center gap-3">
+                <button onclick="toggleTheme()" title="Toggle Dark Mode"
+                    class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors focus:outline-none">
+                    <span class="material-icons theme-icon text-[18px]">dark_mode</span>
+                </button>
                 <a href="login.html"
                     class="text-gray-600 dark:text-gray-300 hover:text-primary font-semibold text-sm">Login</a>
                 <a href="register.html"

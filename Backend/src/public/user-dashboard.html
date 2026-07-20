@@ -765,7 +765,9 @@
                                     </div>
                                     <div class="flex-1 min-w-0">
                                         <div class="flex items-center gap-2 mb-1">
-                                            <span class="px-2 py-0.5 rounded bg-primary/10 text-primary text-[10px] uppercase font-bold tracking-wider">Confirmed</span>
+                                            <span class="px-2 py-0.5 rounded ${b.payment_status === 'completed' || b.payment_status === 'confirmed' ? 'bg-green-500/10 text-green-500' : 'bg-gray-500/10 text-gray-500'} text-[10px] uppercase font-bold tracking-wider">
+                                                ${b.payment_status === 'completed' ? 'Paid' : (b.payment_status === 'confirmed' ? 'Confirmed' : b.payment_status.toUpperCase())}
+                                            </span>
                                             <span class="text-gray-400 text-xs font-medium">#${b.reference.split('-').pop()}</span>
                                         </div>
                                         <h3 class="text-white text-lg sm:text-xl font-black truncate mb-2 group-hover:text-primary transition-colors">${b.event_title}</h3>

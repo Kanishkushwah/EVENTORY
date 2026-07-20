@@ -389,8 +389,8 @@
                     <p class="text-xs text-gray-500 uppercase tracking-wide">Bookings</p>
                 </div>
                 <div class="text-center px-4 border-l">
-                    <p class="text-2xl font-bold text-gray-900" id="header-points">0</p>
-                    <p class="text-xs text-gray-500 uppercase tracking-wide">Points</p>
+                    <p class="text-2xl font-bold text-gray-900" id="header-spent">₹0</p>
+                    <p class="text-xs text-gray-500 uppercase tracking-wide">Total Spent</p>
                 </div>
             </div>
         </div>
@@ -768,14 +768,19 @@
             const bookingsCount = document.getElementById('header-bookings-count');
 
             try {
-                // Fetch from Backend
+                // 1. Fetch from Bookings API
                 const res = await fetch(`/api/users/bookings/${loggedInUser.email}`);
                 const data = await res.json();
                 allBookingsCache = data.all || [];
 
-                // Update Header with only successful bookings count
+                // Update Header Count
                 const confirmedCount = allBookingsCache.filter(b => b.payment_status === 'completed' || b.payment_status === 'confirmed').length;
                 bookingsCount.textContent = confirmedCount;
+
+                // 2. Fetch from Stats API for Header
+                const statsRes = await fetch(`/api/users/stats/${loggedInUser.email}`);
+                const stats = await statsRes.json();
+                document.getElementById('header-spent').textContent = '₹' + (stats.totalSpent || 0).toLocaleString();
 
                 renderBookings(allBookingsCache);
 

@@ -1209,7 +1209,12 @@
 
                         const result = await verifyRes.json();
                         if (result.success) {
-                            completePayment("RAZORPAY");
+                            // Show success UI directly since verification already confirmed payment on backend
+                            document.getElementById("payment-section").classList.add("hidden");
+                            document.getElementById("confirmation-section").classList.remove("hidden");
+                            loadConfirmationDetails();
+                            generateTicketQR();
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
                         } else {
                             alert("Verification failed: " + result.message);
                             btn.disabled = false;
@@ -1724,13 +1729,21 @@
         }
 
         async function resendBookingEmail() {
-            const reference = document.getElementById('bookingRef').textContent;
-            if (!reference) return;
+            const refEl = document.getElementById('bookingRef');
+            const reference = refEl ? refEl.textContent : null;
+            if (!reference) {
+                alert("Booking reference not found. Please refresh.");
+                return;
+            }
 
-            const btn = event.currentTarget;
-            const originalText = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = `<span class="material-icons-outlined animate-spin text-sm">sync</span> Resending...`;
+            // Get target button safely
+            const btn = window.event ? window.event.currentTarget : null;
+            let originalText = "";
+            if (btn) {
+                originalText = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = `<span class="material-icons-outlined animate-spin text-sm">sync</span> Processing...`;
+            }
 
             try {
                 const res = await fetch('/api/bookings/resend-email', {
@@ -1741,15 +1754,18 @@
 
                 const data = await res.json();
                 if (res.ok) {
-                    alert("✅ Ticket has been resent to your email!");
+                    alert("✅ Ticket has been resent to your email (" + (data.email || 'account email') + ")!");
                 } else {
-                    alert("❌ Failed: " + data.message);
+                    alert("❌ Failed: " + (data.message || "Unknown error"));
                 }
             } catch (err) {
-                alert("❌ Server error while resending. Please try again later.");
+                console.error("Resend error:", err);
+                alert("❌ Connection error. Please try again soon.");
             } finally {
-                btn.disabled = false;
-                btn.innerHTML = originalText;
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                }
             }
         }
 
@@ -2027,6 +2043,23 @@
                         </p>
                     </a>
                 </div>
+
+                <button onclick="resendBookingEmail()"
+                    class="w-full p-5 flex items-center gap-5 border-2 border-gray-100 dark:border-gray-800 rounded-2xl hover:border-primary hover:bg-purple-50 dark:hover:bg-purple-900/10 transition-all group">
+                    <div
+                        class="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-primary group-hover:rotate-12 transition-transform">
+                        <span class="material-icons-outlined text-2xl">mark_email_read</span>
+                    </div>
+                    <div class="text-left flex-1">
+                        <h4 class="font-bold text-gray-900 dark:text-white">Resend Ticket Email</h4>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Didn't get it? We'll resend it right now!
+                        </p>
+                    </div>
+                    <div
+                        class="w-10 h-10 rounded-full border border-gray-100 dark:border-gray-800 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
+                        <span class="material-icons-outlined text-sm">send</span>
+                    </div>
+                </button>
 
                 <a href="tel:8511812332"
                     class="w-full p-5 flex items-center gap-5 border-2 border-gray-100 dark:border-gray-800 rounded-2xl hover:border-primary hover:bg-purple-50 dark:hover:bg-purple-900/10 transition-all group">
